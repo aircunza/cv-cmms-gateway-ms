@@ -5,7 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Headers,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 
@@ -13,13 +13,14 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { Inject } from '@nestjs/common';
 import { NATS_SERVICE } from 'src/config';
 
-import { catchError } from 'rxjs';
+import { catchError, map } from 'rxjs';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from './guards/auth.guard';
 import { User } from './decorators/user.decorator';
 import { Token } from './decorators/token.decorator';
 import { type CurrentUser } from './interfaces /current-user.interface';
+import type { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -47,6 +48,27 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.client.send('auth.login.user', loginUserDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logoutUser(
+    @Token() token: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.client.send('auth.logout.user', token).pipe(
+      map(() => {
+        res.clearCookie('token');
+        res.clearCookie('access_token');
+        res.clearCookie('jwt');
+
+        return { success: true };
+      }),
       catchError((error) => {
         throw new RpcException(error);
       }),
