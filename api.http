@@ -1,4 +1,4 @@
-
+######################## AUTH ########################
 ## Health Check:
 GET http://localhost:3000/api/v1/auth/health
 
@@ -30,3 +30,70 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiYWM4Mjg1L
 ### Logout user:
 POST http://localhost:3000/api/v1/auth/logout
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiYWM4Mjg1LTJiOWUtNGZhMC04MDUzLWU5NTUxNmU1MTJhYSIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0xOFQxODoxMzoyMS4zNzdaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg0NTc2MzU3LCJleHAiOjE3ODQ1ODM1NTd9.ZhRFhbMv1uP9gjhD74UNmSxcPc3gVNUWjGC2rbP4ZTw
+
+
+
+
+######################## ORGANIZATIONS ########################
+@baseUrl = http://localhost:3000/api/v1
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZjYTM1NjYwLTdkNDUtNDUxMS04ZDdhLTQxMDAxZTRjYzEzZCIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yMVQxNjoyMDo1MS42MjJaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg0NjYwMDY2LCJleHAiOjE3ODQ2NjcyNjZ9.VJ9D9tBGgOgLYpwNXbLVqbqxbR0C2ZGfqLuziUx_rC4
+@orgId =a91fc8a3-8d79-48a9-8fd1-5adea1c3a610
+
+### Create organization
+POST {{baseUrl}}/organizations
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "code": "ORG-BOG-001",
+  "name": "CMMS Colombia",
+  "countryCode": "CO",
+  "countryName": "Colombia",
+  "timezone": "America/Bogota",
+  "offsetMinutes": -300
+}
+
+### Get one organization
+GET {{baseUrl}}/organizations/{{orgId}}
+Authorization: Bearer {{token}}
+
+### Get organizations (all active by default)
+GET {{baseUrl}}/organizations
+Authorization: Bearer {{token}}
+
+### Get organizations filtered by code
+GET {{baseUrl}}/organizations?code=ORG-BOG
+Authorization: Bearer {{token}}
+
+### Get organizations filtered by name
+GET {{baseUrl}}/organizations?name=CMMS
+Authorization: Bearer {{token}}
+
+### Get organizations filtered by countryCode
+GET {{baseUrl}}/organizations?countryCode=CO
+Authorization: Bearer {{token}}
+
+### Update organization (partial)
+PATCH {{baseUrl}}/organizations/{{orgId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "CMMS Colombia S.A.S.",
+  "timezone": "America/Bogota",
+  "offsetMinutes": -200
+}
+
+### Update organization (change code)
+PATCH {{baseUrl}}/organizations/{{orgId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "CMMS Colombia S.A.S."
+}
+
+### Deactivate organization (soft delete)
+PATCH {{baseUrl}}/organizations/{{orgId}}/deactivate
+Authorization: Bearer {{token}}
+
