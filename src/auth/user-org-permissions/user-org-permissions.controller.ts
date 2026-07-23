@@ -47,7 +47,7 @@ export class UserOrgPermissionsController {
   }
 
   @UseGuards(AuthGuard)
-  @Get(':userId/:organizationId')
+  @Get(':id')
   findOneUserOrgPermission(
     @Param() findOneUserOrgPermissionDto: FindOneUserOrgPermissionDto,
   ) {
@@ -75,15 +75,14 @@ export class UserOrgPermissionsController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch(':userId/:organizationId')
+  @Patch(':id')
   updateUserOrgPermission(
     @Param() findOneUserOrgPermissionDto: FindOneUserOrgPermissionDto,
     @Body() updateUserOrgPermissionDto: UpdateUserOrgPermissionDto,
   ) {
     return this.client
       .send('user.org.permissions.update', {
-        userId: findOneUserOrgPermissionDto.userId,
-        organizationId: findOneUserOrgPermissionDto.organizationId,
+        id: findOneUserOrgPermissionDto.id,
         updates: updateUserOrgPermissionDto,
       })
       .pipe(
@@ -94,7 +93,7 @@ export class UserOrgPermissionsController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch(':userId/:organizationId/deactivate')
+  @Patch(':id/deactivate')
   deactivateUserOrgPermission(
     @Param() findOneUserOrgPermissionDto: FindOneUserOrgPermissionDto,
   ) {

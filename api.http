@@ -36,8 +36,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiYWM4Mjg1L
 
 ######################## ORGANIZATIONS ########################
 @baseUrl = http://localhost:3000/api/v1
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmMDQxNmRjLTgxMTQtNDMyYy04MDhmLTExMjEyMTZhMjg0YyIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yM1QxNjoxNDowMy4zMjRaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg0ODIzMjQzLCJleHAiOjE3ODQ4MzA0NDN9.0ekNw9m_eKQSrdaN18izCzpO1m5QJ1a2jugbASG4KYo
-@orgId =a91fc8a3-8d79-48a9-8fd1-5adea1c3a610
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFmYTZhZDFiLWI3NTgtNGNhNS1hMjA3LTQyOTQzZjhjNjRhMiIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yM1QxODowNzo1Ni4yNjVaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg0ODMwMDc2LCJleHAiOjE3ODQ4MzcyNzZ9.sdagZOqJcyzjtOmBNIcNWnex8nEdCh7PZvemQ9n1KSU
+@orgId =483eb41f-3442-40fb-bf31-68e908fc6422
 
 ### Create organization
 POST {{baseUrl}}/organizations
@@ -101,8 +101,9 @@ Authorization: Bearer {{token}}
 
 
 ######################## USER ORG PERMISSIONS ########################
-@uopUserId = ff0416dc-8114-432c-808f-1121216a284c
-@uopOrgId = 1ec9edb4-c864-49b7-a390-ed333bc933bb
+@uopUserId = afa6ad1b-b758-4ca5-a207-42943f8c64a2
+@uopOrgId = 483eb41f-3442-40fb-bf31-68e908fc6422
+@uopId = 00000000-0000-0000-0000-000000000000
 
 ### Create user org permission
 POST {{baseUrl}}/user-org-permissions
@@ -119,8 +120,10 @@ Authorization: Bearer {{token}}
   "deniedPermissions": ["users.delete"]
 }
 
+### Nota: copia el id devuelto en create y pegalo en @uopId
+
 ### Get one user org permission (active only)
-GET {{baseUrl}}/user-org-permissions/{{uopUserId}}/{{uopOrgId}}
+GET {{baseUrl}}/user-org-permissions/{{uopId}}
 Authorization: Bearer {{token}}
 
 ### Get user org permissions (all active by default)
@@ -144,7 +147,7 @@ GET {{baseUrl}}/user-org-permissions?isActive=N
 Authorization: Bearer {{token}}
 
 ### Update user org permission (partial)
-PATCH {{baseUrl}}/user-org-permissions/{{uopUserId}}/{{uopOrgId}}
+PATCH {{baseUrl}}/user-org-permissions/{{uopId}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -156,6 +159,6 @@ Authorization: Bearer {{token}}
 }
 
 ### Deactivate user org permission (soft delete)
-PATCH {{baseUrl}}/user-org-permissions/{{uopUserId}}/{{uopOrgId}}/deactivate
+PATCH {{baseUrl}}/user-org-permissions/{{uopId}}/deactivate
 Authorization: Bearer {{token}}
 
