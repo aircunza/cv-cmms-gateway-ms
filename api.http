@@ -23,6 +23,33 @@ Content-Type: application/json
   "password": "password123ghghghgh7+{}"
 }
 
+### Login with code:
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "code": "12345",
+  "password": "password123ghghghgh7+{}"
+}
+
+### Login invalid (both email and code):
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "code": "12345",
+  "password": "password123ghghghgh7+{}"
+}
+
+### Login invalid (missing email and code):
+POST http://localhost:3000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "password": "password123ghghghgh7+{}"
+}
+
 ### Verify user:
 GET http://localhost:3000/api/v1/auth/verify
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZjYTM1NjYwLTdkNDUtNDUxMS04ZDdhLTQxMDAxZTRjYzEzZCIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yMVQxNjoyMDo1MS42MjJaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg0NzUwNjE3LCJleHAiOjE3ODQ3NTc4MTd9.zE6rEd4yXk08utqXTCbeHl25ZNoW65O7TFC6_ArGnzg

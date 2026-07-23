@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -26,6 +27,17 @@ import type { Response } from 'express';
 export class AuthController {
   constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
+  private validateLoginIdentifier(loginUserDto: LoginUserDto) {
+    const hasEmail = Boolean(loginUserDto.email);
+    const hasCode = Boolean(loginUserDto.code);
+
+    if ((hasEmail && hasCode) || (!hasEmail && !hasCode)) {
+      throw new BadRequestException(
+        'Provide exactly one identifier: email or code',
+      );
+    }
+  }
+
   @Get('health')
   status() {
     return this.client.send('health', 'testing verify').pipe(
@@ -47,6 +59,8 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   loginUser(@Body() loginUserDto: LoginUserDto) {
+    this.validateLoginIdentifier(loginUserDto);
+
     return this.client.send('auth.login.user', loginUserDto).pipe(
       catchError((error) => {
         throw new RpcException(error);
