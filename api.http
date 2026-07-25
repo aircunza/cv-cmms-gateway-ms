@@ -63,7 +63,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiYWM4Mjg1L
 
 ######################## ORGANIZATIONS ########################
 @baseUrl = http://localhost:3000/api/v1
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFmYTZhZDFiLWI3NTgtNGNhNS1hMjA3LTQyOTQzZjhjNjRhMiIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yM1QxODowNzo1Ni4yNjVaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg0ODMwMDc2LCJleHAiOjE3ODQ4MzcyNzZ9.sdagZOqJcyzjtOmBNIcNWnex8nEdCh7PZvemQ9n1KSU
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFmYTZhZDFiLWI3NTgtNGNhNS1hMjA3LTQyOTQzZjhjNjRhMiIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yM1QxODowNzo1Ni4yNjVaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg0OTk4ODk4LCJleHAiOjE3ODUwMDYwOTh9.WtzEOOcscZpqD5MYruqxoHDDeh6jmS1gI3pbJByRokU
 @orgId =483eb41f-3442-40fb-bf31-68e908fc6422
 
 ### Create organization
@@ -187,5 +187,176 @@ Authorization: Bearer {{token}}
 
 ### Deactivate user org permission (soft delete)
 PATCH {{baseUrl}}/user-org-permissions/{{uopId}}/deactivate
+Authorization: Bearer {{token}}
+
+
+
+
+######################## WORK AREAS ########################
+@workAreaId = d52d9576-f363-455b-9b30-7324aa111f32
+
+### Create work area
+POST {{baseUrl}}/work-areas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workAreaCode": "WA-001",
+  "workAreaDescription": "Area principal de mantenimiento",
+  "organizationCode": "ORG-BOG-001"
+}
+
+### Nota: copia el id devuelto en create y pegalo en @workAreaId
+
+### Get one work area
+GET {{baseUrl}}/work-areas/{{workAreaId}}
+Authorization: Bearer {{token}}
+
+### Get work areas (all active by default)
+GET {{baseUrl}}/work-areas
+Authorization: Bearer {{token}}
+
+### Get work areas filtered by code
+GET {{baseUrl}}/work-areas?workAreaCode=WA-001
+Authorization: Bearer {{token}}
+
+### Get work areas filtered by organizationCode
+GET {{baseUrl}}/work-areas?organizationCode=ORG-BOG-001
+Authorization: Bearer {{token}}
+
+### Update work area (partial)
+PATCH {{baseUrl}}/work-areas/{{workAreaId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workAreaDescription": "Area principal de mantenimiento - actualizada"
+}
+
+### Deactivate work area (soft delete)
+PATCH {{baseUrl}}/work-areas/{{workAreaId}}/deactivate
+Authorization: Bearer {{token}}
+
+
+
+
+######################## WORK CENTERS ########################
+@workCenterId = 7b902e69-a4d2-429f-89af-9be69007618c
+
+### Create work center
+POST {{baseUrl}}/work-centers
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workCenterCode": "WC-001",
+  "workCenterDescription": "Centro de trabajo principal",
+  "workAreaId": "{{workAreaId}}",
+  "centerCostCode": 1001,
+  "centerCostDescription": "Costo centro 1001"
+}
+
+### Nota: copia el id devuelto en create y pegalo en @workCenterId
+
+### Get one work center
+GET {{baseUrl}}/work-centers/{{workCenterId}}
+Authorization: Bearer {{token}}
+
+### Get work centers (all active by default)
+GET {{baseUrl}}/work-centers
+Authorization: Bearer {{token}}
+
+### Get work centers filtered by code
+GET {{baseUrl}}/work-centers?workCenterCode=WC-001
+Authorization: Bearer {{token}}
+
+### Get work centers filtered by workAreaId
+GET {{baseUrl}}/work-centers?workAreaId={{workAreaId}}
+Authorization: Bearer {{token}}
+
+### Update work center (partial)
+PATCH {{baseUrl}}/work-centers/{{workCenterId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workCenterDescription": "Centro de trabajo principal - actualizado",
+  "centerCostDescription": "Costo centro actualizado"
+}
+
+### Deactivate work center (soft delete)
+PATCH {{baseUrl}}/work-centers/{{workCenterId}}/deactivate
+Authorization: Bearer {{token}}
+
+
+
+
+######################## ASSETS ########################
+@assetCode = ASSET-001
+
+### Create asset
+POST {{baseUrl}}/assets
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "assetCode": "ASSET-001",
+  "assetDescription": "Bomba principal de planta",
+  "assetShortDescription": "Bomba P1",
+  "assetStatus": "OPERATIVE",
+  "operationalHoursOrigin": "MANUAL",
+  "organizationCode": "ORG-BOG-001",
+  "workCenterId": "{{workCenterId}}",
+  "accountingAccountCode": "ACC-100",
+  "supervisorCode": "12345",
+  "assetDependency": "LINEA-1",
+  "processTypeCode": "PROC-A",
+  "subprocessTypeCode": "SUBPROC-A1",
+  "hierarchyCode": "H-001",
+  "assetClass": "CRITICAL",
+  "enabledMaintenanceProgram": "Y",
+  "enabledMaintenanceHoursControl": "Y",
+  "enabledFinancialKpi": "N",
+  "enabledTechnicalKpi": "Y",
+  "woAllowedFlag": "Y",
+  "enabledIiot": "N",
+  "sector": "Produccion",
+  "subsector": "Linea 1"
+}
+
+### Get one asset
+GET {{baseUrl}}/assets/{{assetCode}}
+Authorization: Bearer {{token}}
+
+### Get assets (all active by default)
+GET {{baseUrl}}/assets
+Authorization: Bearer {{token}}
+
+### Get assets filtered by code
+GET {{baseUrl}}/assets?assetCode=ASSET-001
+Authorization: Bearer {{token}}
+
+### Get assets filtered by organizationCode
+GET {{baseUrl}}/assets?organizationCode=ORG-BOG-001
+Authorization: Bearer {{token}}
+
+### Get assets filtered by supervisorCode
+GET {{baseUrl}}/assets?supervisorCode=12345
+Authorization: Bearer {{token}}
+
+### Update asset (partial)
+PATCH {{baseUrl}}/assets/{{assetCode}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "assetDescription": "Bomba principal de planta - actualizada",
+  "assetStatus": "STANDBY",
+  "enabledTechnicalKpi": "N",
+  "subsector": "Linea 2"
+}
+
+### Deactivate asset (soft delete)
+PATCH {{baseUrl}}/assets/{{assetCode}}/deactivate
 Authorization: Bearer {{token}}
 
