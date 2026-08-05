@@ -3,7 +3,6 @@ import { AuthController } from './auth.controller';
 import { NatsModule } from 'src/transports/nats.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { UserOrgPermissionsModule } from './user-org-permissions/user-org-permissions.module';
-import { AssetManagementModule } from './asset-management/asset-management.module';
 
 @Module({
   controllers: [AuthController],
@@ -12,7 +11,6 @@ import { AssetManagementModule } from './asset-management/asset-management.modul
     NatsModule,
     OrganizationsModule,
     UserOrgPermissionsModule,
-    AssetManagementModule,
   ],
 })
 export class AuthModule {}

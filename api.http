@@ -63,7 +63,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiYWM4Mjg1L
 
 ######################## ORGANIZATIONS ########################
 @baseUrl = http://localhost:3000/api/v1
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFmYTZhZDFiLWI3NTgtNGNhNS1hMjA3LTQyOTQzZjhjNjRhMiIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yM1QxODowNzo1Ni4yNjVaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg0OTk4ODk4LCJleHAiOjE3ODUwMDYwOTh9.WtzEOOcscZpqD5MYruqxoHDDeh6jmS1gI3pbJByRokU
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2Y2E0MjA0LTk2NmItNDM0Yy04YzQ0LTIzMDliNDViMzU5NCIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yN1QyMDoxNjozMS44NDVaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg1NjEyNDQyLCJleHAiOjE3ODU2MTk2NDJ9.8leAPL-t32O2xBUPDLVDwyj8K1cLI739ZCoWtlxmfmw
 @orgId =483eb41f-3442-40fb-bf31-68e908fc6422
 
 ### Create organization
@@ -241,7 +241,7 @@ Authorization: Bearer {{token}}
 
 
 ######################## WORK CENTERS ########################
-@workCenterId = 7b902e69-a4d2-429f-89af-9be69007618c
+@workCenterId =  1d2c5aab-fe5b-4c77-9a8d-c80cb11a7c8d
 
 ### Create work center
 POST {{baseUrl}}/work-centers
@@ -360,3 +360,309 @@ Authorization: Bearer {{token}}
 PATCH {{baseUrl}}/assets/{{assetCode}}/deactivate
 Authorization: Bearer {{token}}
 
+######################## MAINTENANCE EXECUTION ########################
+@baseUrl = http://localhost:3000/api/v1
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2Y2E0MjA0LTk2NmItNDM0Yy04YzQ0LTIzMDliNDViMzU5NCIsImNvZGUiOiIxMjM0NSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwidXNlclNob3J0TmFtZSI6IlRVIiwiY3JlYXRlZEF0IjoiMjAyNi0wNy0yN1QyMDoxNjozMS44NDVaIiwidXBkYXRlZEF0IjpudWxsLCJpc0FjdGl2ZSI6bnVsbCwiaXNWZXJpZmllZCI6bnVsbCwiYWRkQXR0cmlidXRlMSI6bnVsbCwiYWRkQXR0cmlidXRlMiI6bnVsbCwiYWRkQXR0cmlidXRlMyI6bnVsbCwiYWRkQXR0cmlidXRlNCI6bnVsbCwiYWRkQXR0cmlidXRlNSI6bnVsbCwiaWF0IjoxNzg1NjEyNDQyLCJleHAiOjE3ODU2MTk2NDJ9.8leAPL-t32O2xBUPDLVDwyj8K1cLI739ZCoWtlxmfmw
+
+@hrResourceCode = HR-001
+@hrOrganizationCode = ORG-BOG-001
+@wrRequestIdToRelease = 8
+@wrRequestIdToComplete =10006
+@wrRequestIdToCancel = 9
+@woWorkOrderCode = 1
+@woOperationCode = 1
+@opMaterialId = 1
+@opHrUsageId = 1
+
+
+
+######################## HUMAN RESOURCES ########################
+
+### Create human resource
+POST {{baseUrl}}/human-resources
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "resourceCode": "{{hrResourceCode}}",
+  "resourceName": "Técnico Mecánico Senior",
+  "resourceType": "MECHANICAL",
+  "organizationCode": "{{hrOrganizationCode}}",
+  "organizationName": "CMMS Colombia",
+  "availabilityStatus": "AVAILABLE",
+  "supervisorId": "af6ad1b-b758-4ca5-a207-42943f8c64a2",
+  "supervisorName": "Test User",
+  "isActive": "Y"
+}
+
+### Get human resources (all)
+GET {{baseUrl}}/human-resources?organizationCode={{hrOrganizationCode}}
+Authorization: Bearer {{token}}
+
+### Get one human resource
+GET {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{hrOrganizationCode}}
+Authorization: Bearer {{token}}
+
+### Update human resource
+PATCH {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{hrOrganizationCode}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "resourceName": "Técnico Mecánico Senior - Actualizado",
+  "availabilityStatus": "ON_LEAVE"
+}
+
+### Deactivate human resource
+PATCH {{baseUrl}}/human-resources/{{hrResourceCode}}/deactivate?organizationCode={{hrOrganizationCode}}
+Authorization: Bearer {{token}}
+
+
+
+######################## WORK REQUESTS ########################
+
+### Create work request
+POST {{baseUrl}}/work-requests
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "assetCode": "ASSET-001",
+  "assetShortDescription": "Bomba P1",
+  "issueDescription": "Vibración excesiva en bomba principal durante operación",
+  "workCenterCode": "WC-001",
+  "workCenterDescription": "Centro de trabajo principal",
+  "centerCostCode": 1001,
+  "workAreaCode": "WA-001",
+  "workAreaDescription": "Area principal de mantenimiento",
+  "sector": "Produccion",
+  "subsector": "Linea 1"
+}
+
+### Nota: copia el requestId devuelto y pégalo en @wrRequestId
+
+### Get work requests (all active)
+GET {{baseUrl}}/work-requests?organizationCode={{hrOrganizationCode}}
+Authorization: Bearer {{token}}
+
+### Get one work request
+GET {{baseUrl}}/work-requests/{{wrRequestIdToRelease}}
+Authorization: Bearer {{token}}
+
+### Update work request
+PATCH {{baseUrl}}/work-requests/{{wrRequestIdToComplete}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "issueDescription": "Vibración excesiva en bomba principal - actualizado",
+  "statusCode": "CANCELEND"
+}
+
+### Cancel work request
+PATCH {{baseUrl}}/work-requests/{{wrRequestIdToCancel}}/cancel
+Authorization: Bearer {{token}}
+
+
+
+######################## WORK ORDERS ########################
+
+### Create work order
+POST {{baseUrl}}/work-orders
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workOrderDescription": "Mantenimiento correctivo bomba P1 - vibración",
+  "assetCode": "ASSET-001",
+  "assetShortDescription": "Bomba P1",
+  "workOrderType": "Not Planned",
+  "workOrderSubType": "Corrective",
+  "workOrderPriority": "1",
+  "woStatusCode": "UNRELEASED",
+  "schedulingMethod": "MANUAL",
+  "plannedStartDate": "2026-08-01T08:00:00Z",
+  "plannedCompletionDate": "2026-08-01T16:00:00Z",
+  "plannedHours": 8,
+  "needByDate": "2026-08-02T08:00:00Z",
+  "workCenterCode": "WC-001",
+  "workCenterDescription": "Centro de trabajo principal",
+  "centerCostCode": 1001,
+  "workAreaCode": "WA-001",
+  "workAreaDescription": "Area principal de mantenimiento",
+  "sector": "Produccion",
+  "subsector": "Linea 1",
+  "organizationCode": "{{hrOrganizationCode}}",
+  "organizationName": "CMMS Colombia"
+}
+
+### Nota: copia el workOrderCode devuelto y pégalo en @woWorkOrderCode
+
+### Get work orders (all)
+GET {{baseUrl}}/work-orders?organizationCode={{hrOrganizationCode}}
+Authorization: Bearer {{token}}
+
+### Get one work order
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}
+Authorization: Bearer {{token}}
+
+### Update work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workOrderDescription": "Mantenimiento correctivo bomba P1 - actualizado",
+  "workOrderPriority": "2"
+}
+
+### Release work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/release
+Authorization: Bearer {{token}}
+
+### Complete work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/complete
+Authorization: Bearer {{token}}
+
+### Close work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/close
+Authorization: Bearer {{token}}
+
+### Cancel work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/cancel
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "canceledReason": "Orden cancelada por prioridad baja"
+}
+
+
+
+######################## WO OPERATIONS ########################
+
+### Create operation
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "operationName": "Inspección de rodamientos",
+  "operationDescription": "Inspeccionar y medir desgaste de rodamientos de la bomba",
+  "operationSeqNumber": 10,
+  "assetCode": "ASSET-001",
+  "assetShortDescription": "Bomba P1",
+  "operationCategory": "MECHANICAL",
+  "operationStatus": "UNRELEASED",
+  "operationType": "Internal",
+  "plannedStartDate": "2026-08-01T08:00:00Z",
+  "plannedCompletionDate": "2026-08-01T12:00:00Z",
+  "plannedHours": 4,
+  "workCenterCode": "WC-001",
+  "workCenterDescription": "Centro de trabajo principal",
+  "centerCostCode": 1001,
+  "workAreaCode": "WA-001",
+  "workAreaDescription": "Area principal de mantenimiento",
+  "sector": "Produccion",
+  "subsector": "Linea 1",
+  "organizationCode": "{{hrOrganizationCode}}",
+  "organizationName": "CMMS Colombia"
+}
+
+### Nota: copia el operationCode devuelto y pégalo en @woOperationCode
+
+### Get operations for a work order
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations
+Authorization: Bearer {{token}}
+
+### Get one operation
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}
+Authorization: Bearer {{token}}
+
+### Update operation
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "operationName": "Inspección de rodamientos - Actualizado",
+  "actualStartDate": "2026-08-01T08:30:00Z",
+  "actualCompletionDate": "2026-08-01T11:00:00Z",
+  "actualHours": 2.5,
+  "operationStatus": "COMPLETED"
+}
+
+### Review operation
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/review
+Authorization: Bearer {{token}}
+
+
+
+######################## OPERATION MATERIALS ########################
+
+### Create operation material
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "operationCode": {{woOperationCode}},
+  "organizationCode": "{{hrOrganizationCode}}",
+  "materialCode": "MAT-BRG-001",
+  "materialName": "Rodamiento SKF 6205",
+  "quantity": 2,
+  "unitCost": 45.50,
+  "supplyType": "1",
+  "materialSequenceNumber": 10
+}
+
+### Get materials for an operation
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials
+Authorization: Bearer {{token}}
+
+### Update operation material
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials/{{opMaterialId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "quantity": 3,
+  "unitCost": 42.00
+}
+
+
+
+######################## OPERATION HUMAN RESOURCES ########################
+
+### Create operation human resource
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "operationCode": {{woOperationCode}},
+  "organizationCode": "{{hrOrganizationCode}}",
+  "resourceCode": "{{hrResourceCode}}",
+  "plannedHours": 4,
+  "actualHours": 2.5,
+  "hourlyCost": 35.00,
+  "principalFlag": "Y",
+  "resourceSequenceNumber": 10,
+  "plannedStartDate": "2026-08-01T08:00:00Z",
+  "plannedCompletionDate": "2026-08-01T12:00:00Z",
+  "usageRate": 1.0
+}
+
+### Get human resources for an operation
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
+Authorization: Bearer {{token}}
+
+### Update operation human resource
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources/{{opHrUsageId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "actualHours": 3,
+  "hourlyCost": 38.00
+}
