@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const response = await firstValueFrom(
-        this.client.send<{ user: unknown; token: string }>(
+        this.client.send<{ user: unknown; organizations: unknown; token: string }>(
           'auth.verify.user',
           token,
         ),
@@ -33,13 +33,15 @@ export class AuthGuard implements CanActivate {
         !response ||
         typeof response !== 'object' ||
         !('user' in response) ||
+        !('organizations' in response) ||
         !('token' in response)
       ) {
         throw new UnauthorizedException('Invalid auth response');
       }
 
-      const { user, token: newToken } = response;
+      const { user, organizations, token: newToken } = response;
       request['user'] = user;
+      request['organizations'] = organizations;
       request['token'] = newToken;
     } catch {
       throw new UnauthorizedException();

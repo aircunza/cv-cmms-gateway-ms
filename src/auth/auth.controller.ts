@@ -20,7 +20,9 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from './guards/auth.guard';
 import { User } from './decorators/user.decorator';
 import { Token } from './decorators/token.decorator';
+import { Organizations } from './decorators/organizations.decorator';
 import { type CurrentUser } from './interfaces /current-user.interface';
+import { type OrganizationRole } from './interfaces/organization-role.interface';
 import type { Response } from 'express';
 
 @Controller('auth')
@@ -91,11 +93,11 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('verify')
-  verifyToken(@User() user: CurrentUser, @Token() token: string) {
-    // const user = req['user'];
-    // const token = req['token'];
-
-    // return this.client.send('auth.verify.user', {});
-    return { user, token };
+  verifyToken(
+    @User() user: CurrentUser,
+    @Organizations() organizations: OrganizationRole[],
+    @Token() token: string,
+  ) {
+    return { user, organizations, token };
   }
 }
