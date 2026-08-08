@@ -59,7 +59,11 @@ export class WorkOrdersController {
       (o) => o.organizationCode === organizationCode,
     );
     if (!org) return [];
-    return org.roles.flatMap((role) => role.permissions ?? []);
+
+    const allPermissions = org.roles.flatMap((role) => role.permissions ?? []);
+    const allDenied = org.roles.flatMap((role) => role.deniedPermissions ?? []);
+
+    return allPermissions.filter((p) => !allDenied.includes(p));
   }
 
   private getUserRoles(
