@@ -33,7 +33,10 @@ export class HumanResourcesController {
   }
 
   private getActorCode(user: CurrentUser) {
-    if (!user.code) throw new BadRequestException('Authenticated user code not found in token');
+    if (!user.code)
+      throw new BadRequestException(
+        'Authenticated user code not found in token',
+      );
     return user.code;
   }
 
@@ -49,23 +52,43 @@ export class HumanResourcesController {
   @Post()
   create(@Body() dto: CreateHumanResourceDto, @User() user: CurrentUser) {
     return this.client
-      .send('human.resource.create', { ...dto, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('human.resource.create', {
+        ...dto,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Get(':resourceCode')
-  findOne(@Param() params: { resourceCode: string }, @Query() dto: { organizationCode: string }) {
-    return this.client.send('human.resource.find.one', { resourceCode: params.resourceCode, organizationCode: dto.organizationCode }).pipe(
-      catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }),
-    );
+  findOne(
+    @Param() params: { resourceCode: string },
+    @Query() dto: { organizationCode: string },
+  ) {
+    return this.client
+      .send('human.resource.find.one', {
+        resourceCode: params.resourceCode,
+        organizationCode: dto.organizationCode,
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Get()
   findAll(@Query() dto: FindAllHumanResourceDto) {
     return this.client.send('human.resource.find.all', dto).pipe(
-      catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }),
+      catchError((error: unknown) => {
+        throw new RpcException(this.toRpcError(error));
+      }),
     );
   }
 
@@ -78,8 +101,18 @@ export class HumanResourcesController {
     @User() user: CurrentUser,
   ) {
     return this.client
-      .send('human.resource.update', { resourceCode: params.resourceCode, organizationCode: query.organizationCode, ...dto, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('human.resource.update', {
+        resourceCode: params.resourceCode,
+        organizationCode: query.organizationCode,
+        ...dto,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
@@ -90,7 +123,16 @@ export class HumanResourcesController {
     @User() user: CurrentUser,
   ) {
     return this.client
-      .send('human.resource.deactivate', { resourceCode: params.resourceCode, organizationCode: query.organizationCode, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('human.resource.deactivate', {
+        resourceCode: params.resourceCode,
+        organizationCode: query.organizationCode,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 }

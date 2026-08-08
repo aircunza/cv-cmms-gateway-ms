@@ -51,34 +51,58 @@ export class WorkOrdersController {
     return orgCode as string;
   }
 
-  private getUserPermissions(organizations: OrganizationRole[], organizationCode: string): string[] {
-    const org = organizations.find((o) => o.organizationCode === organizationCode);
+  private getUserPermissions(
+    organizations: OrganizationRole[],
+    organizationCode: string,
+  ): string[] {
+    const org = organizations.find(
+      (o) => o.organizationCode === organizationCode,
+    );
     if (!org) return [];
     return org.roles.flatMap((role) => role.permissions ?? []);
   }
 
-  private getUserRoles(organizations: OrganizationRole[], organizationCode: string): string[] {
-    const org = organizations.find((o) => o.organizationCode === organizationCode);
+  private getUserRoles(
+    organizations: OrganizationRole[],
+    organizationCode: string,
+  ): string[] {
+    const org = organizations.find(
+      (o) => o.organizationCode === organizationCode,
+    );
     if (!org) return [];
     return org.roles.map((role) => role.roleCode);
   }
 
-  private validateOrgAccess(organizations: OrganizationRole[], organizationCode: string) {
-    const org = organizations.find((o) => o.organizationCode === organizationCode);
+  private validateOrgAccess(
+    organizations: OrganizationRole[],
+    organizationCode: string,
+  ) {
+    const org = organizations.find(
+      (o) => o.organizationCode === organizationCode,
+    );
     if (!org) {
-      throw new BadRequestException(`User does not have access to organization ${organizationCode}`);
+      throw new BadRequestException(
+        `User does not have access to organization ${organizationCode}`,
+      );
     }
   }
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() dto: CreateWorkOrderDto, @User() user: CurrentUser, @Req() req: Request) {
+  create(
+    @Body() dto: CreateWorkOrderDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
     const organizationCode = this.getOrganizationCode(req);
     const organizations = req['organizations'] as OrganizationRole[];
 
     this.validateOrgAccess(organizations, organizationCode);
 
-    const userPermissions = this.getUserPermissions(organizations, organizationCode);
+    const userPermissions = this.getUserPermissions(
+      organizations,
+      organizationCode,
+    );
     const userRoles = this.getUserRoles(organizations, organizationCode);
 
     return this.client
@@ -90,62 +114,179 @@ export class WorkOrdersController {
         userPermissions,
         userRoles,
       })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Get(':workOrderCode')
-  findOne(@Param() dto: WorkOrderCodeDto) {
-    return this.client.send('work.order.find.one', dto).pipe(
-      catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }),
-    );
+  findOne(
+    @Param() dto: WorkOrderCodeDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
+    return this.client
+      .send('work.order.find.one', {
+        workOrderCode: dto.workOrderCode,
+        organizationCode,
+        userRoles,
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll(@Query() dto: FindAllWorkOrderDto) {
-    return this.client.send('work.order.find.all', dto).pipe(
-      catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }),
-    );
+  findAll(
+    @Query() dto: FindAllWorkOrderDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
+    const parsedFilters =
+      typeof dto.filters === 'string'
+        ? this.safeJsonParse(dto.filters)
+        : dto.filters;
+
+    const parsedOrder =
+      typeof dto.order === 'string' ? this.safeJsonParse(dto.order) : dto.order;
+
+    const parsedLimit =
+      typeof dto.limit === 'string' ? parseInt(dto.limit, 10) : dto.limit;
+
+    const parsedOffset =
+      typeof dto.offset === 'string' ? parseInt(dto.offset, 10) : dto.offset;
+
+    return this.client
+      .send('work.order.find.all', {
+        organizationCode,
+        userRoles,
+        filters: parsedFilters,
+        order: parsedOrder,
+        limit: parsedLimit,
+        offset: parsedOffset,
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
+  }
+
+  private safeJsonParse(value: string): unknown {
+    try {
+      return JSON.parse(value) as unknown;
+    } catch {
+      return undefined;
+    }
   }
 
   @UseGuards(AuthGuard)
   @Patch(':workOrderCode')
-  update(@Param() params: WorkOrderCodeDto, @Body() dto: UpdateWorkOrderDto, @User() user: CurrentUser) {
+  update(
+    @Param() params: WorkOrderCodeDto,
+    @Body() dto: UpdateWorkOrderDto,
+    @User() user: CurrentUser,
+  ) {
     return this.client
-      .send('work.order.update', { workOrderCode: params.workOrderCode, ...dto, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('work.order.update', {
+        workOrderCode: params.workOrderCode,
+        ...dto,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Patch(':workOrderCode/release')
   release(@Param() params: WorkOrderCodeDto, @User() user: CurrentUser) {
     return this.client
-      .send('work.order.release', { workOrderCode: params.workOrderCode, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('work.order.release', {
+        workOrderCode: params.workOrderCode,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Patch(':workOrderCode/complete')
   complete(@Param() params: WorkOrderCodeDto, @User() user: CurrentUser) {
     return this.client
-      .send('work.order.complete', { workOrderCode: params.workOrderCode, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('work.order.complete', {
+        workOrderCode: params.workOrderCode,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Patch(':workOrderCode/close')
   close(@Param() params: WorkOrderCodeDto, @User() user: CurrentUser) {
     return this.client
-      .send('work.order.close', { workOrderCode: params.workOrderCode, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('work.order.close', {
+        workOrderCode: params.workOrderCode,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Patch(':workOrderCode/cancel')
-  cancel(@Param() params: WorkOrderCodeDto, @Body() dto: { canceledReason?: string }, @User() user: CurrentUser) {
+  cancel(
+    @Param() params: WorkOrderCodeDto,
+    @Body() dto: { canceledReason?: string },
+    @User() user: CurrentUser,
+  ) {
     return this.client
-      .send('work.order.cancel', { workOrderCode: params.workOrderCode, actorId: this.getActorId(user), actorName: this.getActorName(user), canceledReason: dto.canceledReason })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('work.order.cancel', {
+        workOrderCode: params.workOrderCode,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+        canceledReason: dto.canceledReason,
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 }

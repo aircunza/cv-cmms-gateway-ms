@@ -47,7 +47,7 @@ const mockAuthGuard = {
   }),
 };
 
-describe('Work Orders Gateway (e2e, HTTP)', () => {
+describe('Work Order Find One (e2e, HTTP)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -74,102 +74,65 @@ describe('Work Orders Gateway (e2e, HTTP)', () => {
     jest.clearAllMocks();
   });
 
-  it('creates work order and forwards enriched payload to microservice', async () => {
+  it('finds one work order and forwards enriched payload to microservice', async () => {
     const microserviceResponse = {
       workOrder: {
         workOrderCode: '1001',
-        workOrderDescription: 'E2E Work Order',
+        workOrderDescription: 'Preventive maintenance on hydraulic pump',
         assetCode: 'AST-001',
+        assetShortDescription: 'Hydraulic Pump',
         woStatusCode: 'UNRELEASED',
         woStatusLabel: 'Unreleased',
         workOrderType: 'Planned',
         workOrderSubType: 'Preventive',
         workOrderPriority: '2',
-        enableOracleWorkOrder: 'N',
+        workCenterCode: 'WC-01',
+        workCenterDescription: 'Main Workshop',
+        centerCostCode: 101,
+        workAreaCode: 'WA-01',
+        workAreaDescription: 'Plant Floor',
+        sector: 'Production',
+        subsector: 'Line A',
         organizationCode: 'E2E_ORG_001',
+        organizationName: 'E2E Organization',
         createdBy: '550e8400-e29b-41d4-a716-446655440001',
-        createdByName: 'EU',
+        createdByName: 'E2E User',
+        updatedBy: null,
+        updatedByName: null,
+        createdAt: '2026-08-07T15:12:00.000Z',
+        updatedAt: '2026-08-07T15:12:00.000Z',
+        actualStartDate: '2026-08-07T08:00:00.000Z',
+        actualCompletionDate: '2026-08-07T10:00:00.000Z',
         actualHours: 2,
         totalManHours: 2,
         totalSupplierHours: 0,
-        operations: [
-          {
-            operationCode: '5001',
-            operationName: 'Lubrication',
-            operationSubType: 'Preventive',
-            operationStatus: 'UNRELEASED',
-            operationStatusLabel: 'Unreleased',
-            actualHours: 2,
-            workOrderOperationResource: [
-              {
-                id: '10001',
-                resourceCode: 'RES-001',
-                resourceSequenceNumber: 1,
-                plannedHours: 2,
-                actualHours: 2,
-                principalFlag: 'Y',
-              },
-            ],
-            workOrderOperationMaterial: [],
-          },
-        ],
+        plannedHours: null,
+        workRequestId: null,
+        enableOracleWorkOrder: 'N',
+        oclWorkOrderId: null,
+        oclWorkOrderNumber: null,
+        releasedDate: null,
+        closedDate: null,
+        canceledDate: null,
+        canceledReason: null,
+        operations: [],
       },
     };
 
     mockNatsClient.send.mockReturnValue(of(microserviceResponse));
 
     const response = await request(app.getHttpServer())
-      .post('/work-orders')
+      .get('/work-orders/1001')
       .set('Authorization', 'Bearer mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
-      .send({
-        workOrderDescription: 'E2E Work Order',
-        woStatusCode: 'UNRELEASED',
-        assetCode: 'AST-001',
-        workOrderType: 'Planned',
-        workOrderSubType: 'Preventive',
-        workOrderPriority: '2',
-        enableOracleWorkOrder: 'N',
-        operations: [
-          {
-            operationName: 'Lubrication',
-            operationDescription: 'Lubrication test',
-            operationSeqNumber: 10,
-            createdBy: '550e8400-e29b-41d4-a716-446655440001',
-            operationStatus: 'UNRELEASED',
-            operationType: 'Internal',
-            operationSubType: 'Preventive',
-            actualStartDate: '2025-11-21T08:00:00.000Z',
-            actualCompletionDate: '2025-11-21T10:00:00.000Z',
-            workOrderOperationResource: [
-              {
-                principalFlag: 'Y',
-                resourceCode: 'RES-001',
-                resourceSequenceNumber: 1,
-                plannedHours: 2,
-                actualHours: 2,
-              },
-            ],
-          },
-        ],
-      })
-      .expect(201);
+      .expect(200);
 
     expect(mockNatsClient.send).toHaveBeenCalledWith(
-      'work.order.create',
+      'work.order.find.one',
       expect.objectContaining({
-        actorId: '550e8400-e29b-41d4-a716-446655440001',
-        actorName: 'EU',
+        workOrderCode: '1001',
         organizationCode: 'E2E_ORG_001',
-        userPermissions: ['mnt.work.orders.create'],
         userRoles: ['PLANNER_MAINTENANCE_01'],
-        workOrderDescription: 'E2E Work Order',
-        woStatusCode: 'UNRELEASED',
-        assetCode: 'AST-001',
-        workOrderType: 'Planned',
-        workOrderSubType: 'Preventive',
-        workOrderPriority: '2',
-        enableOracleWorkOrder: 'N',
       }),
     );
 
@@ -179,21 +142,10 @@ describe('Work Orders Gateway (e2e, HTTP)', () => {
   });
 
   it('rejects when X-Organization-Code header is missing', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/work-orders')
+    await request(app.getHttpServer())
+      .get('/work-orders/1001')
       .set('Authorization', 'Bearer mock-token')
-      .send({
-        workOrderDescription: 'E2E Work Order',
-        woStatusCode: 'UNRELEASED',
-        assetCode: 'AST-001',
-        workOrderType: 'Planned',
-        workOrderSubType: 'Preventive',
-        workOrderPriority: '2',
-        enableOracleWorkOrder: 'N',
-      })
       .expect(400);
-
-    expect(response.body.message).toContain('X-Organization-Code header is required');
   });
 
   it('rejects when user does not have access to organization', async () => {
@@ -230,21 +182,10 @@ describe('Work Orders Gateway (e2e, HTTP)', () => {
       return true;
     });
 
-    const response = await request(app.getHttpServer())
-      .post('/work-orders')
+    await request(app.getHttpServer())
+      .get('/work-orders/1001')
       .set('Authorization', 'Bearer mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
-      .send({
-        workOrderDescription: 'E2E Work Order',
-        woStatusCode: 'UNRELEASED',
-        assetCode: 'AST-001',
-        workOrderType: 'Planned',
-        workOrderSubType: 'Preventive',
-        workOrderPriority: '2',
-        enableOracleWorkOrder: 'N',
-      })
       .expect(400);
-
-    expect(response.body.message).toContain('User does not have access to organization');
   });
 });

@@ -22,7 +22,9 @@ import {
   FindAllOperationHrDto,
 } from './dto';
 
-@Controller('work-orders/:workOrderCode/operations/:operationCode/human-resources')
+@Controller(
+  'work-orders/:workOrderCode/operations/:operationCode/human-resources',
+)
 export class OperationHumanResourcesController {
   constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
@@ -32,7 +34,10 @@ export class OperationHumanResourcesController {
   }
 
   private getActorCode(user: CurrentUser) {
-    if (!user.code) throw new BadRequestException('Authenticated user code not found in token');
+    if (!user.code)
+      throw new BadRequestException(
+        'Authenticated user code not found in token',
+      );
     return user.code;
   }
 
@@ -52,16 +57,35 @@ export class OperationHumanResourcesController {
     @User() user: CurrentUser,
   ) {
     return this.client
-      .send('operation.hr.create', { ...dto, operationCode: Number(params.operationCode), actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('operation.hr.create', {
+        ...dto,
+        operationCode: Number(params.operationCode),
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll(@Param() params: { operationCode: string }, @Query() dto: FindAllOperationHrDto) {
-    return this.client.send('operation.hr.find.all', { ...dto, operationCode: Number(params.operationCode) }).pipe(
-      catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }),
-    );
+  findAll(
+    @Param() params: { operationCode: string },
+    @Query() dto: FindAllOperationHrDto,
+  ) {
+    return this.client
+      .send('operation.hr.find.all', {
+        ...dto,
+        operationCode: Number(params.operationCode),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
@@ -72,7 +96,16 @@ export class OperationHumanResourcesController {
     @User() user: CurrentUser,
   ) {
     return this.client
-      .send('operation.hr.update', { id: Number(params.id), ...dto, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('operation.hr.update', {
+        id: Number(params.id),
+        ...dto,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 }

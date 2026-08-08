@@ -23,10 +23,11 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const response = await firstValueFrom(
-        this.client.send<{ user: unknown; organizations: unknown; token: string }>(
-          'auth.verify.user',
-          token,
-        ),
+        this.client.send<{
+          user: unknown;
+          organizations: unknown;
+          token: string;
+        }>('auth.verify.user', token),
       );
 
       if (

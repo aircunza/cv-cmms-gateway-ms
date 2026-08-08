@@ -2,20 +2,24 @@
 
 Gateway for the CMMS maintenance execution microservice.
 
-## Work Order Endpoints
+## Work Orders Frontend Contract
 
-### Create Work Order
+Base URL:
 
-**Endpoint:** `POST /work-orders`
+`/api/v1`
 
-**Headers:**
+Headers required for all Work Order endpoints:
 
-| Header              | Type   | Required | Description                                    |
-| ------------------- | ------ | -------- | ---------------------------------------------- |
-| Authorization       | string | Yes      | Bearer token from authentication               |
-| X-Organization-Code | string | Yes      | Target organization code                       |
+- `Authorization: Bearer <token>`
+- `X-Organization-Code: <organization-code>`
 
-**Request Body:**
+## Create Work Order
+
+Endpoint:
+
+`POST /api/v1/work-orders`
+
+Request body example:
 
 ```json
 {
@@ -35,8 +39,8 @@ Gateway for the CMMS maintenance execution microservice.
       "operationStatus": "UNRELEASED",
       "operationType": "Internal",
       "operationSubType": "Preventive",
-      "actualStartDate": "2025-11-21T08:00:00.000Z",
-      "actualCompletionDate": "2025-11-21T10:00:00.000Z",
+      "actualStartDate": "2026-08-07T08:00:00.000Z",
+      "actualCompletionDate": "2026-08-07T10:00:00.000Z",
       "workOrderOperationResource": [
         {
           "principalFlag": "Y",
@@ -45,59 +49,307 @@ Gateway for the CMMS maintenance execution microservice.
           "plannedHours": 2,
           "actualHours": 2
         }
-      ]
+      ],
+      "workOrderOperationMaterial": []
     }
   ]
 }
 ```
 
-**Required Fields:**
+## Get Work Orders
 
-| Field                | Type                        | Description                                          |
-| -------------------- | --------------------------- | ---------------------------------------------------- |
-| workOrderDescription | string (max 240)            | Description of the work order.                       |
-| woStatusCode         | string (max 30)             | Status in UPPER_SNAKE_CASE (e.g., "UNRELEASED").     |
-| assetCode            | string (max 80)             | Asset identifier.                                    |
-| workOrderType        | string (max 30)             | "Planned" or "Not Planned".                          |
-| workOrderSubType     | string (max 30)             | "Preventive", "Corrective", "Emergency", etc.        |
-| workOrderPriority    | string ("1"\|"2"\|"3"\|"4") | Priority level (1=highest).                          |
-| enableOracleWorkOrder| string ("Y"\|"N")           | Flag to enable Oracle integration.                   |
+Endpoint:
 
-**Allowed Type/Subtype Combinations:**
+`GET /api/v1/work-orders`
 
-| workOrderType | workOrderSubType           |
-| ------------- | -------------------------- |
-| Planned       | Preventive, Corrective, Inspection, TPM |
-| Not Planned   | Emergency                  |
+Query parameters:
 
-**Operations (optional):** If not provided, a default operation is created automatically.
+- `filters`: JSON string (required)
+- `order`: JSON string (optional)
+- `limit`: non-negative integer (optional)
+- `offset`: non-negative integer (optional)
 
-**Example with cURL:**
+Supported operators:
 
-```bash
-curl -X POST http://localhost:3000/work-orders \
-  -H "Authorization: Bearer <your-token>" \
-  -H "X-Organization-Code: ORG-BOG-001" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "workOrderDescription": "Preventive maintenance",
-    "woStatusCode": "UNRELEASED",
+- `eq`
+- `like`
+- `gt`
+- `lt`
+- `in`
+
+Allowed filter fields:
+
+- `workOrderCode`
+- `assetCode`
+- `workOrderDescription`
+- `woStatusCode`
+- `workOrderType`
+- `workOrderSubType`
+- `organizationCode`
+- `workCenterCode`
+- `workAreaCode`
+- `createdAt`
+- `actualStartDate`
+- `actualCompletionDate`
+- `releasedDate`
+- `closedDate`
+- `canceledDate`
+
+Example query payload (human-readable JSON):
+
+```json
+{
+  "filters": [
+    { "field": "organizationCode", "operator": "eq", "value": "ORG-BOG-001" },
+    { "field": "workOrderSubType", "operator": "eq", "value": "Preventive" }
+  ],
+  "order": [["createdAt", "DESC"]],
+  "limit": 10,
+  "offset": 0
+}
+```
+
+Note: `filters` and `order` must be sent as serialized JSON strings in query params.
+
+Response example:
+
+```json
+{
+  "workOrders": [
+    {
+      "workOrderCode": "1001",
+      "workOrderDescription": "Preventive maintenance on hydraulic pump",
+      "assetCode": "AST-001",
+      "assetShortDescription": "Hydraulic Pump",
+      "woStatusCode": "UNRELEASED",
+      "woStatusLabel": "Unreleased",
+      "workOrderType": "Planned",
+      "workOrderSubType": "Preventive",
+      "workOrderPriority": "2",
+      "workCenterCode": "WC-01",
+      "workCenterDescription": "Main Workshop",
+      "centerCostCode": 101,
+      "workAreaCode": "WA-01",
+      "workAreaDescription": "Plant Floor",
+      "sector": "Production",
+      "subsector": "Line A",
+      "organizationCode": "ORG-BOG-001",
+      "organizationName": "Bogota Plant",
+      "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+      "createdByName": "John Doe",
+      "updatedBy": null,
+      "updatedByName": null,
+      "createdAt": "2026-08-07T15:12:00.000Z",
+      "updatedAt": "2026-08-07T15:12:00.000Z",
+      "actualStartDate": "2026-08-07T08:00:00.000Z",
+      "actualCompletionDate": "2026-08-07T10:00:00.000Z",
+      "actualHours": 2,
+      "totalManHours": 2,
+      "totalSupplierHours": 0,
+      "plannedHours": null,
+      "workRequestId": null,
+      "enableOracleWorkOrder": "N",
+      "oclWorkOrderId": null,
+      "oclWorkOrderNumber": null,
+      "releasedDate": null,
+      "closedDate": null,
+      "canceledDate": null,
+      "canceledReason": null,
+      "operations": [
+        {
+          "operationCode": "5001",
+          "operationName": "Lubrication",
+          "operationDescription": "Lubrication of all components",
+          "operationSeqNumber": 10,
+          "assetCode": "AST-001",
+          "assetShortDescription": "Hydraulic Pump",
+          "operationStatus": "UNRELEASED",
+          "operationStatusLabel": "Unreleased",
+          "operationType": "Internal",
+          "operationSubType": "Preventive",
+          "actualStartDate": "2026-08-07T08:00:00.000Z",
+          "actualCompletionDate": "2026-08-07T10:00:00.000Z",
+          "actualHours": 2,
+          "workCenterCode": "WC-01",
+          "workCenterDescription": "Main Workshop",
+          "workAreaCode": "WA-01",
+          "workAreaDescription": "Plant Floor",
+          "organizationCode": "ORG-BOG-001",
+          "organizationName": "Bogota Plant",
+          "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+          "createdByName": "John Doe",
+          "createdAt": "2026-08-07T15:12:00.000Z",
+          "updatedAt": "2026-08-07T15:12:00.000Z",
+          "workOrderOperationResource": [
+            {
+              "id": "9001",
+              "resourceCode": "RES-001",
+              "resourceSequenceNumber": 1,
+              "plannedHours": 2,
+              "actualHours": 2,
+              "principalFlag": "Y",
+              "organizationCode": "ORG-BOG-001",
+              "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+              "createdByName": "John Doe",
+              "createdAt": "2026-08-07T15:12:00.000Z",
+              "updatedAt": "2026-08-07T15:12:00.000Z",
+              "transactedInOracle": "N",
+              "oclWoOperationResourceId": null,
+              "syncedToOracleAt": null
+            }
+          ],
+          "workOrderOperationMaterial": [
+            {
+              "id": "9501",
+              "materialCode": "MAT-001",
+              "materialName": null,
+              "materialSequenceNumber": 10,
+              "quantity": 1,
+              "supplyType": "1",
+              "unitCost": null,
+              "totalCost": null,
+              "organizationCode": "ORG-BOG-001",
+              "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+              "createdByName": "John Doe",
+              "createdAt": "2026-08-07T15:12:00.000Z",
+              "updatedAt": "2026-08-07T15:12:00.000Z",
+              "transactedInOracle": "N",
+              "oclWoOperationMaterialId": null,
+              "syncedToOracleAt": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "total": 1
+}
+```
+
+## Get Work Order By Code
+
+Endpoint:
+
+`GET /api/v1/work-orders/:workOrderCode`
+
+Response example:
+
+```json
+{
+  "workOrder": {
+    "workOrderCode": "1001",
+    "workOrderDescription": "Preventive maintenance on hydraulic pump",
     "assetCode": "AST-001",
+    "assetShortDescription": "Hydraulic Pump",
+    "woStatusCode": "UNRELEASED",
+    "woStatusLabel": "Unreleased",
     "workOrderType": "Planned",
     "workOrderSubType": "Preventive",
     "workOrderPriority": "2",
-    "enableOracleWorkOrder": "N"
-  }'
+    "workCenterCode": "WC-01",
+    "workCenterDescription": "Main Workshop",
+    "centerCostCode": 101,
+    "workAreaCode": "WA-01",
+    "workAreaDescription": "Plant Floor",
+    "sector": "Production",
+    "subsector": "Line A",
+    "organizationCode": "ORG-BOG-001",
+    "organizationName": "Bogota Plant",
+    "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+    "createdByName": "John Doe",
+    "updatedBy": null,
+    "updatedByName": null,
+    "createdAt": "2026-08-07T15:12:00.000Z",
+    "updatedAt": "2026-08-07T15:12:00.000Z",
+    "actualStartDate": "2026-08-07T08:00:00.000Z",
+    "actualCompletionDate": "2026-08-07T10:00:00.000Z",
+    "actualHours": 2,
+    "totalManHours": 2,
+    "totalSupplierHours": 0,
+    "plannedHours": null,
+    "workRequestId": null,
+    "enableOracleWorkOrder": "N",
+    "oclWorkOrderId": null,
+    "oclWorkOrderNumber": null,
+    "releasedDate": null,
+    "closedDate": null,
+    "canceledDate": null,
+    "canceledReason": null,
+    "operations": [
+      {
+        "operationCode": "5001",
+        "operationName": "Lubrication",
+        "operationDescription": "Lubrication of all components",
+        "operationSeqNumber": 10,
+        "assetCode": "AST-001",
+        "assetShortDescription": "Hydraulic Pump",
+        "operationStatus": "UNRELEASED",
+        "operationStatusLabel": "Unreleased",
+        "operationType": "Internal",
+        "operationSubType": "Preventive",
+        "actualStartDate": "2026-08-07T08:00:00.000Z",
+        "actualCompletionDate": "2026-08-07T10:00:00.000Z",
+        "actualHours": 2,
+        "workCenterCode": "WC-01",
+        "workCenterDescription": "Main Workshop",
+        "workAreaCode": "WA-01",
+        "workAreaDescription": "Plant Floor",
+        "organizationCode": "ORG-BOG-001",
+        "organizationName": "Bogota Plant",
+        "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+        "createdByName": "John Doe",
+        "createdAt": "2026-08-07T15:12:00.000Z",
+        "updatedAt": "2026-08-07T15:12:00.000Z",
+        "workOrderOperationResource": [
+          {
+            "id": "9001",
+            "resourceCode": "RES-001",
+            "resourceSequenceNumber": 1,
+            "plannedHours": 2,
+            "actualHours": 2,
+            "principalFlag": "Y",
+            "organizationCode": "ORG-BOG-001",
+            "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+            "createdByName": "John Doe",
+            "createdAt": "2026-08-07T15:12:00.000Z",
+            "updatedAt": "2026-08-07T15:12:00.000Z",
+            "transactedInOracle": "N",
+            "oclWoOperationResourceId": null,
+            "syncedToOracleAt": null
+          }
+        ],
+        "workOrderOperationMaterial": [
+          {
+            "id": "9501",
+            "materialCode": "MAT-001",
+            "materialName": null,
+            "materialSequenceNumber": 10,
+            "quantity": 1,
+            "supplyType": "1",
+            "unitCost": null,
+            "totalCost": null,
+            "organizationCode": "ORG-BOG-001",
+            "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+            "createdByName": "John Doe",
+            "createdAt": "2026-08-07T15:12:00.000Z",
+            "updatedAt": "2026-08-07T15:12:00.000Z",
+            "transactedInOracle": "N",
+            "oclWoOperationMaterialId": null,
+            "syncedToOracleAt": null
+          }
+        ]
+      }
+    ]
+  }
+}
 ```
 
-### Other Endpoints
+## Other Work Order Endpoints
 
-| Method | Path                        | Description              |
-| ------ | --------------------------- | ------------------------ |
-| GET    | /work-orders                | List all work orders     |
-| GET    | /work-orders/:workOrderCode | Get work order by code   |
-| PATCH  | /work-orders/:workOrderCode | Update work order        |
-| PATCH  | /work-orders/:workOrderCode/release | Release work order |
-| PATCH  | /work-orders/:workOrderCode/complete | Complete work order |
-| PATCH  | /work-orders/:workOrderCode/close | Close work order       |
-| PATCH  | /work-orders/:workOrderCode/cancel | Cancel work order     |
+| Method | Path                                        | Description         |
+| ------ | ------------------------------------------- | ------------------- |
+| PATCH  | /api/v1/work-orders/:workOrderCode          | Update work order   |
+| PATCH  | /api/v1/work-orders/:workOrderCode/release  | Release work order  |
+| PATCH  | /api/v1/work-orders/:workOrderCode/complete | Complete work order |
+| PATCH  | /api/v1/work-orders/:workOrderCode/close    | Close work order    |
+| PATCH  | /api/v1/work-orders/:workOrderCode/cancel   | Cancel work order   |

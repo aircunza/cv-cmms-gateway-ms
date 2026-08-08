@@ -212,7 +212,9 @@ export class CreateWorkOrderDto {
 
   validateTypeSubtype(): boolean {
     return VALID_TYPE_SUBTYPE_COMBOS.some(
-      (combo) => combo.workOrderType === this.workOrderType && combo.workOrderSubType === this.workOrderSubType,
+      (combo) =>
+        combo.workOrderType === this.workOrderType &&
+        combo.workOrderSubType === this.workOrderSubType,
     );
   }
 }
@@ -271,6 +273,18 @@ export class UpdateWorkOrderDto {
 }
 
 export class FindAllWorkOrderDto {
+  @IsOptional()
+  filters?: unknown;
+
+  @IsOptional()
+  order?: unknown;
+
+  @IsOptional()
+  limit?: number | string;
+
+  @IsOptional()
+  offset?: number | string;
+
   @IsString()
   @IsOptional()
   @MaxLength(80)
@@ -299,5 +313,5 @@ export class FindAllWorkOrderDto {
 
 export class WorkOrderCodeDto {
   @IsNotEmpty()
-  workOrderCode: number;
+  workOrderCode: number | string;
 }

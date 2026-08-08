@@ -32,7 +32,10 @@ export class OperationMaterialsController {
   }
 
   private getActorCode(user: CurrentUser) {
-    if (!user.code) throw new BadRequestException('Authenticated user code not found in token');
+    if (!user.code)
+      throw new BadRequestException(
+        'Authenticated user code not found in token',
+      );
     return user.code;
   }
 
@@ -52,16 +55,35 @@ export class OperationMaterialsController {
     @User() user: CurrentUser,
   ) {
     return this.client
-      .send('operation.material.create', { ...dto, operationCode: Number(params.operationCode), actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('operation.material.create', {
+        ...dto,
+        operationCode: Number(params.operationCode),
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll(@Param() params: { operationCode: string }, @Query() dto: FindAllOperationMaterialDto) {
-    return this.client.send('operation.material.find.all', { ...dto, operationCode: Number(params.operationCode) }).pipe(
-      catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }),
-    );
+  findAll(
+    @Param() params: { operationCode: string },
+    @Query() dto: FindAllOperationMaterialDto,
+  ) {
+    return this.client
+      .send('operation.material.find.all', {
+        ...dto,
+        operationCode: Number(params.operationCode),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)
@@ -72,7 +94,16 @@ export class OperationMaterialsController {
     @User() user: CurrentUser,
   ) {
     return this.client
-      .send('operation.material.update', { id: Number(params.id), ...dto, actorId: this.getActorId(user), actorName: this.getActorName(user) })
-      .pipe(catchError((error: unknown) => { throw new RpcException(this.toRpcError(error)); }));
+      .send('operation.material.update', {
+        id: Number(params.id),
+        ...dto,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 }

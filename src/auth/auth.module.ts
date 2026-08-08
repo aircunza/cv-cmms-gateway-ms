@@ -7,10 +7,6 @@ import { UserOrgPermissionsModule } from './user-org-permissions/user-org-permis
 @Module({
   controllers: [AuthController],
   providers: [],
-  imports: [
-    NatsModule,
-    OrganizationsModule,
-    UserOrgPermissionsModule,
-  ],
+  imports: [NatsModule, OrganizationsModule, UserOrgPermissionsModule],
 })
 export class AuthModule {}
