@@ -210,11 +210,26 @@ export class WorkOrdersController {
     @Param() params: WorkOrderCodeDto,
     @Body() dto: UpdateWorkOrderDto,
     @User() user: CurrentUser,
+    @Req() req: Request,
   ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userPermissions = this.getUserPermissions(
+      organizations,
+      organizationCode,
+    );
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
     return this.client
       .send('work.order.update', {
         workOrderCode: params.workOrderCode,
         ...dto,
+        organizationCode,
+        userPermissions,
+        userRoles,
         actorId: this.getActorId(user),
         actorName: this.getActorName(user),
       })
@@ -227,10 +242,23 @@ export class WorkOrdersController {
 
   @UseGuards(AuthGuard)
   @Patch(':workOrderCode/release')
-  release(@Param() params: WorkOrderCodeDto, @User() user: CurrentUser) {
+  release(
+    @Param() params: WorkOrderCodeDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
     return this.client
       .send('work.order.release', {
         workOrderCode: params.workOrderCode,
+        organizationCode,
+        userRoles,
         actorId: this.getActorId(user),
         actorName: this.getActorName(user),
       })
@@ -243,10 +271,23 @@ export class WorkOrdersController {
 
   @UseGuards(AuthGuard)
   @Patch(':workOrderCode/complete')
-  complete(@Param() params: WorkOrderCodeDto, @User() user: CurrentUser) {
+  complete(
+    @Param() params: WorkOrderCodeDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
     return this.client
       .send('work.order.complete', {
         workOrderCode: params.workOrderCode,
+        organizationCode,
+        userRoles,
         actorId: this.getActorId(user),
         actorName: this.getActorName(user),
       })
@@ -259,10 +300,23 @@ export class WorkOrdersController {
 
   @UseGuards(AuthGuard)
   @Patch(':workOrderCode/close')
-  close(@Param() params: WorkOrderCodeDto, @User() user: CurrentUser) {
+  close(
+    @Param() params: WorkOrderCodeDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
     return this.client
       .send('work.order.close', {
         workOrderCode: params.workOrderCode,
+        organizationCode,
+        userRoles,
         actorId: this.getActorId(user),
         actorName: this.getActorName(user),
       })
@@ -277,15 +331,83 @@ export class WorkOrdersController {
   @Patch(':workOrderCode/cancel')
   cancel(
     @Param() params: WorkOrderCodeDto,
-    @Body() dto: { canceledReason?: string },
+    @Body() dto: { canceledReason: string },
     @User() user: CurrentUser,
+    @Req() req: Request,
   ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
     return this.client
       .send('work.order.cancel', {
         workOrderCode: params.workOrderCode,
+        organizationCode,
+        userRoles,
+        canceledReason: dto.canceledReason,
         actorId: this.getActorId(user),
         actorName: this.getActorName(user),
-        canceledReason: dto.canceledReason,
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch(':workOrderCode/hold')
+  holdOn(
+    @Param() params: WorkOrderCodeDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
+    return this.client
+      .send('work.order.hold', {
+        workOrderCode: params.workOrderCode,
+        organizationCode,
+        userRoles,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch(':workOrderCode/pending-approval')
+  pendingApproval(
+    @Param() params: WorkOrderCodeDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
+    return this.client
+      .send('work.order.pending-approval', {
+        workOrderCode: params.workOrderCode,
+        organizationCode,
+        userRoles,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
       })
       .pipe(
         catchError((error: unknown) => {

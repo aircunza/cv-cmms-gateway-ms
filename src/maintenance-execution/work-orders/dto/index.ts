@@ -24,24 +24,24 @@ export class CreateWoOperationResourceDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
-  resourceCode: string;
+  resourceCode!: string;
 
   @IsNumber()
   @Min(0)
-  resourceSequenceNumber: number;
+  resourceSequenceNumber!: number;
 
   @IsNumber()
   @Min(0.0001)
-  plannedHours: number;
+  plannedHours!: number;
 
   @IsNumber()
   @Min(0.0001)
-  actualHours: number;
+  actualHours!: number;
 
   @IsString()
   @IsNotEmpty()
   @IsIn(['Y', 'N'])
-  principalFlag: string;
+  principalFlag!: string;
 
   @IsOptional()
   @IsNumber()
@@ -57,20 +57,20 @@ export class CreateWoOperationResourceDto {
 export class CreateWoOperationMaterialDto {
   @IsNumber()
   @Min(1)
-  materialSequenceNumber: number;
+  materialSequenceNumber!: number;
 
   @IsNumber()
   @Min(0.0001)
-  quantity: number;
+  quantity!: number;
 
   @IsString()
   @IsNotEmpty()
-  supplyType: string;
+  supplyType!: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
-  materialCode: string;
+  materialCode!: string;
 }
 
 export class CreateWoOperationDto {
@@ -78,46 +78,46 @@ export class CreateWoOperationDto {
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(120)
-  operationName: string;
+  operationName!: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(240)
-  operationDescription: string;
+  operationDescription!: string;
 
   @IsNumber()
   @Min(1)
-  operationSeqNumber: number;
+  operationSeqNumber!: number;
 
   @IsString()
   @IsNotEmpty()
-  createdBy: string;
+  createdBy!: string;
 
   @IsString()
   @IsNotEmpty()
-  operationStatus: string;
+  operationStatus!: string;
 
   @IsString()
   @IsNotEmpty()
   @IsIn(['Internal', 'Supplier'])
-  operationType: string;
+  operationType!: string;
 
   @IsString()
   @IsNotEmpty()
-  actualStartDate: string;
+  actualStartDate!: string;
 
   @IsString()
   @IsNotEmpty()
-  actualCompletionDate: string;
+  actualCompletionDate!: string;
 
   @IsString()
   @IsNotEmpty()
-  operationSubType: string;
+  operationSubType!: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateWoOperationResourceDto)
-  workOrderOperationResource: CreateWoOperationResourceDto[];
+  workOrderOperationResource!: CreateWoOperationResourceDto[];
 
   @IsOptional()
   @IsArray()
@@ -150,37 +150,37 @@ export class CreateWorkOrderDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(240)
-  workOrderDescription: string;
+  workOrderDescription!: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(30)
-  woStatusCode: string;
+  woStatusCode!: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(80)
-  assetCode: string;
+  assetCode!: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(30)
-  workOrderType: string;
+  workOrderType!: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(30)
-  workOrderSubType: string;
+  workOrderSubType!: string;
 
   @IsString()
   @IsNotEmpty()
   @IsIn(['1', '2', '3', '4'])
-  workOrderPriority: string;
+  workOrderPriority!: string;
 
   @IsString()
   @IsNotEmpty()
   @IsIn(['Y', 'N'])
-  enableOracleWorkOrder: string;
+  enableOracleWorkOrder!: string;
 
   @IsOptional()
   @IsArray()
@@ -221,6 +221,11 @@ export class CreateWorkOrderDto {
 
 export class UpdateWorkOrderDto {
   @IsString()
+  @IsNotEmpty()
+  @IsIn(['Y', 'N'])
+  enableOracleWorkOrder!: string;
+
+  @IsString()
   @IsOptional()
   @MaxLength(240)
   workOrderDescription?: string;
@@ -237,39 +242,8 @@ export class UpdateWorkOrderDto {
 
   @IsString()
   @IsOptional()
-  @MaxLength(30)
+  @IsIn(['1', '2', '3', '4'])
   workOrderPriority?: string;
-
-  @IsString()
-  @IsOptional()
-  @MaxLength(30)
-  woStatusCode?: string;
-
-  @IsOptional()
-  plannedStartDate?: Date;
-
-  @IsOptional()
-  plannedCompletionDate?: Date;
-
-  @IsOptional()
-  plannedHours?: number;
-
-  @IsOptional()
-  actualStartDate?: Date;
-
-  @IsOptional()
-  actualCompletionDate?: Date;
-
-  @IsOptional()
-  actualHours?: number;
-
-  @IsString()
-  @IsOptional()
-  @MaxLength(240)
-  canceledReason?: string;
-
-  @IsOptional()
-  needByDate?: Date;
 }
 
 export class FindAllWorkOrderDto {
@@ -313,5 +287,5 @@ export class FindAllWorkOrderDto {
 
 export class WorkOrderCodeDto {
   @IsNotEmpty()
-  workOrderCode: number | string;
+  workOrderCode!: number | string;
 }
