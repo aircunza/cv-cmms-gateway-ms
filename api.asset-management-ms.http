@@ -1,0 +1,171 @@
+@baseUrl = http://localhost:3000/api/v1
+
+### Login (ejecutar primero para capturar el token)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "usuario01@empresa1.pe",
+  "password": "Password123!"
+}
+
+###
+@token = {{login.response.body.$.token}}
+@orgCode = ORG-LIMA-001
+
+######################## WORK AREAS ########################
+
+@workAreaId = 10000000-0000-4000-8000-0000000000A1
+
+### Create work area
+POST {{baseUrl}}/work-areas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workAreaCode": "WA-001",
+  "workAreaDescription": "Area de Produccion 1",
+  "organizationCode": "{{orgCode}}"
+}
+
+### Nota: copia el id devuelto en create y pégalo en @workAreaId
+
+### Get one work area
+GET {{baseUrl}}/work-areas/{{workAreaId}}
+Authorization: Bearer {{token}}
+
+### Get work areas (all active by default)
+GET {{baseUrl}}/work-areas
+Authorization: Bearer {{token}}
+
+### Get work areas filtered by code
+GET {{baseUrl}}/work-areas?workAreaCode=WA-001
+Authorization: Bearer {{token}}
+
+### Get work areas filtered by organizationCode
+GET {{baseUrl}}/work-areas?organizationCode={{orgCode}}
+Authorization: Bearer {{token}}
+
+### Update work area (partial)
+PATCH {{baseUrl}}/work-areas/{{workAreaId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workAreaDescription": "Area de Produccion 1 - actualizada"
+}
+
+### Deactivate work area (soft delete)
+PATCH {{baseUrl}}/work-areas/{{workAreaId}}/deactivate
+Authorization: Bearer {{token}}
+
+######################## WORK CENTERS ########################
+
+@workCenterId = 10000000-0000-4000-8000-0000000000B1
+
+### Create work center
+POST {{baseUrl}}/work-centers
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workCenterCode": "WC-001",
+  "workCenterDescription": "Taller Mecanico Central",
+  "workAreaId": "{{workAreaId}}",
+  "centerCostCode": 1001,
+  "centerCostDescription": "Centro de costo 1001 - Mantenimiento mecanico"
+}
+
+### Nota: copia el id devuelto en create y pégalo en @workCenterId
+
+### Get one work center
+GET {{baseUrl}}/work-centers/{{workCenterId}}
+Authorization: Bearer {{token}}
+
+### Get work centers (all active by default)
+GET {{baseUrl}}/work-centers
+Authorization: Bearer {{token}}
+
+### Get work centers filtered by code
+GET {{baseUrl}}/work-centers?workCenterCode=WC-001
+Authorization: Bearer {{token}}
+
+### Get work centers filtered by workAreaId
+GET {{baseUrl}}/work-centers?workAreaId={{workAreaId}}
+Authorization: Bearer {{token}}
+
+### Update work center (partial)
+PATCH {{baseUrl}}/work-centers/{{workCenterId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "workCenterDescription": "Taller Mecanico Central - actualizado",
+  "centerCostDescription": "Centro de costo actualizado"
+}
+
+### Deactivate work center (soft delete)
+PATCH {{baseUrl}}/work-centers/{{workCenterId}}/deactivate
+Authorization: Bearer {{token}}
+
+######################## ASSETS ########################
+
+@assetCode = AST-001
+
+### Create asset
+POST {{baseUrl}}/assets
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "assetCode": "AST-001",
+  "assetDescription": "Chancadora primaria de mandibulas",
+  "assetShortDescription": "Chancadora primaria",
+  "assetStatus": "OPERATIVE",
+  "organizationCode": "{{orgCode}}",
+  "workCenterId": "10000000-0000-4000-8000-0000000000B2",
+  "sector": "Mineria",
+  "subsector": "Chancado",
+  "enabledMaintenanceProgram": "Y",
+  "enabledMaintenanceHoursControl": "Y",
+  "enabledFinancialKpi": "N",
+  "enabledTechnicalKpi": "Y",
+  "woAllowedFlag": "Y",
+  "enabledIiot": "N"
+}
+
+### Get one asset
+GET {{baseUrl}}/assets/{{assetCode}}
+Authorization: Bearer {{token}}
+
+### Get assets (all active by default)
+GET {{baseUrl}}/assets
+Authorization: Bearer {{token}}
+
+### Get assets filtered by code
+GET {{baseUrl}}/assets?assetCode=AST-001
+Authorization: Bearer {{token}}
+
+### Get assets filtered by organizationCode
+GET {{baseUrl}}/assets?organizationCode={{orgCode}}
+Authorization: Bearer {{token}}
+
+### Get assets filtered by assetStatus
+GET {{baseUrl}}/assets?assetStatus=OPERATIVE
+Authorization: Bearer {{token}}
+
+### Update asset (partial)
+PATCH {{baseUrl}}/assets/{{assetCode}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "assetDescription": "Chancadora primaria de mandibulas - actualizada",
+  "assetStatus": "STANDBY",
+  "enabledTechnicalKpi": "N"
+}
+
+### Deactivate asset (soft delete)
+PATCH {{baseUrl}}/assets/{{assetCode}}/deactivate
+Authorization: Bearer {{token}}

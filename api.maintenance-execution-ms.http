@@ -1,0 +1,326 @@
+@baseUrl = http://localhost:3000/api/v1
+
+
+### Login (ejecutar primero para capturar el token)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "usuario01@empresa1.pe",
+  "password": "Password123!"
+}
+
+###
+@token = {{login.response.body.$.token}}
+@orgCode = ORG-LIMA-001
+@actorId = 10000000-0000-4000-8000-000000000011
+
+@hrResourceCode = RES-001
+@wrRequestId = 900000001
+@woWorkOrderCode = 1001
+@woOperationCode = 5006
+@opMaterialId = 9001
+@opHrUsageId = 9101
+
+######################## HUMAN RESOURCES ########################
+
+### Create human resource
+POST {{baseUrl}}/human-resources
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "resourceCode": "{{hrResourceCode}}",
+  "resourceName": "Tecnico Mecanico 1",
+  "resourceType": "MECHANICAL",
+  "organizationCode": "{{orgCode}}",
+  "organizationName": "Empresa 1",
+  "availabilityStatus": "AVAILABLE",
+  "supervisorId": "10000000-0000-4000-8000-000000000017",
+  "supervisorName": "Usuario 07"
+}
+
+### Get human resources (all)
+GET {{baseUrl}}/human-resources?organizationCode={{orgCode}}
+Authorization: Bearer {{token}}
+
+### Get one human resource
+GET {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{orgCode}}
+Authorization: Bearer {{token}}
+
+### Update human resource
+PATCH {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{orgCode}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "resourceName": "Tecnico Mecanico 1 - Actualizado",
+  "availabilityStatus": "ON_LEAVE"
+}
+
+### Deactivate human resource
+PATCH {{baseUrl}}/human-resources/{{hrResourceCode}}/deactivate?organizationCode={{orgCode}}
+Authorization: Bearer {{token}}
+
+######################## WORK REQUESTS ########################
+
+### Create work request
+POST {{baseUrl}}/work-requests
+Content-Type: application/json
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "assetCode": "AST-001",
+  "assetShortDescription": "Chancadora primaria",
+  "issueDescription": "Vibracion excesiva en chancadora primaria detectada en operacion",
+  "enableOracleWorkOrder": "N"
+}
+
+### Nota: copia el requestId devuelto y pégalo en @wrRequestId
+
+### Get work requests (filters como JSON string URL-encoded)
+GET {{baseUrl}}/work-requests?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%5D&limit=10&offset=0
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Get one work request
+GET {{baseUrl}}/work-requests/{{wrRequestId}}
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Update work request description
+PATCH {{baseUrl}}/work-requests/{{wrRequestId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "issueDescription": "Vibracion excesiva en chancadora primaria - actualizado"
+}
+
+### Complete work request
+PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/complete
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Cancel work request
+PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/cancel
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+######################## WORK ORDERS ########################
+
+### Create work order
+POST {{baseUrl}}/work-orders
+Content-Type: application/json
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "workOrderDescription": "Vibracion excesiva en chancadora primaria detectada en operacion",
+  "woStatusCode": "UNRELEASED",
+  "assetCode": "AST-001",
+  "workOrderType": "Not Planned",
+  "workOrderSubType": "Emergency",
+  "workOrderPriority": "1",
+  "enableOracleWorkOrder": "N",
+  "operations": [
+    {
+      "operationName": "DEFAULT_OPERATION",
+      "operationDescription": "Auto-generated default operation",
+      "operationSeqNumber": 1,
+      "createdBy": "{{actorId}}",
+      "operationStatus": "UNRELEASED",
+      "operationType": "Internal",
+      "operationSubType": "Emergency",
+      "actualStartDate": "2026-08-01T08:00:00Z",
+      "actualCompletionDate": "2026-08-01T12:00:00Z",
+      "workOrderOperationResource": [
+        {
+          "principalFlag": "Y",
+          "resourceCode": "{{hrResourceCode}}",
+          "resourceSequenceNumber": 1,
+          "plannedHours": 4,
+          "actualHours": 2.5
+        }
+      ],
+      "workOrderOperationMaterial": []
+    }
+  ]
+}
+
+### Nota: copia el workOrderCode devuelto y pégalo en @woWorkOrderCode
+
+### Get work orders (filters como JSON string URL-encoded)
+GET {{baseUrl}}/work-orders?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%5D&limit=10&offset=0
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Get one work order
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Update work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "enableOracleWorkOrder": "N",
+  "workOrderDescription": "Vibracion excesiva en chancadora primaria - actualizado",
+  "workOrderPriority": "2"
+}
+
+### Release work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/release
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Hold work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/hold
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Pending approval work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/pending-approval
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Complete work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/complete
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Close work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/close
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+### Cancel work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/cancel
+Content-Type: application/json
+Authorization: Bearer {{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "canceledReason": "Orden cancelada por prioridad baja"
+}
+
+######################## WO OPERATIONS ########################
+
+### Create operation
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "operationName": "DEFAULT_OPERATION",
+  "operationDescription": "Auto-generated default operation",
+  "operationSeqNumber": 1,
+  "assetCode": "AST-001",
+  "assetShortDescription": "Chancadora primaria",
+  "operationStatus": "UNRELEASED",
+  "operationType": "Internal",
+  "organizationCode": "{{orgCode}}",
+  "plannedStartDate": "2026-08-01T08:00:00Z",
+  "plannedCompletionDate": "2026-08-01T12:00:00Z"
+}
+
+### Nota: copia el operationCode devuelto y pégalo en @woOperationCode
+
+### Get operations for a work order
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations?assetCode=AST-001&operationStatus=UNRELEASED
+Authorization: Bearer {{token}}
+
+### Get one operation
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}
+Authorization: Bearer {{token}}
+
+### Update operation
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "operationName": "DEFAULT_OPERATION - Actualizado",
+  "operationStatus": "IN_PROCESS",
+  "actualStartDate": "2026-08-01T08:30:00Z",
+  "actualCompletionDate": "2026-08-01T11:00:00Z",
+  "actualHours": 2.5
+}
+
+### Review operation
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/review
+Authorization: Bearer {{token}}
+
+######################## OPERATION MATERIALS ########################
+
+### Create operation material
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "organizationCode": "{{orgCode}}",
+  "materialCode": "MAT-001",
+  "materialName": "Empalme de faja vulcanizado",
+  "quantity": 1,
+  "unitCost": 250.00,
+  "supplyType": "1",
+  "materialSequenceNumber": 10
+}
+
+### Nota: copia el id devuelto y pégalo en @opMaterialId
+
+### Get materials for an operation
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials
+Authorization: Bearer {{token}}
+
+### Update operation material
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials/{{opMaterialId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "quantity": 3,
+  "unitCost": 42.00
+}
+
+######################## OPERATION HUMAN RESOURCES ########################
+
+### Create operation human resource
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "organizationCode": "{{orgCode}}",
+  "resourceCode": "{{hrResourceCode}}",
+  "plannedHours": 4,
+  "actualHours": 2.5,
+  "hourlyCost": 35.00,
+  "principalFlag": "Y",
+  "resourceSequenceNumber": 10,
+  "plannedStartDate": "2026-08-01T08:00:00Z",
+  "plannedCompletionDate": "2026-08-01T12:00:00Z"
+}
+
+### Nota: copia el id devuelto y pégalo en @opHrUsageId
+
+### Get human resources for an operation
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
+Authorization: Bearer {{token}}
+
+### Update operation human resource
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources/{{opHrUsageId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "actualHours": 3,
+  "hourlyCost": 38.00
+}

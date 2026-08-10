@@ -1,0 +1,162 @@
+@baseUrl = http://localhost:3000/api/v1
+
+
+### Health check
+GET {{baseUrl}}/auth/health
+
+### Register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123ghghghgh7+{}",
+  "userName": "Test User",
+  "userShortName": "TU",
+  "code": "12345"
+}
+
+### Login (ejecutar primero para capturar el token)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "usuario01@empresa1.pe",
+  "password": "Password123!"
+}
+
+###
+@token = {{login.response.body.$.token}}
+@userId = 10000000-0000-4000-8000-000000000011
+@orgId = 10000000-0000-4000-8000-000000000001
+
+### Verify user
+GET {{baseUrl}}/auth/verify
+Authorization: Bearer {{token}}
+
+### Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{token}}
+
+######################## ORGANIZATIONS ########################
+
+### Create organization
+POST {{baseUrl}}/organizations
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "code": "ORG-LIMA-001",
+  "name": "Empresa 1",
+  "countryCode": "PE",
+  "countryName": "Peru",
+  "timezone": "America/Lima",
+  "offsetMinutes": -300
+}
+
+### Nota: copia el id devuelto y pégalo en @orgId
+
+### Get one organization
+GET {{baseUrl}}/organizations/{{orgId}}
+Authorization: Bearer {{token}}
+
+### Get organizations (all active by default)
+GET {{baseUrl}}/organizations
+Authorization: Bearer {{token}}
+
+### Get organizations filtered by code
+GET {{baseUrl}}/organizations?code=ORG-LIMA
+Authorization: Bearer {{token}}
+
+### Get organizations filtered by name
+GET {{baseUrl}}/organizations?name=Empresa
+Authorization: Bearer {{token}}
+
+### Get organizations filtered by countryCode
+GET {{baseUrl}}/organizations?countryCode=PE
+Authorization: Bearer {{token}}
+
+### Update organization (partial)
+PATCH {{baseUrl}}/organizations/{{orgId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Empresa 1 S.A.C.",
+  "timezone": "America/Lima",
+  "offsetMinutes": -300
+}
+
+### Update organization (cambiar code: rechazado por la MS)
+PATCH {{baseUrl}}/organizations/{{orgId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "code": "ORG-BOG-002"
+}
+
+### Deactivate organization (soft delete)
+PATCH {{baseUrl}}/organizations/{{orgId}}/deactivate
+Authorization: Bearer {{token}}
+
+######################## USER ORG PERMISSIONS ########################
+
+@uopOrgId = 10000000-0000-4000-8000-000000000001
+@uopId = 00000000-0000-0000-0000-000000000000
+
+### Create user org permission
+POST {{baseUrl}}/user-org-permissions
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": "10000000-0000-4000-8000-000000000013",
+  "organizationId": "{{uopOrgId}}",
+  "roleCode": "PLANNER_MAINTENANCE_01",
+  "roleName": "Planificador de mantenimiento 1",
+  "roleDescription": "Planifica ordenes de trabajo; no puede cancelar",
+  "permissions": ["mnt.work.orders.view", "mnt.work.orders.create"],
+  "deniedPermissions": ["mnt.work.orders.cancel"]
+}
+
+### Nota: copia el id devuelto en create y pégalo en @uopId
+
+### Get one user org permission (active only)
+GET {{baseUrl}}/user-org-permissions/{{uopId}}
+Authorization: Bearer {{token}}
+
+### Get user org permissions (all active by default)
+GET {{baseUrl}}/user-org-permissions
+Authorization: Bearer {{token}}
+
+### Get user org permissions filtered by userId
+GET {{baseUrl}}/user-org-permissions?userId={{userId}}
+Authorization: Bearer {{token}}
+
+### Get user org permissions filtered by organizationId
+GET {{baseUrl}}/user-org-permissions?organizationId={{uopOrgId}}
+Authorization: Bearer {{token}}
+
+### Get user org permissions filtered by roleCode
+GET {{baseUrl}}/user-org-permissions?roleCode=PLANNER_MAINTENANCE_01
+Authorization: Bearer {{token}}
+
+### Get user org permissions including inactive
+GET {{baseUrl}}/user-org-permissions?isActive=N
+Authorization: Bearer {{token}}
+
+### Update user org permission (partial)
+PATCH {{baseUrl}}/user-org-permissions/{{uopId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "roleName": "Maintenance Planner Senior",
+  "permissions": ["mnt.work.orders.view", "mnt.work.orders.create", "mnt.work.orders.update"]
+}
+
+### Deactivate user org permission (soft delete)
+PATCH {{baseUrl}}/user-org-permissions/{{uopId}}/deactivate
+Authorization: Bearer {{token}}
