@@ -1,0 +1,17 @@
+services:
+  nats-main:
+    image: nats:latest
+    container_name: nats-server
+    ports:
+      - '4222:4222'
+      - '8222:8222'
+    #environment:
+    #  NATS_USER: devuser
+    #  NATS_PASS: devpass
+    command:
+      - --user
+      - ${NATS_USER}
+      - --pass
+      - ${NATS_PASS}
+      - -m
+      - '8222'
