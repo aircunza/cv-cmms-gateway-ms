@@ -21,7 +21,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { User } from './decorators/user.decorator';
 import { Token } from './decorators/token.decorator';
 import { Organizations } from './decorators/organizations.decorator';
-import { type CurrentUser } from './interfaces /current-user.interface';
+import { type CurrentUser } from './interfaces/current-user.interface';
 import { type OrganizationRole } from './interfaces/organization-role.interface';
 import type { Response } from 'express';
 

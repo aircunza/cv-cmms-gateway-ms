@@ -14,7 +14,7 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { User } from 'src/auth/decorators/user.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import type { CurrentUser } from 'src/auth/interfaces /current-user.interface';
+import type { CurrentUser } from 'src/auth/interfaces/current-user.interface';
 import { NATS_SERVICE } from 'src/config';
 import {
   CreateOperationMaterialDto,
