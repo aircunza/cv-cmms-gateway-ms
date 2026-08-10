@@ -24,7 +24,18 @@
     "test:e2e:wr:update": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/work-request/work-request.update.test.ts",
     "test:e2e:wr:complete": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/work-request/work-request.complete.test.ts",
     "test:e2e:wr:cancel": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/work-request/work-request.cancel.test.ts",
-    "test:e2e:wr": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/work-request/work-request.create.test.ts ./test/e2e/work-request/work-request.find.all.test.ts ./test/e2e/work-request/work-request.find.one.test.ts ./test/e2e/work-request/work-request.update.test.ts ./test/e2e/work-request/work-request.complete.test.ts ./test/e2e/work-request/work-request.cancel.test.ts"
+    "test:e2e:wr": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/work-request/work-request.create.test.ts ./test/e2e/work-request/work-request.find.all.test.ts ./test/e2e/work-request/work-request.find.one.test.ts ./test/e2e/work-request/work-request.update.test.ts ./test/e2e/work-request/work-request.complete.test.ts ./test/e2e/work-request/work-request.cancel.test.ts",
+    "test:e2e:wo:create": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.create.test.ts",
+    "test:e2e:wo:find-all": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.find.all.test.ts",
+    "test:e2e:wo:find-one": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.find.one.test.ts",
+    "test:e2e:wo:update": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.update.test.ts",
+    "test:e2e:wo:release": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.release.test.ts",
+    "test:e2e:wo:hold": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.hold.test.ts",
+    "test:e2e:wo:complete": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.complete.test.ts",
+    "test:e2e:wo:close": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.close.test.ts",
+    "test:e2e:wo:cancel": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.cancel.test.ts",
+    "test:e2e:wo:pending-approval": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.pending-approval.test.ts",
+    "test:e2e:wo": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.create.test.ts ./test/e2e/maintenance-execution/work-order.find.all.test.ts ./test/e2e/maintenance-execution/work-order.find.one.test.ts ./test/e2e/maintenance-execution/work-order.update.test.ts ./test/e2e/maintenance-execution/work-order.release.test.ts ./test/e2e/maintenance-execution/work-order.hold.test.ts ./test/e2e/maintenance-execution/work-order.complete.test.ts ./test/e2e/maintenance-execution/work-order.close.test.ts ./test/e2e/maintenance-execution/work-order.cancel.test.ts ./test/e2e/maintenance-execution/work-order.pending-approval.test.ts"
   },
   "dependencies": {
     "@nestjs/common": "11.0.1",

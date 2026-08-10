@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { of } from 'rxjs';
 import request from 'supertest';
 import { AppModule } from 'src/app.module';
@@ -36,7 +36,7 @@ const mockAuthGuard = {
             roleCode: 'PLANNER_MAINTENANCE_01',
             roleName: 'Planner',
             roleDescription: 'Planner role',
-            permissions: ['mnt.work.orders.view'],
+            permissions: ['mnt.work.orders.view', 'mnt.work.orders.cancel'],
             deniedPermissions: null,
           },
         ],
@@ -47,7 +47,7 @@ const mockAuthGuard = {
   }),
 };
 
-describe('Work Order Find All (e2e, HTTP)', () => {
+describe('Work Order Cancel (e2e, HTTP)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -61,6 +61,13 @@ describe('Work Order Find All (e2e, HTTP)', () => {
       .compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    );
     await app.init();
   });
 
@@ -74,125 +81,85 @@ describe('Work Order Find All (e2e, HTTP)', () => {
     jest.clearAllMocks();
   });
 
-  it('finds all work orders and forwards enriched payload to microservice', async () => {
+  it('cancels a work order and forwards enriched payload to microservice', async () => {
     const microserviceResponse = {
-      workOrders: [
-        {
-          workOrderCode: '1001',
-          workOrderDescription: 'Preventive maintenance',
-          assetCode: 'AST-001',
-          woStatusCode: 'UNRELEASED',
-          woStatusLabel: 'Unreleased',
-          workOrderType: 'Planned',
-          workOrderSubType: 'Preventive',
-          workOrderPriority: '2',
-          organizationCode: 'E2E_ORG_001',
-          operations: [],
-        },
-      ],
-      total: 1,
+      workOrder: {
+        workOrderCode: '1001',
+        workOrderDescription: 'Preventive maintenance on hydraulic pump',
+        assetCode: 'AST-001',
+        woStatusCode: 'CANCELED',
+        woStatusLabel: 'Canceled',
+        workOrderType: 'Planned',
+        workOrderSubType: 'Preventive',
+        workOrderPriority: '2',
+        organizationCode: 'E2E_ORG_001',
+        canceledDate: '2026-08-07T16:00:00.000Z',
+        canceledReason: 'No replacement parts available',
+        operations: [],
+      },
     };
 
     mockNatsClient.send.mockReturnValue(of(microserviceResponse));
 
-    const filters = JSON.stringify([
-      { field: 'organizationCode', operator: 'eq', value: 'E2E_ORG_001' },
-      { field: 'workOrderSubType', operator: 'eq', value: 'Preventive' },
-    ]);
-    const order = JSON.stringify([['createdAt', 'DESC']]);
-
     const response = await request(app.getHttpServer())
-      .get(
-        `/work-orders?filters=${encodeURIComponent(filters)}&order=${encodeURIComponent(order)}&limit=10&offset=0`,
-      )
+      .patch('/work-orders/1001/cancel')
       .set('Authorization', 'Bearer mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
+      .send({ canceledReason: 'No replacement parts available' })
       .expect(200);
 
     expect(mockNatsClient.send).toHaveBeenCalledWith(
-      'work.order.find.all',
+      'work.order.cancel',
       expect.objectContaining({
+        workOrderCode: '1001',
         organizationCode: 'E2E_ORG_001',
         userRoles: ['PLANNER_MAINTENANCE_01'],
-        userPermissions: ['mnt.work.orders.view'],
-        filters: [
-          { field: 'organizationCode', operator: 'eq', value: 'E2E_ORG_001' },
-          { field: 'workOrderSubType', operator: 'eq', value: 'Preventive' },
-        ],
-        order: [['createdAt', 'DESC']],
-        limit: 10,
-        offset: 0,
+        userPermissions: ['mnt.work.orders.view', 'mnt.work.orders.cancel'],
+        canceledReason: 'No replacement parts available',
+        actorId: '550e8400-e29b-41d4-a716-446655440001',
+        actorName: 'EU',
       }),
     );
 
-    expect(response.body.workOrders).toBeDefined();
-    expect(response.body.workOrders).toHaveLength(1);
-    expect(response.body.total).toBe(1);
+    expect(response.body.workOrder).toBeDefined();
+    expect(response.body.workOrder.woStatusCode).toBe('CANCELED');
+    expect(response.body.workOrder.canceledReason).toBe(
+      'No replacement parts available',
+    );
   });
 
-  it('rejects when filters is not valid JSON', async () => {
+  it('rejects when canceledReason is missing', async () => {
     await request(app.getHttpServer())
-      .get(`/work-orders?filters=${encodeURIComponent('{invalid json')}`)
+      .patch('/work-orders/1001/cancel')
       .set('Authorization', 'Bearer mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
+      .send({})
       .expect(400);
   });
 
-  it('rejects when limit is not a non-negative integer', async () => {
+  it('rejects when canceledReason exceeds 240 characters', async () => {
     await request(app.getHttpServer())
-      .get(
-        `/work-orders?filters=${encodeURIComponent('[]')}&limit=${encodeURIComponent('abc')}`,
-      )
+      .patch('/work-orders/1001/cancel')
       .set('Authorization', 'Bearer mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
+      .send({ canceledReason: 'a'.repeat(241) })
       .expect(400);
   });
 
   it('rejects when X-Organization-Code header is missing', async () => {
     await request(app.getHttpServer())
-      .get('/work-orders')
+      .patch('/work-orders/1001/cancel')
       .set('Authorization', 'Bearer mock-token')
+      .send({ canceledReason: 'No replacement parts available' })
       .expect(400);
   });
 
   it('rejects when user does not have access to organization', async () => {
-    mockAuthGuard.canActivate.mockImplementationOnce((context) => {
-      const ctx = context.switchToHttp();
-      const req = ctx.getRequest();
-      req['user'] = {
-        id: '550e8400-e29b-41d4-a716-446655440001',
-        code: 'E2E_USER_01',
-        userName: 'E2E User',
-        userShortName: 'EU',
-        email: 'e2e@test.com',
-      };
-      req['organizations'] = [
-        {
-          organizationId: 'org-001',
-          organizationCode: 'E2E_ORG_001',
-          organizationName: 'E2E Organization',
-          countryCode: 'CO',
-          countryName: 'Colombia',
-          timezone: 'America/Bogota',
-          roles: [
-            {
-              roleCode: 'PLANNER_MAINTENANCE_01',
-              roleName: 'Planner',
-              roleDescription: 'Planner role',
-              permissions: ['mnt.work.orders.create'],
-              deniedPermissions: null,
-            },
-          ],
-        },
-      ];
-      req['token'] = 'mock-token';
-      return true;
-    });
-
     await request(app.getHttpServer())
-      .get('/work-orders')
+      .patch('/work-orders/1001/cancel')
       .set('Authorization', 'Bearer mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
+      .send({ canceledReason: 'No replacement parts available' })
       .expect(400);
   });
 });

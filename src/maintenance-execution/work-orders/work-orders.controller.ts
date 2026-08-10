@@ -24,6 +24,7 @@ import {
   UpdateWorkOrderDto,
   FindAllWorkOrderDto,
   WorkOrderCodeDto,
+  CancelWorkOrderDto,
 } from './dto';
 
 @Controller('work-orders')
@@ -137,6 +138,10 @@ export class WorkOrdersController {
 
     this.validateOrgAccess(organizations, organizationCode);
 
+    const userPermissions = this.getUserPermissions(
+      organizations,
+      organizationCode,
+    );
     const userRoles = this.getUserRoles(organizations, organizationCode);
 
     return this.client
@@ -144,6 +149,7 @@ export class WorkOrdersController {
         workOrderCode: dto.workOrderCode,
         organizationCode,
         userRoles,
+        userPermissions,
       })
       .pipe(
         catchError((error: unknown) => {
@@ -164,26 +170,31 @@ export class WorkOrdersController {
 
     this.validateOrgAccess(organizations, organizationCode);
 
+    const userPermissions = this.getUserPermissions(
+      organizations,
+      organizationCode,
+    );
     const userRoles = this.getUserRoles(organizations, organizationCode);
 
     const parsedFilters =
       typeof dto.filters === 'string'
-        ? this.safeJsonParse(dto.filters)
+        ? this.parseJsonParam(dto.filters)
         : dto.filters;
 
     const parsedOrder =
-      typeof dto.order === 'string' ? this.safeJsonParse(dto.order) : dto.order;
+      typeof dto.order === 'string'
+        ? this.parseJsonParam(dto.order)
+        : dto.order;
 
-    const parsedLimit =
-      typeof dto.limit === 'string' ? parseInt(dto.limit, 10) : dto.limit;
+    const parsedLimit = this.parseNonNegativeInt(dto.limit);
 
-    const parsedOffset =
-      typeof dto.offset === 'string' ? parseInt(dto.offset, 10) : dto.offset;
+    const parsedOffset = this.parseNonNegativeInt(dto.offset);
 
     return this.client
       .send('work.order.find.all', {
         organizationCode,
         userRoles,
+        userPermissions,
         filters: parsedFilters,
         order: parsedOrder,
         limit: parsedLimit,
@@ -196,12 +207,23 @@ export class WorkOrdersController {
       );
   }
 
-  private safeJsonParse(value: string): unknown {
+  private parseJsonParam(value: string): unknown {
     try {
       return JSON.parse(value) as unknown;
     } catch {
-      return undefined;
+      throw new BadRequestException('Invalid filter data');
     }
+  }
+
+  private parseNonNegativeInt(
+    value: number | string | undefined,
+  ): number | undefined {
+    if (value === undefined || value === '') return undefined;
+    const parsed = typeof value === 'string' ? parseInt(value, 10) : value;
+    if (Number.isNaN(parsed) || !Number.isInteger(parsed) || parsed < 0) {
+      throw new BadRequestException('Invalid filter data');
+    }
+    return parsed;
   }
 
   @UseGuards(AuthGuard)
@@ -331,7 +353,7 @@ export class WorkOrdersController {
   @Patch(':workOrderCode/cancel')
   cancel(
     @Param() params: WorkOrderCodeDto,
-    @Body() dto: { canceledReason: string },
+    @Body() dto: CancelWorkOrderDto,
     @User() user: CurrentUser,
     @Req() req: Request,
   ) {
@@ -340,12 +362,17 @@ export class WorkOrdersController {
 
     this.validateOrgAccess(organizations, organizationCode);
 
+    const userPermissions = this.getUserPermissions(
+      organizations,
+      organizationCode,
+    );
     const userRoles = this.getUserRoles(organizations, organizationCode);
 
     return this.client
       .send('work.order.cancel', {
         workOrderCode: params.workOrderCode,
         organizationCode,
+        userPermissions,
         userRoles,
         canceledReason: dto.canceledReason,
         actorId: this.getActorId(user),

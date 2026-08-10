@@ -6,19 +6,12 @@ import {
   MinLength,
   ValidateNested,
   IsArray,
+  ArrayNotEmpty,
   IsIn,
   IsNumber,
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-
-const VALID_TYPE_SUBTYPE_COMBOS = [
-  { workOrderType: 'Planned', workOrderSubType: 'Preventive' },
-  { workOrderType: 'Planned', workOrderSubType: 'Corrective' },
-  { workOrderType: 'Planned', workOrderSubType: 'Inspection' },
-  { workOrderType: 'Planned', workOrderSubType: 'TPM' },
-  { workOrderType: 'Not Planned', workOrderSubType: 'Emergency' },
-];
 
 export class CreateWoOperationResourceDto {
   @IsString()
@@ -115,6 +108,7 @@ export class CreateWoOperationDto {
   operationSubType!: string;
 
   @IsArray()
+  @ArrayNotEmpty({ message: 'workOrderOperationResource should not be empty' })
   @ValidateNested({ each: true })
   @Type(() => CreateWoOperationResourceDto)
   workOrderOperationResource!: CreateWoOperationResourceDto[];
@@ -182,11 +176,11 @@ export class CreateWorkOrderDto {
   @IsIn(['Y', 'N'])
   enableOracleWorkOrder!: string;
 
-  @IsOptional()
   @IsArray()
+  @ArrayNotEmpty({ message: 'operations should not be empty' })
   @ValidateNested({ each: true })
   @Type(() => CreateWoOperationDto)
-  operations?: CreateWoOperationDto[];
+  operations!: CreateWoOperationDto[];
 
   @IsOptional()
   workRequestId?: number;
@@ -209,14 +203,6 @@ export class CreateWorkOrderDto {
 
   @IsOptional()
   plannedCompletionDate?: Date;
-
-  validateTypeSubtype(): boolean {
-    return VALID_TYPE_SUBTYPE_COMBOS.some(
-      (combo) =>
-        combo.workOrderType === this.workOrderType &&
-        combo.workOrderSubType === this.workOrderSubType,
-    );
-  }
 }
 
 export class UpdateWorkOrderDto {
@@ -247,7 +233,7 @@ export class UpdateWorkOrderDto {
 }
 
 export class FindAllWorkOrderDto {
-  @IsOptional()
+  @IsNotEmpty()
   filters?: unknown;
 
   @IsOptional()
@@ -258,31 +244,13 @@ export class FindAllWorkOrderDto {
 
   @IsOptional()
   offset?: number | string;
+}
 
+export class CancelWorkOrderDto {
   @IsString()
-  @IsOptional()
-  @MaxLength(80)
-  assetCode?: string;
-
-  @IsString()
-  @IsOptional()
-  @MaxLength(255)
-  organizationCode?: string;
-
-  @IsString()
-  @IsOptional()
-  @MaxLength(30)
-  woStatusCode?: string;
-
-  @IsString()
-  @IsOptional()
-  @MaxLength(30)
-  workOrderType?: string;
-
-  @IsString()
-  @IsOptional()
-  @MaxLength(30)
-  workOrderSubType?: string;
+  @IsNotEmpty()
+  @MaxLength(240)
+  canceledReason!: string;
 }
 
 export class WorkOrderCodeDto {

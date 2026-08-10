@@ -36,7 +36,7 @@ const mockAuthGuard = {
             roleCode: 'PLANNER_MAINTENANCE_01',
             roleName: 'Planner',
             roleDescription: 'Planner role',
-            permissions: ['mnt.work.orders.view'],
+            permissions: ['mnt.work.orders.view', 'mnt.work.orders.update'],
             deniedPermissions: null,
           },
         ],
@@ -47,7 +47,7 @@ const mockAuthGuard = {
   }),
 };
 
-describe('Work Order Find One (e2e, HTTP)', () => {
+describe('Work Order Release (e2e, HTTP)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -74,47 +74,19 @@ describe('Work Order Find One (e2e, HTTP)', () => {
     jest.clearAllMocks();
   });
 
-  it('finds one work order and forwards enriched payload to microservice', async () => {
+  it('releases a work order and forwards enriched payload to microservice', async () => {
     const microserviceResponse = {
       workOrder: {
         workOrderCode: '1001',
         workOrderDescription: 'Preventive maintenance on hydraulic pump',
         assetCode: 'AST-001',
-        assetShortDescription: 'Hydraulic Pump',
-        woStatusCode: 'UNRELEASED',
-        woStatusLabel: 'Unreleased',
+        woStatusCode: 'RELEASED',
+        woStatusLabel: 'Released',
         workOrderType: 'Planned',
         workOrderSubType: 'Preventive',
         workOrderPriority: '2',
-        workCenterCode: 'WC-01',
-        workCenterDescription: 'Main Workshop',
-        centerCostCode: 101,
-        workAreaCode: 'WA-01',
-        workAreaDescription: 'Plant Floor',
-        sector: 'Production',
-        subsector: 'Line A',
         organizationCode: 'E2E_ORG_001',
-        organizationName: 'E2E Organization',
-        createdBy: '550e8400-e29b-41d4-a716-446655440001',
-        createdByName: 'E2E User',
-        updatedBy: null,
-        updatedByName: null,
-        createdAt: '2026-08-07T15:12:00.000Z',
-        updatedAt: '2026-08-07T15:12:00.000Z',
-        actualStartDate: '2026-08-07T08:00:00.000Z',
-        actualCompletionDate: '2026-08-07T10:00:00.000Z',
-        actualHours: 2,
-        totalManHours: 2,
-        totalSupplierHours: 0,
-        plannedHours: null,
-        workRequestId: null,
-        enableOracleWorkOrder: 'N',
-        oclWorkOrderId: null,
-        oclWorkOrderNumber: null,
-        releasedDate: null,
-        closedDate: null,
-        canceledDate: null,
-        canceledReason: null,
+        releasedDate: '2026-08-07T15:12:00.000Z',
         operations: [],
       },
     };
@@ -122,69 +94,39 @@ describe('Work Order Find One (e2e, HTTP)', () => {
     mockNatsClient.send.mockReturnValue(of(microserviceResponse));
 
     const response = await request(app.getHttpServer())
-      .get('/work-orders/1001')
+      .patch('/work-orders/1001/release')
       .set('Authorization', 'Bearer mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .expect(200);
 
     expect(mockNatsClient.send).toHaveBeenCalledWith(
-      'work.order.find.one',
+      'work.order.release',
       expect.objectContaining({
         workOrderCode: '1001',
         organizationCode: 'E2E_ORG_001',
         userRoles: ['PLANNER_MAINTENANCE_01'],
-        userPermissions: ['mnt.work.orders.view'],
+        actorId: '550e8400-e29b-41d4-a716-446655440001',
+        actorName: 'EU',
       }),
     );
 
     expect(response.body.workOrder).toBeDefined();
-    expect(response.body.workOrder.workOrderCode).toBe('1001');
-    expect(response.body.workOrder.organizationCode).toBe('E2E_ORG_001');
+    expect(response.body.workOrder.woStatusCode).toBe('RELEASED');
+    expect(response.body.workOrder.releasedDate).toBe(
+      '2026-08-07T15:12:00.000Z',
+    );
   });
 
   it('rejects when X-Organization-Code header is missing', async () => {
     await request(app.getHttpServer())
-      .get('/work-orders/1001')
+      .patch('/work-orders/1001/release')
       .set('Authorization', 'Bearer mock-token')
       .expect(400);
   });
 
   it('rejects when user does not have access to organization', async () => {
-    mockAuthGuard.canActivate.mockImplementationOnce((context) => {
-      const ctx = context.switchToHttp();
-      const req = ctx.getRequest();
-      req['user'] = {
-        id: '550e8400-e29b-41d4-a716-446655440001',
-        code: 'E2E_USER_01',
-        userName: 'E2E User',
-        userShortName: 'EU',
-        email: 'e2e@test.com',
-      };
-      req['organizations'] = [
-        {
-          organizationId: 'org-001',
-          organizationCode: 'E2E_ORG_001',
-          organizationName: 'E2E Organization',
-          countryCode: 'CO',
-          countryName: 'Colombia',
-          timezone: 'America/Bogota',
-          roles: [
-            {
-              roleCode: 'PLANNER_MAINTENANCE_01',
-              roleName: 'Planner',
-              roleDescription: 'Planner role',
-              permissions: ['mnt.work.orders.create'],
-              deniedPermissions: null,
-            },
-          ],
-        },
-      ];
-      req['token'] = 'mock-token';
-      return true;
-    });
-
     await request(app.getHttpServer())
-      .get('/work-orders/1001')
+      .patch('/work-orders/1001/release')
       .set('Authorization', 'Bearer mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .expect(400);

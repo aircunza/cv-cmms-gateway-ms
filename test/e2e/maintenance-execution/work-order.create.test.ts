@@ -170,6 +170,28 @@ describe('Work Order Create (e2e, HTTP)', () => {
         workOrderSubType: 'Preventive',
         workOrderPriority: '2',
         enableOracleWorkOrder: 'N',
+        operations: [
+          {
+            operationName: 'Lubrication',
+            operationDescription: 'Lubrication test',
+            operationSeqNumber: 10,
+            createdBy: '550e8400-e29b-41d4-a716-446655440001',
+            operationStatus: 'UNRELEASED',
+            operationType: 'Internal',
+            operationSubType: 'Preventive',
+            actualStartDate: '2025-11-21T08:00:00.000Z',
+            actualCompletionDate: '2025-11-21T10:00:00.000Z',
+            workOrderOperationResource: [
+              {
+                principalFlag: 'Y',
+                resourceCode: 'RES-001',
+                resourceSequenceNumber: 1,
+                plannedHours: 2,
+                actualHours: 2,
+              },
+            ],
+          },
+        ],
       }),
     );
 
@@ -190,6 +212,28 @@ describe('Work Order Create (e2e, HTTP)', () => {
         workOrderSubType: 'Preventive',
         workOrderPriority: '2',
         enableOracleWorkOrder: 'N',
+        operations: [
+          {
+            operationName: 'Lubrication',
+            operationDescription: 'Lubrication test',
+            operationSeqNumber: 10,
+            createdBy: '550e8400-e29b-41d4-a716-446655440001',
+            operationStatus: 'UNRELEASED',
+            operationType: 'Internal',
+            operationSubType: 'Preventive',
+            actualStartDate: '2025-11-21T08:00:00.000Z',
+            actualCompletionDate: '2025-11-21T10:00:00.000Z',
+            workOrderOperationResource: [
+              {
+                principalFlag: 'Y',
+                resourceCode: 'RES-001',
+                resourceSequenceNumber: 1,
+                plannedHours: 2,
+                actualHours: 2,
+              },
+            ],
+          },
+        ],
       })
       .expect(400);
 
@@ -244,6 +288,28 @@ describe('Work Order Create (e2e, HTTP)', () => {
         workOrderSubType: 'Preventive',
         workOrderPriority: '2',
         enableOracleWorkOrder: 'N',
+        operations: [
+          {
+            operationName: 'Lubrication',
+            operationDescription: 'Lubrication test',
+            operationSeqNumber: 10,
+            createdBy: '550e8400-e29b-41d4-a716-446655440001',
+            operationStatus: 'UNRELEASED',
+            operationType: 'Internal',
+            operationSubType: 'Preventive',
+            actualStartDate: '2025-11-21T08:00:00.000Z',
+            actualCompletionDate: '2025-11-21T10:00:00.000Z',
+            workOrderOperationResource: [
+              {
+                principalFlag: 'Y',
+                resourceCode: 'RES-001',
+                resourceSequenceNumber: 1,
+                plannedHours: 2,
+                actualHours: 2,
+              },
+            ],
+          },
+        ],
       })
       .expect(400);
 
@@ -331,6 +397,28 @@ describe('Work Order Create (e2e, HTTP)', () => {
         workOrderSubType: 'Preventive',
         workOrderPriority: '2',
         enableOracleWorkOrder: 'N',
+        operations: [
+          {
+            operationName: 'Lubrication',
+            operationDescription: 'Lubrication test',
+            operationSeqNumber: 10,
+            createdBy: '550e8400-e29b-41d4-a716-446655440001',
+            operationStatus: 'UNRELEASED',
+            operationType: 'Internal',
+            operationSubType: 'Preventive',
+            actualStartDate: '2025-11-21T08:00:00.000Z',
+            actualCompletionDate: '2025-11-21T10:00:00.000Z',
+            workOrderOperationResource: [
+              {
+                principalFlag: 'Y',
+                resourceCode: 'RES-001',
+                resourceSequenceNumber: 1,
+                plannedHours: 2,
+                actualHours: 2,
+              },
+            ],
+          },
+        ],
       })
       .expect(201);
 
