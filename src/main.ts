@@ -3,11 +3,14 @@ import { AppModule } from './app.module';
 import { envs } from './config/envs';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { RpcCustomExceptionFilter } from './common';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const logger = new Logger('Gateway-');
 
   const app = await NestFactory.create(AppModule);
+
+  app.use(cookieParser());
 
   app.setGlobalPrefix('api/v1');
 

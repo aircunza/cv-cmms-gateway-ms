@@ -33,18 +33,18 @@ Content-Type: application/json
 
 ### Verify user
 GET {{baseUrl}}/auth/verify
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Logout
 POST {{baseUrl}}/auth/logout
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ######################## ORGANIZATIONS ########################
 
 ### Create organization
 POST {{baseUrl}}/organizations
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "code": "ORG-LIMA-001",
@@ -59,28 +59,28 @@ Authorization: Bearer {{token}}
 
 ### Get one organization
 GET {{baseUrl}}/organizations/{{orgId}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get organizations (all active by default)
 GET {{baseUrl}}/organizations
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get organizations filtered by code
 GET {{baseUrl}}/organizations?code=ORG-LIMA
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get organizations filtered by name
 GET {{baseUrl}}/organizations?name=Empresa
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get organizations filtered by countryCode
 GET {{baseUrl}}/organizations?countryCode=PE
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Update organization (partial)
 PATCH {{baseUrl}}/organizations/{{orgId}}
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "name": "Empresa 1 S.A.C.",
@@ -91,7 +91,7 @@ Authorization: Bearer {{token}}
 ### Update organization (cambiar code: rechazado por la MS)
 PATCH {{baseUrl}}/organizations/{{orgId}}
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "code": "ORG-BOG-002"
@@ -99,7 +99,7 @@ Authorization: Bearer {{token}}
 
 ### Deactivate organization (soft delete)
 PATCH {{baseUrl}}/organizations/{{orgId}}/deactivate
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ######################## USER ORG PERMISSIONS ########################
 
@@ -109,7 +109,7 @@ Authorization: Bearer {{token}}
 ### Create user org permission
 POST {{baseUrl}}/user-org-permissions
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "userId": "10000000-0000-4000-8000-000000000013",
@@ -125,32 +125,32 @@ Authorization: Bearer {{token}}
 
 ### Get one user org permission (active only)
 GET {{baseUrl}}/user-org-permissions/{{uopId}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get user org permissions (all active by default)
 GET {{baseUrl}}/user-org-permissions
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get user org permissions filtered by userId
 GET {{baseUrl}}/user-org-permissions?userId={{userId}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get user org permissions filtered by organizationId
 GET {{baseUrl}}/user-org-permissions?organizationId={{uopOrgId}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get user org permissions filtered by roleCode
 GET {{baseUrl}}/user-org-permissions?roleCode=PLANNER_MAINTENANCE_01
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get user org permissions including inactive
 GET {{baseUrl}}/user-org-permissions?isActive=N
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Update user org permission (partial)
 PATCH {{baseUrl}}/user-org-permissions/{{uopId}}
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "roleName": "Maintenance Planner Senior",
@@ -159,4 +159,4 @@ Authorization: Bearer {{token}}
 
 ### Deactivate user org permission (soft delete)
 PATCH {{baseUrl}}/user-org-permissions/{{uopId}}/deactivate
-Authorization: Bearer {{token}}
+Cookie: token={{token}}

@@ -112,7 +112,7 @@ describe('Work Request Update (e2e, HTTP)', () => {
 
     const response = await request(app.getHttpServer())
       .patch('/work-requests/900000001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({
         issueDescription: 'Oil leak detected on the hydraulic pump - updated.',
@@ -140,7 +140,7 @@ describe('Work Request Update (e2e, HTTP)', () => {
   it('rejects when user does not have access to organization', async () => {
     await request(app.getHttpServer())
       .patch('/work-requests/900000001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .send({
         issueDescription: 'Oil leak detected on the hydraulic pump - updated.',

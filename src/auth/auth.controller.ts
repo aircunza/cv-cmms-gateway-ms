@@ -60,10 +60,22 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  loginUser(@Body() loginUserDto: LoginUserDto) {
+  loginUser(
+    @Body() loginUserDto: LoginUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     this.validateLoginIdentifier(loginUserDto);
 
     return this.client.send('auth.login.user', loginUserDto).pipe(
+      map((result) => {
+        if (result && result.token) {
+          res.cookie('token', result.token, {
+            httpOnly: false,
+            secure: false,
+          });
+        }
+        return result;
+      }),
       catchError((error) => {
         throw new RpcException(error);
       }),

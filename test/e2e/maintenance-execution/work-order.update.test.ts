@@ -94,7 +94,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
 
     const response = await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({ workOrderDescription: 'Updated description' })
       .expect(200);
@@ -138,7 +138,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
 
     await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({ workOrderPriority: '1' })
       .expect(200);
@@ -157,7 +157,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
   it('rejects when X-Organization-Code header is missing', async () => {
     await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .send({ workOrderDescription: 'Updated' })
       .expect(400);
   });
@@ -198,7 +198,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
 
     await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .send({ workOrderDescription: 'Updated' })
       .expect(400);
@@ -224,7 +224,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
 
     await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({
         workOrderDescription: 'Updated description',

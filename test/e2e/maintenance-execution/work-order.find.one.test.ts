@@ -123,7 +123,7 @@ describe('Work Order Find One (e2e, HTTP)', () => {
 
     const response = await request(app.getHttpServer())
       .get('/work-orders/1001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .expect(200);
 
@@ -145,7 +145,7 @@ describe('Work Order Find One (e2e, HTTP)', () => {
   it('rejects when X-Organization-Code header is missing', async () => {
     await request(app.getHttpServer())
       .get('/work-orders/1001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .expect(400);
   });
 
@@ -185,7 +185,7 @@ describe('Work Order Find One (e2e, HTTP)', () => {
 
     await request(app.getHttpServer())
       .get('/work-orders/1001')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .expect(400);
   });

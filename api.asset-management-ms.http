@@ -21,7 +21,7 @@ Content-Type: application/json
 ### Create work area
 POST {{baseUrl}}/work-areas
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "workAreaCode": "WA-001",
@@ -33,24 +33,24 @@ Authorization: Bearer {{token}}
 
 ### Get one work area
 GET {{baseUrl}}/work-areas/{{workAreaId}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get work areas (all active by default)
 GET {{baseUrl}}/work-areas
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get work areas filtered by code
 GET {{baseUrl}}/work-areas?workAreaCode=WA-001
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get work areas filtered by organizationCode
 GET {{baseUrl}}/work-areas?organizationCode={{orgCode}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Update work area (partial)
 PATCH {{baseUrl}}/work-areas/{{workAreaId}}
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "workAreaDescription": "Area de Produccion 1 - actualizada"
@@ -58,7 +58,7 @@ Authorization: Bearer {{token}}
 
 ### Deactivate work area (soft delete)
 PATCH {{baseUrl}}/work-areas/{{workAreaId}}/deactivate
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ######################## WORK CENTERS ########################
 
@@ -67,7 +67,7 @@ Authorization: Bearer {{token}}
 ### Create work center
 POST {{baseUrl}}/work-centers
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "workCenterCode": "WC-001",
@@ -81,24 +81,24 @@ Authorization: Bearer {{token}}
 
 ### Get one work center
 GET {{baseUrl}}/work-centers/{{workCenterId}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get work centers (all active by default)
 GET {{baseUrl}}/work-centers
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get work centers filtered by code
 GET {{baseUrl}}/work-centers?workCenterCode=WC-001
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get work centers filtered by workAreaId
 GET {{baseUrl}}/work-centers?workAreaId={{workAreaId}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Update work center (partial)
 PATCH {{baseUrl}}/work-centers/{{workCenterId}}
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "workCenterDescription": "Taller Mecanico Central - actualizado",
@@ -107,7 +107,7 @@ Authorization: Bearer {{token}}
 
 ### Deactivate work center (soft delete)
 PATCH {{baseUrl}}/work-centers/{{workCenterId}}/deactivate
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ######################## ASSETS ########################
 
@@ -116,7 +116,7 @@ Authorization: Bearer {{token}}
 ### Create asset
 POST {{baseUrl}}/assets
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "assetCode": "AST-001",
@@ -137,28 +137,28 @@ Authorization: Bearer {{token}}
 
 ### Get one asset
 GET {{baseUrl}}/assets/{{assetCode}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get assets (all active by default)
 GET {{baseUrl}}/assets
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get assets filtered by code
 GET {{baseUrl}}/assets?assetCode=AST-001
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get assets filtered by organizationCode
 GET {{baseUrl}}/assets?organizationCode={{orgCode}}
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Get assets filtered by assetStatus
 GET {{baseUrl}}/assets?assetStatus=OPERATIVE
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 ### Update asset (partial)
 PATCH {{baseUrl}}/assets/{{assetCode}}
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Cookie: token={{token}}
 
 {
   "assetDescription": "Chancadora primaria de mandibulas - actualizada",
@@ -168,4 +168,4 @@ Authorization: Bearer {{token}}
 
 ### Deactivate asset (soft delete)
 PATCH {{baseUrl}}/assets/{{assetCode}}/deactivate
-Authorization: Bearer {{token}}
+Cookie: token={{token}}

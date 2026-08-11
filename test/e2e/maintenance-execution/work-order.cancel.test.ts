@@ -103,7 +103,7 @@ describe('Work Order Cancel (e2e, HTTP)', () => {
 
     const response = await request(app.getHttpServer())
       .patch('/work-orders/1001/cancel')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({ canceledReason: 'No replacement parts available' })
       .expect(200);
@@ -131,7 +131,7 @@ describe('Work Order Cancel (e2e, HTTP)', () => {
   it('rejects when canceledReason is missing', async () => {
     await request(app.getHttpServer())
       .patch('/work-orders/1001/cancel')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({})
       .expect(400);
@@ -140,7 +140,7 @@ describe('Work Order Cancel (e2e, HTTP)', () => {
   it('rejects when canceledReason exceeds 240 characters', async () => {
     await request(app.getHttpServer())
       .patch('/work-orders/1001/cancel')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({ canceledReason: 'a'.repeat(241) })
       .expect(400);
@@ -149,7 +149,7 @@ describe('Work Order Cancel (e2e, HTTP)', () => {
   it('rejects when X-Organization-Code header is missing', async () => {
     await request(app.getHttpServer())
       .patch('/work-orders/1001/cancel')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .send({ canceledReason: 'No replacement parts available' })
       .expect(400);
   });
@@ -157,7 +157,7 @@ describe('Work Order Cancel (e2e, HTTP)', () => {
   it('rejects when user does not have access to organization', async () => {
     await request(app.getHttpServer())
       .patch('/work-orders/1001/cancel')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .send({ canceledReason: 'No replacement parts available' })
       .expect(400);

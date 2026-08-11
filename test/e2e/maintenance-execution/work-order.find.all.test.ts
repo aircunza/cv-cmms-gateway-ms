@@ -105,7 +105,7 @@ describe('Work Order Find All (e2e, HTTP)', () => {
       .get(
         `/work-orders?filters=${encodeURIComponent(filters)}&order=${encodeURIComponent(order)}&limit=10&offset=0`,
       )
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .expect(200);
 
@@ -133,7 +133,7 @@ describe('Work Order Find All (e2e, HTTP)', () => {
   it('rejects when filters is not valid JSON', async () => {
     await request(app.getHttpServer())
       .get(`/work-orders?filters=${encodeURIComponent('{invalid json')}`)
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .expect(400);
   });
@@ -143,7 +143,7 @@ describe('Work Order Find All (e2e, HTTP)', () => {
       .get(
         `/work-orders?filters=${encodeURIComponent('[]')}&limit=${encodeURIComponent('abc')}`,
       )
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .expect(400);
   });
@@ -151,7 +151,7 @@ describe('Work Order Find All (e2e, HTTP)', () => {
   it('rejects when X-Organization-Code header is missing', async () => {
     await request(app.getHttpServer())
       .get('/work-orders')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .expect(400);
   });
 
@@ -191,7 +191,7 @@ describe('Work Order Find All (e2e, HTTP)', () => {
 
     await request(app.getHttpServer())
       .get('/work-orders')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .expect(400);
   });

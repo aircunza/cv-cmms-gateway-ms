@@ -94,7 +94,7 @@ describe('Work Order Hold (e2e, HTTP)', () => {
 
     const response = await request(app.getHttpServer())
       .patch('/work-orders/1001/hold')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .expect(200);
 
@@ -116,14 +116,14 @@ describe('Work Order Hold (e2e, HTTP)', () => {
   it('rejects when X-Organization-Code header is missing', async () => {
     await request(app.getHttpServer())
       .patch('/work-orders/1001/hold')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .expect(400);
   });
 
   it('rejects when user does not have access to organization', async () => {
     await request(app.getHttpServer())
       .patch('/work-orders/1001/hold')
-      .set('Authorization', 'Bearer mock-token')
+      .set('Cookie', 'token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .expect(400);
   });
