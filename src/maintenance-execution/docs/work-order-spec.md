@@ -18,7 +18,7 @@ The business logic, validations and error codes documented here follow the maint
 
 | Header              | Type   | Required | Description                                     |
 | ------------------- | ------ | -------- | ----------------------------------------------- |
-| Authorization       | string | Yes      | Bearer token                                    |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)                                    |
 | X-Organization-Code | string | Yes      | Target organization code (example: ORG-BOG-001) |
 
 ### Request Body
@@ -343,7 +343,7 @@ The `DEFAULT_OPERATION` fallback is an internal concern of the execution microse
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Query Parameters
@@ -508,7 +508,7 @@ For find all, the gateway:
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Path Parameter
@@ -550,7 +550,7 @@ For find one, the gateway:
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Path Parameter
@@ -616,7 +616,7 @@ For update, the gateway:
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Path Parameter
@@ -664,7 +664,7 @@ For release, the gateway:
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Path Parameter
@@ -712,7 +712,7 @@ For hold, the gateway:
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Path Parameter
@@ -760,7 +760,7 @@ For complete, the gateway:
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Path Parameter
@@ -808,7 +808,7 @@ For close, the gateway:
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Path Parameter
@@ -871,7 +871,7 @@ For cancel, the gateway:
 
 | Header              | Type   | Required | Description              |
 | ------------------- | ------ | -------- | ------------------------ |
-| Authorization       | string | Yes      | Bearer token             |
+| Cookie             | string | Yes      | Authentication token (token=&lt;jwt&gt;)             |
 | X-Organization-Code | string | Yes      | Target organization code |
 
 ### Path Parameter

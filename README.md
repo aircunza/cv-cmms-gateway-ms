@@ -915,7 +915,7 @@ Response:
 
 Headers required for all Work Order endpoints:
 
-- `Authorization: Bearer <token>`
+- `Cookie: token=<jwt>`
 - `X-Organization-Code: <organization-code>`
 
 | Method | Endpoint                                            | Description      |
@@ -1312,7 +1312,7 @@ Response example:
 
 Headers required for all Work Request endpoints:
 
-- `Authorization: Bearer <token>`
+- `Cookie: token=<jwt>`
 - `X-Organization-Code: <organization-code>`
 
 | Method | Endpoint                                  | Description              |
