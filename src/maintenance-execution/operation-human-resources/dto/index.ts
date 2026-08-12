@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNotEmpty, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsNotEmpty, MaxLength, IsNumber, Min, IsIn, IsDateString } from 'class-validator';
 
 export class CreateOperationHrDto {
   @IsNotEmpty()
@@ -14,13 +14,12 @@ export class CreateOperationHrDto {
   @MaxLength(255)
   resourceCode: string;
 
-  @IsOptional()
-  plannedHours?: number;
+  @IsNumber()
+  @Min(0.0001)
+  actualHours: number;
 
   @IsOptional()
-  actualHours?: number;
-
-  @IsOptional()
+  @IsNumber()
   hourlyCost?: number;
 
   @IsString()
@@ -28,27 +27,33 @@ export class CreateOperationHrDto {
   @MaxLength(1)
   principalFlag?: string;
 
-  @IsOptional()
-  resourceSequenceNumber?: number;
+  @IsNumber()
+  @Min(0)
+  resourceSequenceNumber: number;
+
+  @IsDateString()
+  actualStartDate: string;
+
+  @IsDateString()
+  actualCompletionDate: string;
 
   @IsOptional()
-  plannedStartDate?: Date;
+  @IsDateString()
+  plannedStartDate?: string;
 
   @IsOptional()
-  plannedCompletionDate?: Date;
-
-  @IsOptional()
-  usageRate?: number;
+  @IsDateString()
+  plannedCompletionDate?: string;
 }
 
 export class UpdateOperationHrDto {
   @IsOptional()
-  plannedHours?: number;
-
-  @IsOptional()
+  @IsNumber()
+  @Min(0.0001)
   actualHours?: number;
 
   @IsOptional()
+  @IsNumber()
   hourlyCost?: number;
 
   @IsString()
@@ -57,16 +62,35 @@ export class UpdateOperationHrDto {
   principalFlag?: string;
 
   @IsOptional()
-  plannedStartDate?: Date;
+  @IsDateString()
+  actualStartDate?: string;
 
   @IsOptional()
-  plannedCompletionDate?: Date;
+  @IsDateString()
+  actualCompletionDate?: string;
 
   @IsOptional()
-  usageRate?: number;
+  @IsDateString()
+  plannedStartDate?: string;
+
+  @IsOptional()
+  @IsDateString()
+  plannedCompletionDate?: string;
 }
 
 export class FindAllOperationHrDto {
   @IsOptional()
   operationCode?: number;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['Y', 'N'])
+  includeCanceled?: string;
+}
+
+export class CancelOperationHrDto {
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(240)
+  canceledReason: string;
 }

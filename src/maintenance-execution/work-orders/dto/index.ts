@@ -25,16 +25,20 @@ export class CreateWoOperationResourceDto {
 
   @IsNumber()
   @Min(0.0001)
-  plannedHours!: number;
-
-  @IsNumber()
-  @Min(0.0001)
   actualHours!: number;
 
   @IsString()
   @IsNotEmpty()
   @IsIn(['Y', 'N'])
   principalFlag!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  actualStartDate!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  actualCompletionDate!: string;
 
   @IsOptional()
   @IsNumber()

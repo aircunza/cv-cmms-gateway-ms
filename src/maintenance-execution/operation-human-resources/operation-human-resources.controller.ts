@@ -7,18 +7,22 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
+import type { Request } from 'express';
 import { catchError } from 'rxjs';
 import { User } from 'src/auth/decorators/user.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import type { CurrentUser } from 'src/auth/interfaces/current-user.interface';
+import type { OrganizationRole } from 'src/auth/interfaces/organization-role.interface';
 import { NATS_SERVICE } from 'src/config';
 import {
   CreateOperationHrDto,
   UpdateOperationHrDto,
+  CancelOperationHrDto,
   FindAllOperationHrDto,
 } from './dto';
 
@@ -47,6 +51,14 @@ export class OperationHumanResourcesController {
 
   private getActorId(user: CurrentUser) {
     return user.id;
+  }
+
+  private getOrganizationCode(request: Request): string {
+    const orgCode = request.headers['x-organization-code'];
+    if (!orgCode) {
+      throw new BadRequestException('X-Organization-Code header is required');
+    }
+    return orgCode as string;
   }
 
   @UseGuards(AuthGuard)
@@ -98,6 +110,28 @@ export class OperationHumanResourcesController {
     return this.client
       .send('operation.hr.update', {
         id: Number(params.id),
+        ...dto,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch(':id/cancel')
+  cancel(
+    @Param() params: { id: string; operationCode: string },
+    @Body() dto: CancelOperationHrDto,
+    @User() user: CurrentUser,
+  ) {
+    return this.client
+      .send('operation.hr.cancel', {
+        id: Number(params.id),
+        operationCode: Number(params.operationCode),
         ...dto,
         actorId: this.getActorId(user),
         actorName: this.getActorName(user),

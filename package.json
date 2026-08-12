@@ -35,7 +35,10 @@
     "test:e2e:wo:close": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.close.test.ts",
     "test:e2e:wo:cancel": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.cancel.test.ts",
     "test:e2e:wo:pending-approval": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.pending-approval.test.ts",
-    "test:e2e:wo": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.create.test.ts ./test/e2e/maintenance-execution/work-order.find.all.test.ts ./test/e2e/maintenance-execution/work-order.find.one.test.ts ./test/e2e/maintenance-execution/work-order.update.test.ts ./test/e2e/maintenance-execution/work-order.release.test.ts ./test/e2e/maintenance-execution/work-order.hold.test.ts ./test/e2e/maintenance-execution/work-order.complete.test.ts ./test/e2e/maintenance-execution/work-order.close.test.ts ./test/e2e/maintenance-execution/work-order.cancel.test.ts ./test/e2e/maintenance-execution/work-order.pending-approval.test.ts"
+    "test:e2e:wo": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.create.test.ts ./test/e2e/maintenance-execution/work-order.find.all.test.ts ./test/e2e/maintenance-execution/work-order.find.one.test.ts ./test/e2e/maintenance-execution/work-order.update.test.ts ./test/e2e/maintenance-execution/work-order.release.test.ts ./test/e2e/maintenance-execution/work-order.hold.test.ts ./test/e2e/maintenance-execution/work-order.complete.test.ts ./test/e2e/maintenance-execution/work-order.close.test.ts ./test/e2e/maintenance-execution/work-order.cancel.test.ts ./test/e2e/maintenance-execution/work-order.pending-approval.test.ts",
+    "db:mock:reset:load": "bash load_mock_data/reset-and-load-mock-data.sh",
+    "db:mock:reset": "bash load_mock_data/reset-mock-data.sh"
+
   },
   "dependencies": {
     "@nestjs/common": "11.1.28",

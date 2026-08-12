@@ -7,7 +7,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "usuario01@empresa1.pe",
+  "email": "usuario02@empresa1.pe",
   "password": "Password123!"
 }
 
@@ -142,8 +142,9 @@ X-Organization-Code: {{orgCode}}
           "principalFlag": "Y",
           "resourceCode": "{{hrResourceCode}}",
           "resourceSequenceNumber": 1,
-          "plannedHours": 4,
-          "actualHours": 2.5
+          "actualHours": 2.5,
+          "actualStartDate": "2026-08-01T08:00:00Z",
+          "actualCompletionDate": "2026-08-01T10:30:00Z"
         }
       ],
       "workOrderOperationMaterial": []
@@ -210,6 +211,16 @@ X-Organization-Code: {{orgCode}}
   "canceledReason": "Orden cancelada por prioridad baja"
 }
 
+### Reprogram work order
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/reprogram
+Content-Type: application/json
+Cookie: token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "newActualStartDate": "2026-08-05T08:00:00Z"
+}
+
 ######################## WO OPERATIONS ########################
 
 ### Create operation
@@ -218,16 +229,14 @@ Content-Type: application/json
 Cookie: token={{token}}
 
 {
-  "operationName": "DEFAULT_OPERATION",
-  "operationDescription": "Auto-generated default operation",
-  "operationSeqNumber": 1,
+  "operationName": "Inspection",
+  "operationDescription": "Visual inspection of components",
+  "operationSeqNumber": 10,
   "assetCode": "AST-001",
   "assetShortDescription": "Chancadora primaria",
   "operationStatus": "UNRELEASED",
   "operationType": "Internal",
-  "organizationCode": "{{orgCode}}",
-  "plannedStartDate": "2026-08-01T08:00:00Z",
-  "plannedCompletionDate": "2026-08-01T12:00:00Z"
+  "organizationCode": "{{orgCode}}"
 }
 
 ### Nota: copia el operationCode devuelto y pégalo en @woOperationCode
@@ -246,16 +255,23 @@ Content-Type: application/json
 Cookie: token={{token}}
 
 {
-  "operationName": "DEFAULT_OPERATION - Actualizado",
-  "operationStatus": "IN_PROCESS",
-  "actualStartDate": "2026-08-01T08:30:00Z",
-  "actualCompletionDate": "2026-08-01T11:00:00Z",
-  "actualHours": 2.5
+  "operationName": "Inspection - Actualizado",
+  "operationStatus": "IN_PROCESS"
 }
 
 ### Review operation
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/review
 Cookie: token={{token}}
+
+### Cancel operation
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/cancel
+Content-Type: application/json
+Cookie: token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "canceledReason": "Operation no longer needed"
+}
 
 ######################## OPERATION MATERIALS ########################
 
@@ -300,11 +316,12 @@ Cookie: token={{token}}
 {
   "organizationCode": "{{orgCode}}",
   "resourceCode": "{{hrResourceCode}}",
-  "plannedHours": 4,
   "actualHours": 2.5,
   "hourlyCost": 35.00,
   "principalFlag": "Y",
   "resourceSequenceNumber": 10,
+  "actualStartDate": "2026-08-01T08:00:00Z",
+  "actualCompletionDate": "2026-08-01T10:30:00Z",
   "plannedStartDate": "2026-08-01T08:00:00Z",
   "plannedCompletionDate": "2026-08-01T12:00:00Z"
 }
@@ -323,4 +340,13 @@ Cookie: token={{token}}
 {
   "actualHours": 3,
   "hourlyCost": 38.00
+}
+
+### Cancel operation human resource
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources/{{opHrUsageId}}/cancel
+Content-Type: application/json
+Cookie: token={{token}}
+
+{
+  "canceledReason": "Resource no longer needed"
 }

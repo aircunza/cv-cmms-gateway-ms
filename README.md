@@ -1330,6 +1330,8 @@ For the full contract (permissions, roles, field constraints), see the [Work Req
 
 `POST /api/v1/work-requests`
 
+> **Initial data requirement:** Before using this endpoint, the maintenance-execution database SHALL contain at least one human resource with `resourceCode = "DEFAULT_RESOURCE"`. Creating a Work Request auto-generates a default operation that references this resource; if it is missing, creation fails with an FK constraint violation.
+
 Request body example:
 
 ```json
