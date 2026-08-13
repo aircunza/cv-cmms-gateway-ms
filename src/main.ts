@@ -12,6 +12,11 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  app.enableCors({
+    origin: envs.corsOrigins,
+    credentials: true,
+  });
+
   app.setGlobalPrefix('api/v1');
 
   app.useGlobalPipes(

@@ -6,6 +6,7 @@ interface EnvVars {
   NATS_SERVERS: string[];
   NATS_USER: string;
   NATS_PASS: string;
+  CORS_ORIGINS: string[];
   // AUTH_MICROSERVICE_HOST: string;
   // AUTH_MICROSERVICE_PORT: number;
 }
@@ -17,12 +18,14 @@ const envsSchema = joi
     NATS_SERVERS: joi.array().items(joi.string()).required(),
     NATS_USER: joi.string().required(),
     NATS_PASS: joi.string().required(),
+    CORS_ORIGINS: joi.array().items(joi.string()).required(),
   })
   .unknown(true);
 
 const result = envsSchema.validate({
   ...process.env,
   NATS_SERVERS: process.env.NATS_SERVERS?.split(','),
+  CORS_ORIGINS: process.env.CORS_ORIGINS?.split(','),
 });
 
 if (result.error) {
@@ -36,4 +39,5 @@ export const envs = {
   natsServers: envVars.NATS_SERVERS,
   natsUser: envVars.NATS_USER,
   natsPass: envVars.NATS_PASS,
+  corsOrigins: envVars.CORS_ORIGINS,
 };
