@@ -42,7 +42,7 @@ const mockAuthGuard = {
         ],
       },
     ];
-    req['token'] = 'mock-token';
+    req['auth_token'] = 'mock-token';
     return true;
   }),
 };
@@ -94,7 +94,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
 
     const response = await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({ workOrderDescription: 'Updated description' })
       .expect(200);
@@ -138,7 +138,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
 
     await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({ workOrderPriority: '1' })
       .expect(200);
@@ -157,7 +157,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
   it('rejects when X-Organization-Code header is missing', async () => {
     await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .send({ workOrderDescription: 'Updated' })
       .expect(400);
   });
@@ -192,13 +192,13 @@ describe('Work Order Update (e2e, HTTP)', () => {
           ],
         },
       ];
-      req['token'] = 'mock-token';
+      req['auth_token'] = 'mock-token';
       return true;
     });
 
     await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .send({ workOrderDescription: 'Updated' })
       .expect(400);
@@ -224,7 +224,7 @@ describe('Work Order Update (e2e, HTTP)', () => {
 
     await request(app.getHttpServer())
       .patch('/work-orders/1001')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({
         workOrderDescription: 'Updated description',

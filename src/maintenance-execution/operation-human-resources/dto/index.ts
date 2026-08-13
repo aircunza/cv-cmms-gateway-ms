@@ -1,4 +1,13 @@
-import { IsString, IsOptional, IsNotEmpty, MaxLength, IsNumber, Min, IsIn, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNotEmpty,
+  MaxLength,
+  IsNumber,
+  Min,
+  IsIn,
+  IsDateString,
+} from 'class-validator';
 
 export class CreateOperationHrDto {
   @IsNotEmpty()

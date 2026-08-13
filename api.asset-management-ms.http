@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ###
-@token = {{login.response.body.$.token}}
+@token = {{login.response.body.$.auth_token}}
 @orgCode = ORG-LIMA-001
 
 ######################## WORK AREAS ########################
@@ -21,7 +21,7 @@ Content-Type: application/json
 ### Create work area
 POST {{baseUrl}}/work-areas
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "workAreaCode": "WA-001",
@@ -33,24 +33,24 @@ Cookie: token={{token}}
 
 ### Get one work area
 GET {{baseUrl}}/work-areas/{{workAreaId}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get work areas (all active by default)
 GET {{baseUrl}}/work-areas
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get work areas filtered by code
 GET {{baseUrl}}/work-areas?workAreaCode=WA-001
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get work areas filtered by organizationCode
 GET {{baseUrl}}/work-areas?organizationCode={{orgCode}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update work area (partial)
 PATCH {{baseUrl}}/work-areas/{{workAreaId}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "workAreaDescription": "Area de Produccion 1 - actualizada"
@@ -58,7 +58,7 @@ Cookie: token={{token}}
 
 ### Deactivate work area (soft delete)
 PATCH {{baseUrl}}/work-areas/{{workAreaId}}/deactivate
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ######################## WORK CENTERS ########################
 
@@ -67,7 +67,7 @@ Cookie: token={{token}}
 ### Create work center
 POST {{baseUrl}}/work-centers
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "workCenterCode": "WC-001",
@@ -81,24 +81,24 @@ Cookie: token={{token}}
 
 ### Get one work center
 GET {{baseUrl}}/work-centers/{{workCenterId}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get work centers (all active by default)
 GET {{baseUrl}}/work-centers
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get work centers filtered by code
 GET {{baseUrl}}/work-centers?workCenterCode=WC-001
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get work centers filtered by workAreaId
 GET {{baseUrl}}/work-centers?workAreaId={{workAreaId}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update work center (partial)
 PATCH {{baseUrl}}/work-centers/{{workCenterId}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "workCenterDescription": "Taller Mecanico Central - actualizado",
@@ -107,7 +107,7 @@ Cookie: token={{token}}
 
 ### Deactivate work center (soft delete)
 PATCH {{baseUrl}}/work-centers/{{workCenterId}}/deactivate
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ######################## ASSETS ########################
 
@@ -116,7 +116,7 @@ Cookie: token={{token}}
 ### Create asset
 POST {{baseUrl}}/assets
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "assetCode": "AST-001",
@@ -137,28 +137,28 @@ Cookie: token={{token}}
 
 ### Get one asset
 GET {{baseUrl}}/assets/{{assetCode}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get assets (all active by default)
 GET {{baseUrl}}/assets
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get assets filtered by code
 GET {{baseUrl}}/assets?assetCode=AST-001
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get assets filtered by organizationCode
 GET {{baseUrl}}/assets?organizationCode={{orgCode}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get assets filtered by assetStatus
 GET {{baseUrl}}/assets?assetStatus=OPERATIVE
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update asset (partial)
 PATCH {{baseUrl}}/assets/{{assetCode}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "assetDescription": "Chancadora primaria de mandibulas - actualizada",
@@ -168,4 +168,4 @@ Cookie: token={{token}}
 
 ### Deactivate asset (soft delete)
 PATCH {{baseUrl}}/assets/{{assetCode}}/deactivate
-Cookie: token={{token}}
+Cookie: auth_token={{token}}

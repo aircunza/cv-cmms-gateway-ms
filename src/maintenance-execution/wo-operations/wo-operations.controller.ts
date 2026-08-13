@@ -164,16 +164,17 @@ export class WoOperationsController {
     const organizationCode = this.getOrganizationCode(req);
     const organizations = req['organizations'] as OrganizationRole[];
 
-    const userPermissions = organizations
-      .find((o) => o.organizationCode === organizationCode)
-      ?.roles.flatMap((role) => role.permissions ?? [])
-      .filter(
-        (p) =>
-          !organizations
-            .find((o) => o.organizationCode === organizationCode)
-            ?.roles.flatMap((r) => r.deniedPermissions ?? [])
-            .includes(p),
-      ) ?? [];
+    const userPermissions =
+      organizations
+        .find((o) => o.organizationCode === organizationCode)
+        ?.roles.flatMap((role) => role.permissions ?? [])
+        .filter(
+          (p) =>
+            !organizations
+              .find((o) => o.organizationCode === organizationCode)
+              ?.roles.flatMap((r) => r.deniedPermissions ?? [])
+              .includes(p),
+        ) ?? [];
 
     return this.client
       .send('wo.operation.cancel', {

@@ -27,24 +27,24 @@ Content-Type: application/json
 }
 
 ###
-@token = {{login.response.body.$.token}}
+@token = {{login.response.body.$.auth_token}}
 @userId = 10000000-0000-4000-8000-000000000011
 @orgId = 10000000-0000-4000-8000-000000000001
 
 ### Verify user
 GET {{baseUrl}}/auth/verify
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Logout
 POST {{baseUrl}}/auth/logout
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ######################## ORGANIZATIONS ########################
 
 ### Create organization
 POST {{baseUrl}}/organizations
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "code": "ORG-LIMA-001",
@@ -59,28 +59,28 @@ Cookie: token={{token}}
 
 ### Get one organization
 GET {{baseUrl}}/organizations/{{orgId}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get organizations (all active by default)
 GET {{baseUrl}}/organizations
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get organizations filtered by code
 GET {{baseUrl}}/organizations?code=ORG-LIMA
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get organizations filtered by name
 GET {{baseUrl}}/organizations?name=Empresa
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get organizations filtered by countryCode
 GET {{baseUrl}}/organizations?countryCode=PE
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update organization (partial)
 PATCH {{baseUrl}}/organizations/{{orgId}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "name": "Empresa 1 S.A.C.",
@@ -91,7 +91,7 @@ Cookie: token={{token}}
 ### Update organization (cambiar code: rechazado por la MS)
 PATCH {{baseUrl}}/organizations/{{orgId}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "code": "ORG-BOG-002"
@@ -99,7 +99,7 @@ Cookie: token={{token}}
 
 ### Deactivate organization (soft delete)
 PATCH {{baseUrl}}/organizations/{{orgId}}/deactivate
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ######################## USER ORG PERMISSIONS ########################
 
@@ -109,7 +109,7 @@ Cookie: token={{token}}
 ### Create user org permission
 POST {{baseUrl}}/user-org-permissions
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "userId": "10000000-0000-4000-8000-000000000013",
@@ -125,32 +125,32 @@ Cookie: token={{token}}
 
 ### Get one user org permission (active only)
 GET {{baseUrl}}/user-org-permissions/{{uopId}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get user org permissions (all active by default)
 GET {{baseUrl}}/user-org-permissions
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get user org permissions filtered by userId
 GET {{baseUrl}}/user-org-permissions?userId={{userId}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get user org permissions filtered by organizationId
 GET {{baseUrl}}/user-org-permissions?organizationId={{uopOrgId}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get user org permissions filtered by roleCode
 GET {{baseUrl}}/user-org-permissions?roleCode=PLANNER_MAINTENANCE_01
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get user org permissions including inactive
 GET {{baseUrl}}/user-org-permissions?isActive=N
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update user org permission (partial)
 PATCH {{baseUrl}}/user-org-permissions/{{uopId}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "roleName": "Maintenance Planner Senior",
@@ -159,4 +159,4 @@ Cookie: token={{token}}
 
 ### Deactivate user org permission (soft delete)
 PATCH {{baseUrl}}/user-org-permissions/{{uopId}}/deactivate
-Cookie: token={{token}}
+Cookie: auth_token={{token}}

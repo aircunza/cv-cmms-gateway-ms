@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
         this.client.send<{
           user: unknown;
           organizations: unknown;
-          token: string;
+          auth_token: string;
         }>('auth.verify.user', token),
       );
 
@@ -35,15 +35,15 @@ export class AuthGuard implements CanActivate {
         typeof response !== 'object' ||
         !('user' in response) ||
         !('organizations' in response) ||
-        !('token' in response)
+        !('auth_token' in response)
       ) {
         throw new UnauthorizedException('Invalid auth response');
       }
 
-      const { user, organizations, token: newToken } = response;
+      const { user, organizations, auth_token: newToken } = response;
       request['user'] = user;
       request['organizations'] = organizations;
-      request['token'] = newToken;
+      request['auth_token'] = newToken;
     } catch {
       throw new UnauthorizedException();
     }
@@ -51,6 +51,6 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromCookie(request: Request): string | undefined {
-    return request.cookies?.token;
+    return request.cookies?.auth_token;
   }
 }

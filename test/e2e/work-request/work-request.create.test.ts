@@ -42,7 +42,7 @@ const mockAuthGuard = {
         ],
       },
     ];
-    req['token'] = 'mock-token';
+    req['auth_token'] = 'mock-token';
     return true;
   }),
 };
@@ -131,7 +131,7 @@ describe('Work Request Create (e2e, HTTP)', () => {
 
     const response = await request(app.getHttpServer())
       .post('/work-requests')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({
         assetCode: 'AST-001',
@@ -165,7 +165,7 @@ describe('Work Request Create (e2e, HTTP)', () => {
   it('rejects when X-Organization-Code header is missing', async () => {
     const response = await request(app.getHttpServer())
       .post('/work-requests')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .send({
         assetCode: 'AST-001',
         issueDescription: 'Oil leak detected on the hydraulic pump.',
@@ -181,7 +181,7 @@ describe('Work Request Create (e2e, HTTP)', () => {
   it('rejects when user does not have access to organization', async () => {
     const response = await request(app.getHttpServer())
       .post('/work-requests')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .send({
         assetCode: 'AST-001',
@@ -263,13 +263,13 @@ describe('Work Request Create (e2e, HTTP)', () => {
           ],
         },
       ];
-      req['token'] = 'mock-token';
+      req['auth_token'] = 'mock-token';
       return true;
     });
 
     await request(app.getHttpServer())
       .post('/work-requests')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({
         assetCode: 'AST-001',

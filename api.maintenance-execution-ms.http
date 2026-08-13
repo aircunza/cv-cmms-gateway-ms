@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ###
-@token = {{login.response.body.$.token}}
+@token = {{login.response.body.$.auth_token}}
 @orgCode = ORG-LIMA-001
 @actorId = 10000000-0000-4000-8000-000000000011
 
@@ -28,7 +28,7 @@ Content-Type: application/json
 ### Create human resource
 POST {{baseUrl}}/human-resources
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "resourceCode": "{{hrResourceCode}}",
@@ -43,16 +43,16 @@ Cookie: token={{token}}
 
 ### Get human resources (all)
 GET {{baseUrl}}/human-resources?organizationCode={{orgCode}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get one human resource
 GET {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{orgCode}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update human resource
 PATCH {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{orgCode}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "resourceName": "Tecnico Mecanico 1 - Actualizado",
@@ -61,14 +61,14 @@ Cookie: token={{token}}
 
 ### Deactivate human resource
 PATCH {{baseUrl}}/human-resources/{{hrResourceCode}}/deactivate?organizationCode={{orgCode}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ######################## WORK REQUESTS ########################
 
 ### Create work request
 POST {{baseUrl}}/work-requests
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 {
@@ -82,18 +82,18 @@ X-Organization-Code: {{orgCode}}
 
 ### Get work requests (filters como JSON string URL-encoded)
 GET {{baseUrl}}/work-requests?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%5D&limit=10&offset=0
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Get one work request
 GET {{baseUrl}}/work-requests/{{wrRequestId}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Update work request description
 PATCH {{baseUrl}}/work-requests/{{wrRequestId}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 {
@@ -102,12 +102,12 @@ X-Organization-Code: {{orgCode}}
 
 ### Complete work request
 PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/complete
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Cancel work request
 PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/cancel
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ######################## WORK ORDERS ########################
@@ -115,7 +115,7 @@ X-Organization-Code: {{orgCode}}
 ### Create work order
 POST {{baseUrl}}/work-orders
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 {
@@ -156,18 +156,18 @@ X-Organization-Code: {{orgCode}}
 
 ### Get work orders (filters como JSON string URL-encoded)
 GET {{baseUrl}}/work-orders?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%5D&limit=10&offset=0
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Get one work order
 GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Update work order
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 {
@@ -178,33 +178,33 @@ X-Organization-Code: {{orgCode}}
 
 ### Release work order
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/release
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Hold work order
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/hold
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Pending approval work order
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/pending-approval
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Complete work order
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/complete
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Close work order
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/close
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 ### Cancel work order
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/cancel
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 {
@@ -214,7 +214,7 @@ X-Organization-Code: {{orgCode}}
 ### Reprogram work order
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/reprogram
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 {
@@ -226,7 +226,7 @@ X-Organization-Code: {{orgCode}}
 ### Create operation
 POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "operationName": "Inspection",
@@ -243,16 +243,16 @@ Cookie: token={{token}}
 
 ### Get operations for a work order
 GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations?assetCode=AST-001&operationStatus=UNRELEASED
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Get one operation
 GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update operation
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "operationName": "Inspection - Actualizado",
@@ -261,12 +261,12 @@ Cookie: token={{token}}
 
 ### Review operation
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/review
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Cancel operation
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/cancel
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 {
@@ -278,7 +278,7 @@ X-Organization-Code: {{orgCode}}
 ### Create operation material
 POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "organizationCode": "{{orgCode}}",
@@ -294,12 +294,12 @@ Cookie: token={{token}}
 
 ### Get materials for an operation
 GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update operation material
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials/{{opMaterialId}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "quantity": 3,
@@ -311,7 +311,7 @@ Cookie: token={{token}}
 ### Create operation human resource
 POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "organizationCode": "{{orgCode}}",
@@ -330,12 +330,12 @@ Cookie: token={{token}}
 
 ### Get human resources for an operation
 GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 ### Update operation human resource
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources/{{opHrUsageId}}
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "actualHours": 3,
@@ -345,7 +345,7 @@ Cookie: token={{token}}
 ### Cancel operation human resource
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources/{{opHrUsageId}}/cancel
 Content-Type: application/json
-Cookie: token={{token}}
+Cookie: auth_token={{token}}
 
 {
   "canceledReason": "Resource no longer needed"

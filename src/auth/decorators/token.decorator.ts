@@ -5,18 +5,18 @@ import {
 } from '@nestjs/common';
 import type { Request } from 'express';
 
-export const Token = createParamDecorator(
+export const AuthToken = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx
       .switchToHttp()
-      .getRequest<Request & { token?: string }>();
+      .getRequest<Request & { auth_token?: string }>();
 
-    if (!request.token) {
+    if (!request.auth_token) {
       throw new InternalServerErrorException(
-        'Token not found in request (AuthGuard called?)',
+        'Auth token not found in request (AuthGuard called?)',
       );
     }
 
-    return request.token;
+    return request.auth_token;
   },
 );

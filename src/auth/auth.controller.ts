@@ -19,7 +19,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from './guards/auth.guard';
 import { User } from './decorators/user.decorator';
-import { Token } from './decorators/token.decorator';
+import { AuthToken } from './decorators/token.decorator';
 import { Organizations } from './decorators/organizations.decorator';
 import { type CurrentUser } from './interfaces/current-user.interface';
 import { type OrganizationRole } from './interfaces/organization-role.interface';
@@ -68,8 +68,8 @@ export class AuthController {
 
     return this.client.send('auth.login.user', loginUserDto).pipe(
       map((result) => {
-        if (result && result.token) {
-          res.cookie('token', result.token, {
+        if (result && result.auth_token) {
+          res.cookie('auth_token', result.auth_token, {
             httpOnly: false,
             secure: false,
           });
@@ -86,12 +86,12 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logoutUser(
-    @Token() token: string,
+    @AuthToken() token: string,
     @Res({ passthrough: true }) res: Response,
   ) {
     return this.client.send('auth.logout.user', token).pipe(
       map(() => {
-        res.clearCookie('token');
+        res.clearCookie('auth_token');
         res.clearCookie('access_token');
         res.clearCookie('jwt');
 
@@ -108,8 +108,8 @@ export class AuthController {
   verifyToken(
     @User() user: CurrentUser,
     @Organizations() organizations: OrganizationRole[],
-    @Token() token: string,
+    @AuthToken() token: string,
   ) {
-    return { user, organizations, token };
+    return { user, organizations, auth_token: token };
   }
 }

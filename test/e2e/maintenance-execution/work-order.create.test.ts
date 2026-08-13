@@ -42,7 +42,7 @@ const mockAuthGuard = {
         ],
       },
     ];
-    req['token'] = 'mock-token';
+    req['auth_token'] = 'mock-token';
     return true;
   }),
 };
@@ -120,7 +120,7 @@ describe('Work Order Create (e2e, HTTP)', () => {
 
     const response = await request(app.getHttpServer())
       .post('/work-orders')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({
         workOrderDescription: 'E2E Work Order',
@@ -203,7 +203,7 @@ describe('Work Order Create (e2e, HTTP)', () => {
   it('rejects when X-Organization-Code header is missing', async () => {
     const response = await request(app.getHttpServer())
       .post('/work-orders')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .send({
         workOrderDescription: 'E2E Work Order',
         woStatusCode: 'UNRELEASED',
@@ -272,13 +272,13 @@ describe('Work Order Create (e2e, HTTP)', () => {
           ],
         },
       ];
-      req['token'] = 'mock-token';
+      req['auth_token'] = 'mock-token';
       return true;
     });
 
     const response = await request(app.getHttpServer())
       .post('/work-orders')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_999')
       .send({
         workOrderDescription: 'E2E Work Order',
@@ -381,13 +381,13 @@ describe('Work Order Create (e2e, HTTP)', () => {
           ],
         },
       ];
-      req['token'] = 'mock-token';
+      req['auth_token'] = 'mock-token';
       return true;
     });
 
     await request(app.getHttpServer())
       .post('/work-orders')
-      .set('Cookie', 'token=mock-token')
+      .set('Cookie', 'auth_token=mock-token')
       .set('X-Organization-Code', 'E2E_ORG_001')
       .send({
         workOrderDescription: 'E2E Work Order',

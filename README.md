@@ -50,7 +50,7 @@ Response:
     "addAttribute4": null,
     "addAttribute5": null
   },
-  "token": "<jwt>"
+  "auth_token": "<jwt>"
 }
 ```
 
@@ -99,7 +99,7 @@ Response:
       ]
     }
   ],
-  "token": "<jwt>"
+  "auth_token": "<jwt>"
 }
 ```
 
@@ -115,7 +115,7 @@ Response:
 
 ### Verify
 
-Response: same shape as login (`user`, `organizations`, `token`), `token` echoes the input token.
+Response: same shape as login (`user`, `organizations`, `auth_token`), `auth_token` echoes the input token.
 
 ### Health
 
@@ -915,7 +915,7 @@ Response:
 
 Headers required for all Work Order endpoints:
 
-- `Cookie: token=<jwt>`
+- `Cookie: auth_token=<jwt>`
 - `X-Organization-Code: <organization-code>`
 
 | Method | Endpoint                                            | Description      |
@@ -1312,7 +1312,7 @@ Response example:
 
 Headers required for all Work Request endpoints:
 
-- `Cookie: token=<jwt>`
+- `Cookie: auth_token=<jwt>`
 - `X-Organization-Code: <organization-code>`
 
 | Method | Endpoint                                  | Description              |
