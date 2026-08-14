@@ -1,4 +1,49 @@
-import { IsString, IsOptional, IsNotEmpty, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNotEmpty,
+  MaxLength,
+  IsNumber,
+  Min,
+  IsInt,
+  IsArray,
+  ArrayNotEmpty,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class CreateWoOperationResourceDto {
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  resourceCode!: string;
+
+  @IsInt()
+  @Min(0)
+  resourceSequenceNumber!: number;
+
+  @IsNumber()
+  @Min(0.01)
+  actualHours!: number;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(1)
+  principalFlag?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  actualStartDate!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  actualCompletionDate!: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  hourlyCost?: number;
+}
 
 export class CreateWoOperationDto {
   @IsString()
@@ -58,22 +103,19 @@ export class CreateWoOperationDto {
   operationType?: string;
 
   @IsOptional()
-  plannedStartDate?: Date;
-
-  @IsOptional()
-  plannedCompletionDate?: Date;
-
-  @IsOptional()
   actualStartDate?: Date;
 
   @IsOptional()
   actualCompletionDate?: Date;
 
   @IsOptional()
-  plannedHours?: number;
-
-  @IsOptional()
   actualHours?: number;
+
+  @IsArray()
+  @ArrayNotEmpty({ message: 'resources should not be empty' })
+  @ValidateNested({ each: true })
+  @Type(() => CreateWoOperationResourceDto)
+  resources!: CreateWoOperationResourceDto[];
 
   @IsString()
   @IsOptional()

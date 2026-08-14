@@ -45,14 +45,6 @@ export class CreateOperationHrDto {
 
   @IsDateString()
   actualCompletionDate: string;
-
-  @IsOptional()
-  @IsDateString()
-  plannedStartDate?: string;
-
-  @IsOptional()
-  @IsDateString()
-  plannedCompletionDate?: string;
 }
 
 export class UpdateOperationHrDto {
@@ -77,14 +69,6 @@ export class UpdateOperationHrDto {
   @IsOptional()
   @IsDateString()
   actualCompletionDate?: string;
-
-  @IsOptional()
-  @IsDateString()
-  plannedStartDate?: string;
-
-  @IsOptional()
-  @IsDateString()
-  plannedCompletionDate?: string;
 }
 
 export class FindAllOperationHrDto {

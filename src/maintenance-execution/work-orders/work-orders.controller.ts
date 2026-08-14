@@ -25,6 +25,7 @@ import {
   FindAllWorkOrderDto,
   WorkOrderCodeDto,
   CancelWorkOrderDto,
+  ReprogramWorkOrderDto,
 } from './dto';
 
 @Controller('work-orders')
@@ -433,6 +434,42 @@ export class WorkOrdersController {
         workOrderCode: params.workOrderCode,
         organizationCode,
         userRoles,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch(':workOrderCode/reprogram')
+  reprogram(
+    @Param() params: WorkOrderCodeDto,
+    @Body() dto: ReprogramWorkOrderDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userPermissions = this.getUserPermissions(
+      organizations,
+      organizationCode,
+    );
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
+    return this.client
+      .send('work.order.reprogram', {
+        workOrderCode: params.workOrderCode,
+        organizationCode,
+        userPermissions,
+        userRoles,
+        newActualStartDate: dto.newActualStartDate,
         actorId: this.getActorId(user),
         actorName: this.getActorName(user),
       })

@@ -930,6 +930,7 @@ Headers required for all Work Order endpoints:
 | PATCH  | /api/v1/work-orders/:workOrderCode/close            | Close            |
 | PATCH  | /api/v1/work-orders/:workOrderCode/cancel           | Cancel           |
 | PATCH  | /api/v1/work-orders/:workOrderCode/pending-approval | Pending approval |
+| PATCH  | /api/v1/work-orders/:workOrderCode/reprogram        | Reprogram        |
 
 For the full contract (permissions, roles, field constraints, allowed type/subtype combinations), see the [Work Order spec](src/maintenance-execution/docs/work-order-spec.md).
 
@@ -1275,6 +1276,37 @@ Response example:
   "workOrder": {
     "workOrderCode": "1001",
     "woStatusCode": "UNRELEASED"
+  }
+}
+```
+
+### Reprogram Work Order
+
+`PATCH /api/v1/work-orders/:workOrderCode/reprogram`
+
+Shifts the Work Order's `actualStartDate` to a new date and applies the same shift (delta) to the `actualStartDate`/`actualCompletionDate` of all non-canceled operations and HR usages. The Work Order's `actualCompletionDate` is recomputed as the max of the shifted operation completion dates.
+
+Requirements:
+- The Work Order must already have an `actualStartDate` (i.e. it must have been released first).
+- Not allowed when the Work Order is `CANCELED` or `CLOSED`.
+
+Request body example:
+
+```json
+{
+  "newActualStartDate": "2026-08-10T08:00:00.000Z"
+}
+```
+
+Response example:
+
+```json
+{
+  "workOrder": {
+    "workOrderCode": "1001",
+    "woStatusCode": "RELEASED",
+    "actualStartDate": "2026-08-10T08:00:00.000Z",
+    "operations": []
   }
 }
 ```

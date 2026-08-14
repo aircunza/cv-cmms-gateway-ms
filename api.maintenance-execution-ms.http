@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:3000/api/v1
 
 
-### Login (ejecutar primero para capturar el token)
+### Login (run first to capture the token)
 # @name login
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
@@ -18,10 +18,14 @@ Content-Type: application/json
 
 @hrResourceCode = RES-001
 @wrRequestId = 900000001
+
 @woWorkOrderCode = 1001
 @woOperationCode = 5006
+@opInspectionCode = 5007
+
 @opMaterialId = 9001
 @opHrUsageId = 9101
+@opHrUsageId2 = 9102
 
 ######################## HUMAN RESOURCES ########################
 
@@ -105,7 +109,7 @@ PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/complete
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
-### Cancel work request
+### Cancel work request (cancels the associated Work Order too)
 PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/cancel
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
@@ -181,37 +185,7 @@ PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/release
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
-### Hold work order
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/hold
-Cookie: auth_token={{token}}
-X-Organization-Code: {{orgCode}}
-
-### Pending approval work order
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/pending-approval
-Cookie: auth_token={{token}}
-X-Organization-Code: {{orgCode}}
-
-### Complete work order
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/complete
-Cookie: auth_token={{token}}
-X-Organization-Code: {{orgCode}}
-
-### Close work order
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/close
-Cookie: auth_token={{token}}
-X-Organization-Code: {{orgCode}}
-
-### Cancel work order
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/cancel
-Content-Type: application/json
-Cookie: auth_token={{token}}
-X-Organization-Code: {{orgCode}}
-
-{
-  "canceledReason": "Orden cancelada por prioridad baja"
-}
-
-### Reprogram work order
+### Reprogram work order (updates actualStartDate of the WO and shifts all operations/resources by the delta)
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/reprogram
 Content-Type: application/json
 Cookie: auth_token={{token}}
@@ -220,6 +194,19 @@ X-Organization-Code: {{orgCode}}
 {
   "newActualStartDate": "2026-08-05T08:00:00Z"
 }
+
+### NOTE: Other Work Order status endpoints
+# There are more WO status change endpoints besides `release`:
+#   PATCH /api/v1/work-orders/:workOrderCode/hold
+#   PATCH /api/v1/work-orders/:workOrderCode/complete
+#   PATCH /api/v1/work-orders/:workOrderCode/close
+#   PATCH /api/v1/work-orders/:workOrderCode/cancel
+#   PATCH /api/v1/work-orders/:workOrderCode/pending-approval
+# Each endpoint only allows specific transitions (e.g. complete requires RELEASED,
+# close requires COMPLETED, cancel is terminal). Read the allowed transitions in
+# docs/work-order-spec.md -> "Status Transition Reference". Note that PENDING_APPROVAL
+# is an initial status set at creation time only (no transition leads to it); the
+# pending-approval endpoint takes a WO from PENDING_APPROVAL to UNRELEASED.
 
 ######################## WO OPERATIONS ########################
 
@@ -234,23 +221,35 @@ Cookie: auth_token={{token}}
   "operationSeqNumber": 10,
   "assetCode": "AST-001",
   "assetShortDescription": "Chancadora primaria",
-  "operationStatus": "UNRELEASED",
+  "operationStatus": "RELEASED",
   "operationType": "Internal",
-  "organizationCode": "{{orgCode}}"
+  "organizationCode": "{{orgCode}}",
+  "actualStartDate": "2026-08-05T08:00:00Z",
+  "actualCompletionDate": "2026-08-05T10:30:00Z",
+  "resources": [
+    {
+      "principalFlag": "Y",
+      "resourceCode": "{{hrResourceCode}}",
+      "resourceSequenceNumber": 1,
+      "actualHours": 2.5,
+      "actualStartDate": "2026-08-05T08:00:00Z",
+      "actualCompletionDate": "2026-08-05T10:30:00Z"
+    }
+  ]
 }
 
-### Nota: copia el operationCode devuelto y pégalo en @woOperationCode
+### Nota: copia el operationCode devuelto y pégalo en @opInspectionCode
 
 ### Get operations for a work order
-GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations?assetCode=AST-001&operationStatus=UNRELEASED
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations?assetCode=AST-001&operationStatus=RELEASED
 Cookie: auth_token={{token}}
 
 ### Get one operation
-GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}
+GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{opInspectionCode}}
 Cookie: auth_token={{token}}
 
 ### Update operation
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{opInspectionCode}}
 Content-Type: application/json
 Cookie: auth_token={{token}}
 
@@ -260,11 +259,11 @@ Cookie: auth_token={{token}}
 }
 
 ### Review operation
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/review
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{opInspectionCode}}/review
 Cookie: auth_token={{token}}
 
 ### Cancel operation
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/cancel
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{opInspectionCode}}/cancel
 Content-Type: application/json
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
@@ -309,7 +308,7 @@ Cookie: auth_token={{token}}
 ######################## OPERATION HUMAN RESOURCES ########################
 
 ### Create operation human resource
-POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/5006/human-resources
 Content-Type: application/json
 Cookie: auth_token={{token}}
 
@@ -320,10 +319,8 @@ Cookie: auth_token={{token}}
   "hourlyCost": 35.00,
   "principalFlag": "Y",
   "resourceSequenceNumber": 10,
-  "actualStartDate": "2026-08-01T08:00:00Z",
-  "actualCompletionDate": "2026-08-01T10:30:00Z",
-  "plannedStartDate": "2026-08-01T08:00:00Z",
-  "plannedCompletionDate": "2026-08-01T12:00:00Z"
+  "actualStartDate": "2026-08-05T08:00:00Z",
+  "actualCompletionDate": "2026-08-05T10:30:00Z"
 }
 
 ### Nota: copia el id devuelto y pégalo en @opHrUsageId
@@ -341,6 +338,24 @@ Cookie: auth_token={{token}}
   "actualHours": 3,
   "hourlyCost": 38.00
 }
+
+### Create a second operation human resource (needed so a cancel of the first leaves at least one ACTIVE resource)
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
+Content-Type: application/json
+Cookie: auth_token={{token}}
+
+{
+  "organizationCode": "{{orgCode}}",
+  "resourceCode": "{{hrResourceCode}}",
+  "actualHours": 1.5,
+  "hourlyCost": 30.00,
+  "principalFlag": "N",
+  "resourceSequenceNumber": 20,
+  "actualStartDate": "2026-08-05T10:30:00Z",
+  "actualCompletionDate": "2026-08-05T12:00:00Z"
+}
+
+### Nota: copia el id devuelto y pégalo en @opHrUsageId2
 
 ### Cancel operation human resource
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources/{{opHrUsageId}}/cancel

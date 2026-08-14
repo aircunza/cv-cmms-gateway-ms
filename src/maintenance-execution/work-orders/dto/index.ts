@@ -10,6 +10,7 @@ import {
   IsIn,
   IsNumber,
   Min,
+  IsDateString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -43,12 +44,6 @@ export class CreateWoOperationResourceDto {
   @IsOptional()
   @IsNumber()
   hourlyCost?: number;
-
-  @IsOptional()
-  plannedStartDate?: Date;
-
-  @IsOptional()
-  plannedCompletionDate?: Date;
 }
 
 export class CreateWoOperationMaterialDto {
@@ -201,12 +196,6 @@ export class CreateWorkOrderDto {
 
   @IsOptional()
   needByDate?: Date;
-
-  @IsOptional()
-  plannedStartDate?: Date;
-
-  @IsOptional()
-  plannedCompletionDate?: Date;
 }
 
 export class UpdateWorkOrderDto {
@@ -260,4 +249,11 @@ export class CancelWorkOrderDto {
 export class WorkOrderCodeDto {
   @IsNotEmpty()
   workOrderCode!: number | string;
+}
+
+export class ReprogramWorkOrderDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsDateString()
+  newActualStartDate!: string;
 }

@@ -44,8 +44,6 @@ The business logic, validations and error codes documented here follow the maint
 | workDefinitionCode    | string (140)    | Work definition code.                           |
 | schedulingMethod      | string (30)     | Scheduling method.                              |
 | needByDate            | Date (ISO 8601) | Date by which the work order needs to be completed. |
-| plannedStartDate      | Date (ISO 8601) | Planned start date.                             |
-| plannedCompletionDate | Date (ISO 8601) | Planned completion date.                        |
 
 #### Operation Object Structure
 
@@ -82,7 +80,6 @@ Each resource in `workOrderOperationResource` SHALL contain:
 | ---------------------- | ----------------- | ------------------------------------------------------------------------------------------ |
 | resourceCode           | string (255)      | Resource identifier.                                                                       |
 | resourceSequenceNumber | integer (>= 0)    | Sequence number for grouping resources. Same sequence = work in parallel.                  |
-| plannedHours           | number (> 0)      | Planned hours for the resource.                                                            |
 | actualHours            | number (> 0)      | Actual hours for the resource.                                                             |
 | principalFlag          | string ("Y"\|"N") | Principal flag indicator.                                                                  |
 
@@ -91,8 +88,6 @@ Optional fields per resource:
 | Field                 | Type              | Description                             |
 | --------------------- | ----------------- | --------------------------------------- |
 | hourlyCost            | number            | Hourly cost of the resource.            |
-| plannedStartDate      | Date (ISO 8601)   | Planned start date for the resource.    |
-| plannedCompletionDate | Date (ISO 8601)   | Planned completion date for resource.   |
 
 ##### Material Object Structure (Optional)
 
@@ -198,7 +193,6 @@ For create, the gateway:
           "principalFlag": "Y",
           "resourceCode": "RES-001",
           "resourceSequenceNumber": 1,
-          "plannedHours": 2,
           "actualHours": 2
         }
       ],
@@ -255,7 +249,6 @@ The `DEFAULT_OPERATION` fallback is an internal concern of the execution microse
     "actualHours": 2,
     "totalManHours": 2,
     "totalSupplierHours": 0,
-    "plannedHours": null,
     "workRequestId": null,
     "enableOracleWorkOrder": "N",
     "oclWorkOrderId": null,
@@ -294,7 +287,6 @@ The `DEFAULT_OPERATION` fallback is an internal concern of the execution microse
             "id": 9001,
             "resourceCode": "RES-001",
             "resourceSequenceNumber": 1,
-            "plannedHours": 2,
             "actualHours": 2,
             "principalFlag": "Y",
             "organizationCode": "ORG-BOG-001",
@@ -482,7 +474,6 @@ For find all, the gateway:
       "actualHours": 0,
       "totalManHours": 0,
       "totalSupplierHours": 0,
-      "plannedHours": null,
       "workRequestId": null,
       "enableOracleWorkOrder": "N",
       "oclWorkOrderId": null,
@@ -880,7 +871,7 @@ For cancel, the gateway:
 
 ### Purpose
 
-Transitions a Work Order from `PENDING_APPROVAL` to `UNRELEASED` status.
+Transitions a Work Order from `PENDING_APPROVAL` to `UNRELEASED` status. `PENDING_APPROVAL` is an **initial creation status only**: it SHALL NOT be reached by transitioning from any other status.
 
 ### Gateway Processing
 
