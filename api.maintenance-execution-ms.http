@@ -308,11 +308,12 @@ Cookie: auth_token={{token}}
 ######################## OPERATION HUMAN RESOURCES ########################
 
 ### Create operation human resource
-POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/5006/human-resources
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
 Content-Type: application/json
 Cookie: auth_token={{token}}
 
 {
+  "operationCode": "{{woOperationCode}}",
   "organizationCode": "{{orgCode}}",
   "resourceCode": "{{hrResourceCode}}",
   "actualHours": 2.5,
