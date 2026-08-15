@@ -36,9 +36,20 @@
     "test:e2e:wo:cancel": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.cancel.test.ts",
     "test:e2e:wo:pending-approval": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.pending-approval.test.ts",
     "test:e2e:wo": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/work-order.create.test.ts ./test/e2e/maintenance-execution/work-order.find.all.test.ts ./test/e2e/maintenance-execution/work-order.find.one.test.ts ./test/e2e/maintenance-execution/work-order.update.test.ts ./test/e2e/maintenance-execution/work-order.release.test.ts ./test/e2e/maintenance-execution/work-order.hold.test.ts ./test/e2e/maintenance-execution/work-order.complete.test.ts ./test/e2e/maintenance-execution/work-order.close.test.ts ./test/e2e/maintenance-execution/work-order.cancel.test.ts ./test/e2e/maintenance-execution/work-order.pending-approval.test.ts",
+    "test:e2e:op:create": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation.create.test.ts",
+    "test:e2e:op:find-one": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation.find-one.test.ts",
+    "test:e2e:op:find-all": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation.find-all.test.ts",
+    "test:e2e:op:update": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation.update.test.ts",
+    "test:e2e:op:review": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation.review.test.ts",
+    "test:e2e:op:cancel": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation.cancel.test.ts",
+    "test:e2e:op": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation.create.test.ts ./test/e2e/maintenance-execution/operation.find-one.test.ts ./test/e2e/maintenance-execution/operation.find-all.test.ts ./test/e2e/maintenance-execution/operation.update.test.ts ./test/e2e/maintenance-execution/operation.review.test.ts ./test/e2e/maintenance-execution/operation.cancel.test.ts",
+    "test:e2e:ophr:create": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation-hr.create.test.ts",
+    "test:e2e:ophr:find-all": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation-hr.find-all.test.ts",
+    "test:e2e:ophr:update": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation-hr.update.test.ts",
+    "test:e2e:ophr:cancel": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation-hr.cancel.test.ts",
+    "test:e2e:ophr": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation-hr.create.test.ts ./test/e2e/maintenance-execution/operation-hr.find-all.test.ts ./test/e2e/maintenance-execution/operation-hr.update.test.ts ./test/e2e/maintenance-execution/operation-hr.cancel.test.ts",
     "db:mock:reset:load": "bash load_mock_data/reset-and-load-mock-data.sh",
     "db:mock:reset": "bash load_mock_data/reset-mock-data.sh"
-
   },
   "dependencies": {
     "@nestjs/common": "11.1.28",
