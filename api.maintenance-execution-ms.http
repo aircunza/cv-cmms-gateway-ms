@@ -23,6 +23,8 @@ Content-Type: application/json
 @woOperationCode = 5006
 @opInspectionCode = 5007
 
+# NOTE: these ids are mock placeholders. When using the material and human
+# resources endpoints, paste here the ids returned in the "Create" responses.
 @opMaterialId = 9001
 @opHrUsageId = 9101
 @opHrUsageId2 = 9102
@@ -82,9 +84,9 @@ X-Organization-Code: {{orgCode}}
   "enableOracleWorkOrder": "N"
 }
 
-### Nota: copia el requestId devuelto y pégalo en @wrRequestId
+### Note: copy the requestId returned and paste it into @wrRequestId
 
-### Get work requests (filters como JSON string URL-encoded)
+### Get work requests (filters as JSON string URL-encoded)
 GET {{baseUrl}}/work-requests?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%5D&limit=10&offset=0
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
@@ -140,7 +142,7 @@ X-Organization-Code: {{orgCode}}
       "operationType": "Internal",
       "operationSubType": "Emergency",
       "actualStartDate": "2026-08-01T08:00:00Z",
-      "actualCompletionDate": "2026-08-01T12:00:00Z",
+      "actualCompletionDate": "2026-08-01T10:30:00Z",
       "workOrderOperationResource": [
         {
           "principalFlag": "Y",
@@ -156,9 +158,9 @@ X-Organization-Code: {{orgCode}}
   ]
 }
 
-### Nota: copia el workOrderCode devuelto y pégalo en @woWorkOrderCode
+### Note: copy the workOrderCode returned and paste it into @woWorkOrderCode
 
-### Get work orders (filters como JSON string URL-encoded)
+### Get work orders (filters as JSON string URL-encoded)
 GET {{baseUrl}}/work-orders?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%5D&limit=10&offset=0
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
@@ -211,6 +213,8 @@ X-Organization-Code: {{orgCode}}
 ######################## WO OPERATIONS ########################
 
 ### Create operation
+# NOTE: operationStatus=RELEASED requires the WO to be RELEASED. If the WO was
+# created fresh with this file, run the "Release work order" endpoint first.
 POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations
 Content-Type: application/json
 Cookie: auth_token={{token}}
@@ -238,7 +242,7 @@ Cookie: auth_token={{token}}
   ]
 }
 
-### Nota: copia el operationCode devuelto y pégalo en @opInspectionCode
+### Note: copy the operationCode returned and paste it into @opInspectionCode
 
 ### Get operations for a work order
 GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations?assetCode=AST-001&operationStatus=RELEASED
@@ -289,7 +293,7 @@ Cookie: auth_token={{token}}
   "materialSequenceNumber": 10
 }
 
-### Nota: copia el id devuelto y pégalo en @opMaterialId
+### Note: copy the id returned and paste it into @opMaterialId
 
 ### Get materials for an operation
 GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/materials
@@ -324,7 +328,7 @@ Cookie: auth_token={{token}}
   "actualCompletionDate": "2026-08-05T10:30:00Z"
 }
 
-### Nota: copia el id devuelto y pégalo en @opHrUsageId
+### Note: copy the id returned and paste it into @opHrUsageId
 
 ### Get human resources for an operation
 GET {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources
@@ -356,7 +360,7 @@ Cookie: auth_token={{token}}
   "actualCompletionDate": "2026-08-05T12:00:00Z"
 }
 
-### Nota: copia el id devuelto y pégalo en @opHrUsageId2
+### Note: copy the id returned and paste it into @opHrUsageId2
 
 ### Cancel operation human resource
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{woOperationCode}}/human-resources/{{opHrUsageId}}/cancel

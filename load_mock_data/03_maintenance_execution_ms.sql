@@ -187,17 +187,17 @@ VALUES
      'Not Planned', 'Emergency', NULL, '1', 'RELEASED',
      NULL,
      NULL, NULL, NULL,
-     '2026-08-01T08:00:00-05:00', '2026-08-01T12:00:00-05:00',
-     4,
+     '2026-08-01T08:00:00-05:00', '2026-08-01T09:00:00-05:00',
+     1,
      '2026-08-01T08:00:00-05:00', NULL, NULL, NULL,
      '2026-08-03T08:00:00-05:00', 900000001,
      'WC-002', 'Grinding Workshop', 1002, 'WA-002', 'Grinding Area',
      'Mining', 'Crushing', 'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000012', 'User 02',
+     '10000000-0000-4000-8000-000000000012', 'User 02',
      NULL, NULL,
-     NULL, NULL,
-     'N', 4, 0,
-     '2026-08-01T08:00:00-05:00', NULL),
+     'N', 1, 0,
+     '2026-08-01T08:00:00-05:00', '2026-08-01T08:00:00-05:00'),
 
     -- 1002: Preventive UNRELEASED
     (1002, 'Preventive maintenance for ball mill 12x14',
@@ -212,10 +212,10 @@ VALUES
      'WC-002', 'Grinding Workshop', 1002, 'WA-002', 'Grinding Area',
      'Mining', 'Grinding', 'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000013', 'User 03',
-     NULL, NULL,
+     '10000000-0000-4000-8000-000000000013', 'User 03',
      NULL, NULL,
      'N', 5, 0,
-     '2026-08-06T08:00:00-05:00', NULL),
+     '2026-08-06T08:00:00-05:00', '2026-08-06T08:00:00-05:00'),
 
     -- 1003: Corrective RELEASED
     (1003, 'Splice repair on conveyor belt N 1',
@@ -231,10 +231,10 @@ VALUES
      'Production Area 1', 'Mining', 'Ore transport',
      'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-00000000001A', 'User 10',
-     NULL, NULL,
+     '10000000-0000-4000-8000-00000000001A', 'User 10',
      NULL, NULL,
      'N', 4, 0,
-     '2026-08-04T08:00:00-05:00', NULL),
+     '2026-08-04T08:00:00-05:00', '2026-08-04T08:00:00-05:00'),
 
     -- 1004: Inspection CLOSED
     (1004, 'Annual inspection of industrial air compressor',
@@ -249,10 +249,10 @@ VALUES
      'WC-003', 'Electrical Workshop', 1003, 'WA-001', 'Production Area 1',
      'Energy', 'Compressed air', 'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000014', 'User 04',
-     NULL, NULL,
+     '10000000-0000-4000-8000-000000000014', 'User 04',
      NULL, NULL,
      'N', 4, 0,
-     '2026-08-02T08:00:00-05:00', NULL),
+     '2026-08-02T08:00:00-05:00', '2026-08-02T08:00:00-05:00'),
 
     -- 1005: Emergency CANCELED
     (1005, 'Emergency generator does not start',
@@ -269,10 +269,10 @@ VALUES
      'Energy and Services Area', 'Energy', 'Emergency generation',
      'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000012', 'User 02',
-     NULL, NULL,
+     '10000000-0000-4000-8000-000000000012', 'User 02',
      NULL, NULL,
      'N', NULL, NULL,
-     '2026-08-04T10:00:00-05:00', NULL);
+     '2026-08-04T10:00:00-05:00', '2026-08-04T10:00:00-05:00');
 
 SET IDENTITY_INSERT [dbo].[mnt_work_orders] OFF;
 GO
@@ -307,15 +307,15 @@ VALUES
      NULL, 'Emergency',
      'RELEASED', 'Internal',
      NULL, NULL, NULL,
-     '2026-08-01T08:00:00-05:00', '2026-08-01T12:00:00-05:00',
-     4,
+     '2026-08-01T08:00:00-05:00', '2026-08-01T09:00:00-05:00',
+     1,
      NULL, NULL,
      'WC-002', 'Grinding Workshop', 1002, 'WA-002', 'Grinding Area',
      'Mining', 'Crushing', 'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000012', 'User 02',
+     '10000000-0000-4000-8000-000000000012', 'User 02',
      NULL, NULL,
-     NULL, NULL,
-     '2026-08-01T08:00:00-05:00', NULL, NULL),
+     '2026-08-01T08:00:00-05:00', '2026-08-01T08:00:00-05:00', NULL),
 
     -- 5001: Bearing lubrication (WO 1002, Preventive, UNRELEASED)
     (5001, 'Bearing lubrication',
@@ -330,9 +330,9 @@ VALUES
      'WC-002', 'Grinding Workshop', 1002, 'WA-002', 'Grinding Area',
      'Mining', 'Grinding', 'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000013', 'User 03',
+     '10000000-0000-4000-8000-000000000013', 'User 03',
      NULL, NULL,
-     NULL, NULL,
-     '2026-08-06T08:00:00-05:00', NULL, NULL),
+     '2026-08-06T08:00:00-05:00', '2026-08-06T08:00:00-05:00', NULL),
 
     -- 5002: Roller inspection (WO 1002, Preventive, UNRELEASED)
     (5002, 'Roller and motor inspection',
@@ -347,9 +347,9 @@ VALUES
      'WC-002', 'Grinding Workshop', 1002, 'WA-002', 'Grinding Area',
      'Mining', 'Grinding', 'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000013', 'User 03',
+     '10000000-0000-4000-8000-000000000013', 'User 03',
      NULL, NULL,
-     NULL, NULL,
-     '2026-08-06T08:00:00-05:00', NULL, NULL),
+     '2026-08-06T08:00:00-05:00', '2026-08-06T08:00:00-05:00', NULL),
 
     -- 5003: Splice replacement (WO 1003, Corrective, RELEASED)
     (5003, 'Splice replacement',
@@ -365,9 +365,9 @@ VALUES
      'Production Area 1', 'Mining', 'Ore transport',
      'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-00000000001A', 'User 10',
+     '10000000-0000-4000-8000-00000000001A', 'User 10',
      NULL, NULL,
-     NULL, NULL,
-     '2026-08-04T08:00:00-05:00', NULL, NULL),
+     '2026-08-04T08:00:00-05:00', '2026-08-04T08:00:00-05:00', NULL),
 
     -- 5004: Annual inspection (WO 1004, Inspection, COMPLETED)
     (5004, 'Annual compressor inspection',
@@ -382,9 +382,9 @@ VALUES
      'WC-003', 'Electrical Workshop', 1003, 'WA-001', 'Production Area 1',
      'Energy', 'Compressed air', 'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000015', 'User 05',
+     '10000000-0000-4000-8000-000000000015', 'User 05',
      NULL, NULL,
-     NULL, NULL,
-     '2026-08-02T08:00:00-05:00', NULL, NULL),
+     '2026-08-02T08:00:00-05:00', '2026-08-02T08:00:00-05:00', NULL),
 
     -- 5005: Emergency repair (WO 1005, Emergency, CANCELED)
     (5005, 'Emergency generator repair',
@@ -393,16 +393,15 @@ VALUES
      NULL, 'Emergency',
      'CANCELED', 'Internal',
      NULL, NULL, NULL,
-     '2026-08-04T11:00:00-05:00', '2026-08-04T13:00:00-05:00',
-     2,
+     NULL, NULL, NULL,
      NULL, NULL,
      'WC-004', 'General Services', 1004, 'WA-003',
      'Energy and Services Area', 'Energy', 'Emergency generation',
      'ORG-LIMA-001', 'Empresa 1',
      '10000000-0000-4000-8000-000000000012', 'User 02',
+     '10000000-0000-4000-8000-000000000012', 'User 02',
      NULL, NULL,
-     NULL, NULL,
-     '2026-08-04T10:00:00-05:00', NULL, NULL);
+     '2026-08-04T10:00:00-05:00', '2026-08-04T10:00:00-05:00', NULL);
 
 SET IDENTITY_INSERT [dbo].[mnt_wo_operations] OFF;
 GO
@@ -464,8 +463,8 @@ VALUES
      'ACTIVE', NULL,
      'N', NULL, NULL,
      '10000000-0000-4000-8000-000000000013', 'User 03',
-     NULL, NULL,
-     '2026-08-06T08:00:00-05:00', NULL),
+     '10000000-0000-4000-8000-000000000013', 'User 03',
+     '2026-08-06T08:00:00-05:00', '2026-08-06T08:00:00-05:00'),
 
     -- Op 5002: Technician 1 (principal) - sequence 1
     (9102, 5002, 'ORG-LIMA-001', 'RES-001',
@@ -475,8 +474,8 @@ VALUES
      'ACTIVE', NULL,
      'N', NULL, NULL,
      '10000000-0000-4000-8000-000000000013', 'User 03',
-     NULL, NULL,
-     '2026-08-06T08:00:00-05:00', NULL),
+     '10000000-0000-4000-8000-000000000013', 'User 03',
+     '2026-08-06T08:00:00-05:00', '2026-08-06T08:00:00-05:00'),
 
     -- Op 5002: Instrumentation tech 1 (secondary) - sequence 2
     (9103, 5002, 'ORG-LIMA-001', 'RES-004',
@@ -486,8 +485,8 @@ VALUES
      'ACTIVE', NULL,
      'N', NULL, NULL,
      '10000000-0000-4000-8000-000000000013', 'User 03',
-     NULL, NULL,
-     '2026-08-06T08:00:00-05:00', NULL),
+     '10000000-0000-4000-8000-000000000013', 'User 03',
+     '2026-08-06T08:00:00-05:00', '2026-08-06T08:00:00-05:00'),
 
     -- Op 5003: Technician 2 (principal) - WO 1003 RELEASED
     (9104, 5003, 'ORG-LIMA-001', 'RES-002',
@@ -497,8 +496,8 @@ VALUES
      'ACTIVE', NULL,
      'N', NULL, NULL,
      '10000000-0000-4000-8000-00000000001A', 'User 10',
-     NULL, NULL,
-     '2026-08-04T08:00:00-05:00', NULL),
+     '10000000-0000-4000-8000-00000000001A', 'User 10',
+     '2026-08-04T08:00:00-05:00', '2026-08-04T08:00:00-05:00'),
 
     -- Op 5004: Electrical tech 1 (principal) - WO 1004 CLOSED
     (9105, 5004, 'ORG-LIMA-001', 'RES-003',
@@ -508,19 +507,19 @@ VALUES
      'ACTIVE', NULL,
      'N', NULL, NULL,
      '10000000-0000-4000-8000-000000000015', 'User 05',
-     NULL, NULL,
-     '2026-08-02T08:00:00-05:00', NULL),
+     '10000000-0000-4000-8000-000000000015', 'User 05',
+     '2026-08-02T08:00:00-05:00', '2026-08-02T08:00:00-05:00'),
 
     -- Op 5006: Default resource for WO 1001 (from WR 900000001)
-    (9107, 5006, 'ORG-LIMA-001', 'RES-001',
-     4, 35.00, 'N', 0,
-     '2026-08-01T08:00:00-05:00', '2026-08-01T12:00:00-05:00',
+    (9107, 5006, 'ORG-LIMA-001', 'DEFAULT_RESOURCE',
+     1, 35.00, 'N', 0,
+     '2026-08-01T08:00:00-05:00', '2026-08-01T09:00:00-05:00',
      NULL, NULL, NULL,
      'ACTIVE', NULL,
      'N', NULL, NULL,
      '10000000-0000-4000-8000-000000000012', 'User 02',
-     NULL, NULL,
-     '2026-08-01T08:00:00-05:00', NULL),
+     '10000000-0000-4000-8000-000000000012', 'User 02',
+     '2026-08-01T08:00:00-05:00', '2026-08-01T08:00:00-05:00'),
 
     -- Op 5005: Technician 1 - WO 1005 CANCELED
     (9106, 5005, 'ORG-LIMA-001', 'RES-001',
@@ -530,8 +529,8 @@ VALUES
      'CANCELED', 'Work order was canceled',
      'N', NULL, NULL,
      '10000000-0000-4000-8000-000000000012', 'User 02',
-     NULL, NULL,
-     '2026-08-04T10:00:00-05:00', NULL);
+     '10000000-0000-4000-8000-000000000012', 'User 02',
+     '2026-08-04T10:00:00-05:00', '2026-08-04T10:00:00-05:00');
 
 SET IDENTITY_INSERT [dbo].[mnt_operation_human_resource_usages] OFF;
 GO
