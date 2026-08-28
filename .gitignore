@@ -1,3 +1,7 @@
+# Private mock data:
+load_mock_private_data
+api.private.maintenance-execution-ms.http
+
 # compiled output
 /dist
 /node_modules

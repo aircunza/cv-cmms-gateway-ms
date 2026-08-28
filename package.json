@@ -49,7 +49,9 @@
     "test:e2e:ophr:cancel": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation-hr.cancel.test.ts",
     "test:e2e:ophr": "jest --config ./test/jest-e2e.json --forceExit --runInBand --runTestsByPath ./test/e2e/maintenance-execution/operation-hr.create.test.ts ./test/e2e/maintenance-execution/operation-hr.find-all.test.ts ./test/e2e/maintenance-execution/operation-hr.update.test.ts ./test/e2e/maintenance-execution/operation-hr.cancel.test.ts",
     "db:mock:reset:load": "bash load_mock_data/reset-and-load-mock-data.sh",
-    "db:mock:reset": "bash load_mock_data/reset-mock-data.sh"
+    "db:mock:reset": "bash load_mock_data/reset-mock-data.sh",
+    "db:private:mock:reset:load": "bash load_mock_private_data/reset-and-load-mock-data.sh",
+    "db:private:mock:reset": "bash load_mock_private_data/reset-mock-data.sh"
   },
   "dependencies": {
     "@nestjs/common": "11.1.28",
