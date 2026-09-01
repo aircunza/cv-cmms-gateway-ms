@@ -29,45 +29,7 @@ Content-Type: application/json
 @opHrUsageId = 9101
 @opHrUsageId2 = 9102
 
-######################## HUMAN RESOURCES ########################
 
-### Create human resource
-POST {{baseUrl}}/human-resources
-Content-Type: application/json
-Cookie: auth_token={{token}}
-
-{
-  "resourceCode": "{{hrResourceCode}}",
-  "resourceName": "Tecnico Mecanico 1",
-  "resourceType": "MECHANICAL",
-  "organizationCode": "{{orgCode}}",
-  "organizationName": "Empresa 1",
-  "availabilityStatus": "AVAILABLE",
-  "supervisorId": "10000000-0000-4000-8000-000000000017",
-  "supervisorName": "Usuario 07"
-}
-
-### Get human resources (all)
-GET {{baseUrl}}/human-resources?organizationCode={{orgCode}}
-Cookie: auth_token={{token}}
-
-### Get one human resource
-GET {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{orgCode}}
-Cookie: auth_token={{token}}
-
-### Update human resource
-PATCH {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{orgCode}}
-Content-Type: application/json
-Cookie: auth_token={{token}}
-
-{
-  "resourceName": "Tecnico Mecanico 1 - Actualizado",
-  "availabilityStatus": "ON_LEAVE"
-}
-
-### Deactivate human resource
-PATCH {{baseUrl}}/human-resources/{{hrResourceCode}}/deactivate?organizationCode={{orgCode}}
-Cookie: auth_token={{token}}
 
 ######################## WORK REQUESTS ########################
 
@@ -370,3 +332,35 @@ Cookie: auth_token={{token}}
 {
   "canceledReason": "Resource no longer needed"
 }
+
+
+######################## ORACLE FUSION READ ENDPOINTS ########################
+
+##The workOrderCode and workOrderOperationCode that were created in the local application must be used.
+##If the connection to Oracle was enabled, it will retrieve the information for the work order
+##that was created in Oracle Fusion as a side effect.
+
+##Work order code local:
+@woCodeLocal = 102862
+## Operation code local:
+@woOpCodeLocal = 93315
+
+### Get work order from Oracle Fusion (real-time)
+GET {{baseUrl}}/oracle/work-orders/{{woCodeLocal}}
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+### Get work order operations from Oracle Fusion (real-time)
+GET {{baseUrl}}/oracle/work-orders/{{woCodeLocal}}/operations
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+### Get operation materials from Oracle Fusion (real-time)
+GET {{baseUrl}}/oracle/work-orders/{{woCodeLocal}}/operations/{{woOpCodeLocal}}/materials
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+### Get operation resources from Oracle Fusion (real-time)
+GET {{baseUrl}}/oracle/work-orders/{{woCodeLocal}}/operations/{{woOpCodeLocal}}/resources
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}

@@ -3,6 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { AssetManagementModule } from './asset-management/asset-management.module';
 import { MaintenanceExecutionModule } from './maintenance-execution/maintenance-execution.module';
 import { UserOrgPermissionsModule } from './auth/user-org-permissions/user-org-permissions.module';
+import { OracleFusionModule } from './oracle-fusion/oracle-fusion.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { UserOrgPermissionsModule } from './auth/user-org-permissions/user-org-p
     UserOrgPermissionsModule,
     AssetManagementModule,
     MaintenanceExecutionModule,
+    OracleFusionModule,
   ],
   controllers: [],
   providers: [],
