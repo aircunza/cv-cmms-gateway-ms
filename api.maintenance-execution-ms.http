@@ -372,7 +372,19 @@ GET {{baseUrl}}/oracle/inventory/77001327
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
+
 ### Search inventory by description from Oracle Fusion (real-time)
 GET {{baseUrl}}/oracle/inventory?description=PERNO
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+# FRONTEND: Wildcards (%) must be sent explicitly, encoded as %25
+# Example: search containing "PERNO" and "DIAMETRO" → %25PERNO%25DIAMETRO%25
+#
+# Internal JSON received by backend:
+# { "description": "%PERNO%DIAMETRO%", "organizationCode": "EMPAMO004" }
+
+### Search parts containing PERNO and DIAMETRO
+GET {{baseUrl}}/oracle/inventory?description=%25PERNO%25DIAMETRO%25
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
