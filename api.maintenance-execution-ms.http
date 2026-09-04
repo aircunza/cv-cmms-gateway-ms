@@ -364,3 +364,15 @@ X-Organization-Code: {{orgCode}}
 GET {{baseUrl}}/oracle/work-orders/{{woCodeLocal}}/operations/{{woOpCodeLocal}}/resources
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
+
+######################## ORACLE INVENTORY ENDPOINTS ########################
+
+### Get inventory by materialCode from Oracle Fusion (real-time)
+GET {{baseUrl}}/oracle/inventory/77001327
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+### Search inventory by description from Oracle Fusion (real-time)
+GET {{baseUrl}}/oracle/inventory?description=PERNO
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
