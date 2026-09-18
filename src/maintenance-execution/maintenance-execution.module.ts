@@ -5,6 +5,7 @@ import { WoOperationsModule } from './wo-operations/wo-operations.module';
 import { OperationMaterialsModule } from './operation-materials/operation-materials.module';
 import { OperationHumanResourcesModule } from './operation-human-resources/operation-human-resources.module';
 import { HumanResourcesModule } from './human-resources/human-resources.module';
+import { AssetsTreeModule } from './assets-tree/assets-tree.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { HumanResourcesModule } from './human-resources/human-resources.module';
     OperationMaterialsModule,
     OperationHumanResourcesModule,
     HumanResourcesModule,
+    AssetsTreeModule,
   ],
 })
 export class MaintenanceExecutionModule {}
