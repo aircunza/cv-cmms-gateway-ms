@@ -10,7 +10,7 @@ export class CreateWorkRequestDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(80)
-  assetCode: string;
+  assetCode!: string;
 
   @IsString()
   @IsOptional()
@@ -20,12 +20,22 @@ export class CreateWorkRequestDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(240)
-  issueDescription: string;
+  issueDescription!: string;
 
   @IsString()
   @IsNotEmpty()
   @IsIn(['Y', 'N'])
-  enableOracleWorkOrder: string;
+  enableOracleWorkOrder!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  operatorCode!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  operatorName!: string;
 }
 
 export class UpdateWorkRequestDto {
@@ -51,5 +61,5 @@ export class FindAllWorkRequestDto {
 
 export class WorkRequestIdDto {
   @IsNotEmpty()
-  requestId: number;
+  requestId!: number;
 }

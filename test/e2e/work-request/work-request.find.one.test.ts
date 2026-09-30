@@ -89,6 +89,8 @@ describe('Work Request Find One (e2e, HTTP)', () => {
         canceledAt: null,
         organizationCode: 'E2E_ORG_001',
         organizationName: 'E2E Organization',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
         createdBy: '550e8400-e29b-41d4-a716-446655440001',
         createdByName: 'EU',
         updatedBy: null,
@@ -128,6 +130,8 @@ describe('Work Request Find One (e2e, HTTP)', () => {
     expect(response.body.workRequest).toBeDefined();
     expect(response.body.workRequest.requestId).toBe('900000001');
     expect(response.body.workRequest.statusCode).toBe('RELEASED');
+    expect(response.body.workRequest.operatorCode).toBe('OP-001');
+    expect(response.body.workRequest.operatorName).toBe('John Operator');
     expect(response.body.workRequest.workOrders).toHaveLength(1);
   });
 

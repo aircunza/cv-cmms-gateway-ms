@@ -1371,7 +1371,9 @@ Request body example:
   "assetCode": "AST-001",
   "assetShortDescription": "Hydraulic Pump",
   "issueDescription": "Oil leak detected on the hydraulic pump.",
-  "enableOracleWorkOrder": "N"
+  "enableOracleWorkOrder": "N",
+  "operatorCode": "OP-001",
+  "operatorName": "John Operator"
 }
 ```
 
@@ -1405,6 +1407,8 @@ Response `201 Created`:
     "subsector": "Line A",
     "organizationCode": "ORG-BOG-001",
     "organizationName": "Bogota Plant",
+    "operatorCode": "OP-001",
+    "operatorName": "John Operator",
     "createdBy": "550e8400-e29b-41d4-a716-446655440001",
     "createdByName": "John Doe",
     "updatedBy": null,
@@ -1450,7 +1454,7 @@ Query parameters:
 
 Supported operators: `eq`, `like`, `gt`, `lt`, `in`.
 
-Allowed filter fields: `requestId`, `assetCode`, `issueDescription`, `statusCode`, `organizationCode`, `workAreaCode`, `createdAt`, `requestedAt`, `releasedAt`, `completedAt`, `canceledAt`.
+Allowed filter fields: `requestId`, `assetCode`, `issueDescription`, `statusCode`, `organizationCode`, `workAreaCode`, `operatorCode`, `operatorName`, `createdAt`, `requestedAt`, `releasedAt`, `completedAt`, `canceledAt`.
 
 Example query payload (human-readable JSON):
 
@@ -1491,6 +1495,8 @@ Response example:
       "workAreaDescription": "Plant Floor",
       "organizationCode": "ORG-BOG-001",
       "organizationName": "Bogota Plant",
+      "operatorCode": "OP-001",
+      "operatorName": "John Operator",
       "createdBy": "550e8400-e29b-41d4-a716-446655440001",
       "createdByName": "John Doe",
       "createdAt": "2026-08-07T15:12:00.000Z",
@@ -1539,6 +1545,8 @@ Response example:
     "workAreaDescription": "Plant Floor",
     "organizationCode": "ORG-BOG-001",
     "organizationName": "Bogota Plant",
+    "operatorCode": "OP-001",
+    "operatorName": "John Operator",
     "createdBy": "550e8400-e29b-41d4-a716-446655440001",
     "createdByName": "John Doe",
     "createdAt": "2026-08-07T15:12:00.000Z",

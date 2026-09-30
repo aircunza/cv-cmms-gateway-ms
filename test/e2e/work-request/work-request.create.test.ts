@@ -96,6 +96,8 @@ describe('Work Request Create (e2e, HTTP)', () => {
         subsector: 'Line A',
         organizationCode: 'E2E_ORG_001',
         organizationName: 'E2E Organization',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
         createdBy: '550e8400-e29b-41d4-a716-446655440001',
         createdByName: 'EU',
         updatedBy: null,
@@ -138,6 +140,8 @@ describe('Work Request Create (e2e, HTTP)', () => {
         assetShortDescription: 'Hydraulic Pump',
         issueDescription: 'Oil leak detected on the hydraulic pump.',
         enableOracleWorkOrder: 'N',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
       })
       .expect(201);
 
@@ -152,12 +156,16 @@ describe('Work Request Create (e2e, HTTP)', () => {
         assetCode: 'AST-001',
         issueDescription: 'Oil leak detected on the hydraulic pump.',
         enableOracleWorkOrder: 'N',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
       }),
     );
 
     expect(response.body.workRequest).toBeDefined();
     expect(response.body.workRequest.requestId).toBe('900000001');
     expect(response.body.workRequest.statusCode).toBe('RELEASED');
+    expect(response.body.workRequest.operatorCode).toBe('OP-001');
+    expect(response.body.workRequest.operatorName).toBe('John Operator');
     expect(response.body.workOrder).toBeDefined();
     expect(response.body.workOrder.workOrderCode).toBe('1001');
   });
@@ -170,6 +178,8 @@ describe('Work Request Create (e2e, HTTP)', () => {
         assetCode: 'AST-001',
         issueDescription: 'Oil leak detected on the hydraulic pump.',
         enableOracleWorkOrder: 'N',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
       })
       .expect(400);
 
@@ -187,6 +197,8 @@ describe('Work Request Create (e2e, HTTP)', () => {
         assetCode: 'AST-001',
         issueDescription: 'Oil leak detected on the hydraulic pump.',
         enableOracleWorkOrder: 'N',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
       })
       .expect(400);
 
@@ -210,6 +222,8 @@ describe('Work Request Create (e2e, HTTP)', () => {
         canceledAt: null,
         organizationCode: 'E2E_ORG_001',
         organizationName: 'E2E Organization',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
         createdBy: '550e8400-e29b-41d4-a716-446655440001',
         createdByName: 'EU',
         updatedBy: null,
@@ -275,6 +289,8 @@ describe('Work Request Create (e2e, HTTP)', () => {
         assetCode: 'AST-001',
         issueDescription: 'Oil leak detected on the hydraulic pump.',
         enableOracleWorkOrder: 'N',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
       })
       .expect(201);
 

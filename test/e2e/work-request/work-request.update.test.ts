@@ -89,6 +89,8 @@ describe('Work Request Update (e2e, HTTP)', () => {
         canceledAt: null,
         organizationCode: 'E2E_ORG_001',
         organizationName: 'E2E Organization',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
         createdBy: '550e8400-e29b-41d4-a716-446655440001',
         createdByName: 'EU',
         updatedBy: '550e8400-e29b-41d4-a716-446655440001',

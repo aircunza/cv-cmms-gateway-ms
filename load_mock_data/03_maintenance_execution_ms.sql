@@ -123,7 +123,8 @@ INSERT INTO [dbo].[mnt_work_request]
      [released_at], [canceled_at], [work_center_code],
      [work_center_description], [center_cost_code], [work_area_code],
      [work_area_description], [sector], [subsector], [organization_code],
-     [organization_name], [created_by], [created_by_name], [created_at])
+     [organization_name], [operator_code], [operator_name],
+     [created_by], [created_by_name], [created_at])
 VALUES
     (900000001, 'AST-001', 'Primary crusher',
      'Excessive vibration in primary crusher detected during operation',
@@ -131,6 +132,7 @@ VALUES
      '2026-08-01T08:00:00-05:00', NULL,
      'WC-002', 'Grinding Workshop', 1002, 'WA-002', 'Grinding Area',
      'Mining', 'Crushing', 'ORG-LIMA-001', 'Empresa 1',
+     'OP-001', 'John Operator',
      '10000000-0000-4000-8000-000000000012', 'User 02',
      '2026-08-01T08:00:00-05:00'),
 
@@ -141,6 +143,7 @@ VALUES
      'WC-001', 'Central Mechanical Workshop', 1001, 'WA-001',
      'Production Area 1', 'Mining', 'Slurry pumping',
      'ORG-LIMA-001', 'Empresa 1',
+     'OP-002', 'Jane Technician',
      '10000000-0000-4000-8000-000000000012', 'User 02',
      '2026-08-02T09:00:00-05:00'),
 
@@ -151,6 +154,7 @@ VALUES
      'WC-004', 'General Services', 1004, 'WA-003',
      'Energy and Services Area', 'Energy', 'Emergency generation',
      'ORG-LIMA-001', 'Empresa 1',
+     'OP-003', 'Mike Engineer',
      '10000000-0000-4000-8000-000000000012', 'User 02',
      '2026-08-04T10:00:00-05:00');
 

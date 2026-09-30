@@ -90,6 +90,8 @@ describe('Work Request Find All (e2e, HTTP)', () => {
           canceledAt: null,
           organizationCode: 'E2E_ORG_001',
           organizationName: 'E2E Organization',
+          operatorCode: 'OP-001',
+          operatorName: 'John Operator',
           workOrders: [
             {
               workOrderCode: '1001',
@@ -138,6 +140,8 @@ describe('Work Request Find All (e2e, HTTP)', () => {
 
     expect(response.body.workRequests).toBeDefined();
     expect(response.body.workRequests).toHaveLength(1);
+    expect(response.body.workRequests[0].operatorCode).toBe('OP-001');
+    expect(response.body.workRequests[0].operatorName).toBe('John Operator');
     expect(response.body.total).toBe(1);
   });
 
