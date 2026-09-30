@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { of } from 'rxjs';
@@ -36,10 +37,7 @@ const mockAuthGuard = {
             roleCode: 'PLANNER_MAINTENANCE_01',
             roleName: 'Planner',
             roleDescription: 'Planner role',
-            permissions: [
-              'mnt.work.orders.view',
-              'mnt.work.orders.cancel',
-            ],
+            permissions: ['mnt.work.orders.view', 'mnt.work.orders.cancel'],
             deniedPermissions: null,
           },
         ],

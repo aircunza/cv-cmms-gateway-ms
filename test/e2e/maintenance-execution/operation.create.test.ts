@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { of } from 'rxjs';
@@ -158,9 +159,7 @@ describe('Operation Create (e2e, HTTP)', () => {
 
     expect(response.body.operation).toBeDefined();
     expect(response.body.operation.operationCode).toBe('5001');
-    expect(response.body.operation.operationName).toBe(
-      'Hydraulic pump repair',
-    );
+    expect(response.body.operation.operationName).toBe('Hydraulic pump repair');
   });
 
   it('rejects when resources is empty', async () => {

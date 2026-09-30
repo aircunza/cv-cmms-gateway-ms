@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { of } from 'rxjs';
@@ -121,9 +122,7 @@ describe('Operation Find All (e2e, HTTP)', () => {
   });
 
   it('forwards workOrderCode as number without extra query params', async () => {
-    mockNatsClient.send.mockReturnValue(
-      of({ operations: [], total: 0 }),
-    );
+    mockNatsClient.send.mockReturnValue(of({ operations: [], total: 0 }));
 
     await request(app.getHttpServer())
       .get('/work-orders/1001/operations')

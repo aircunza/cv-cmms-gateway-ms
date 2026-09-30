@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { of, throwError } from 'rxjs';
@@ -111,10 +112,9 @@ describe('Assets Tree Find (e2e, HTTP)', () => {
         .set('Cookie', 'auth_token=mock-token')
         .expect(200);
 
-      expect(mockNatsClient.send).toHaveBeenCalledWith(
-        'assets.tree.find.one',
-        { id: 1 },
-      );
+      expect(mockNatsClient.send).toHaveBeenCalledWith('assets.tree.find.one', {
+        id: 1,
+      });
 
       expect(response.body.assetsTree).toBeDefined();
       expect(response.body.assetsTree.id).toBe('1');
@@ -123,7 +123,10 @@ describe('Assets Tree Find (e2e, HTTP)', () => {
 
     it('propagates 404 error from microservice', async () => {
       mockNatsClient.send.mockReturnValue(
-        throwError(() => ({ status: 404, message: 'Assets tree record not found' })),
+        throwError(() => ({
+          status: 404,
+          message: 'Assets tree record not found',
+        })),
       );
 
       const response = await request(app.getHttpServer())

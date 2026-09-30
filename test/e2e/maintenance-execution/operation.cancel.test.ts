@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { of } from 'rxjs';
@@ -36,10 +37,7 @@ const mockAuthGuard = {
             roleCode: 'PLANNER_MAINTENANCE_01',
             roleName: 'Planner',
             roleDescription: 'Planner role',
-            permissions: [
-              'mnt.work.orders.view',
-              'mnt.work.orders.cancel',
-            ],
+            permissions: ['mnt.work.orders.view', 'mnt.work.orders.cancel'],
             deniedPermissions: null,
           },
         ],
@@ -110,10 +108,7 @@ describe('Operation Cancel (e2e, HTTP)', () => {
         operationCode: 5001,
         workOrderCode: 1001,
         organizationCode: 'E2E_ORG_001',
-        userPermissions: [
-          'mnt.work.orders.view',
-          'mnt.work.orders.cancel',
-        ],
+        userPermissions: ['mnt.work.orders.view', 'mnt.work.orders.cancel'],
         canceledReason: 'No longer needed',
         actorId: '550e8400-e29b-41d4-a716-446655440001',
         actorName: 'EU',
@@ -182,10 +177,7 @@ describe('Operation Cancel (e2e, HTTP)', () => {
     expect(mockNatsClient.send).toHaveBeenCalledWith(
       'wo.operation.cancel',
       expect.objectContaining({
-        userPermissions: [
-          'mnt.work.orders.view',
-          'mnt.work.orders.cancel',
-        ],
+        userPermissions: ['mnt.work.orders.view', 'mnt.work.orders.cancel'],
       }),
     );
   });

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { of, throwError } from 'rxjs';
@@ -128,7 +129,9 @@ describe('Assets Tree Update & Deactivate (e2e, HTTP)', () => {
 
       expect(response.body.assetsTree).toBeDefined();
       expect(response.body.assetsTree.unit).toBe('Hydraulic System Updated');
-      expect(response.body.assetsTree.sparePartName).toBe('Hydraulic Seal Kit Updated');
+      expect(response.body.assetsTree.sparePartName).toBe(
+        'Hydraulic Seal Kit Updated',
+      );
     });
 
     it('rejects update when field exceeds max length', async () => {
@@ -145,7 +148,10 @@ describe('Assets Tree Update & Deactivate (e2e, HTTP)', () => {
 
     it('propagates 404 error from microservice', async () => {
       mockNatsClient.send.mockReturnValue(
-        throwError(() => ({ status: 404, message: 'Assets tree record not found' })),
+        throwError(() => ({
+          status: 404,
+          message: 'Assets tree record not found',
+        })),
       );
 
       const response = await request(app.getHttpServer())
@@ -161,7 +167,10 @@ describe('Assets Tree Update & Deactivate (e2e, HTTP)', () => {
 
     it('propagates 400 error when combination already exists', async () => {
       mockNatsClient.send.mockReturnValue(
-        throwError(() => ({ status: 400, message: 'Assets tree combination already exists' })),
+        throwError(() => ({
+          status: 400,
+          message: 'Assets tree combination already exists',
+        })),
       );
 
       const response = await request(app.getHttpServer())
@@ -219,7 +228,10 @@ describe('Assets Tree Update & Deactivate (e2e, HTTP)', () => {
 
     it('propagates 404 error from microservice', async () => {
       mockNatsClient.send.mockReturnValue(
-        throwError(() => ({ status: 404, message: 'Assets tree record not found' })),
+        throwError(() => ({
+          status: 404,
+          message: 'Assets tree record not found',
+        })),
       );
 
       const response = await request(app.getHttpServer())

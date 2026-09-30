@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -58,13 +57,11 @@ export class AssetsTreeController {
   @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param() params: { id: string }) {
-    return this.client
-      .send('assets.tree.find.one', { id: +params.id })
-      .pipe(
-        catchError((error: unknown) => {
-          throw new RpcException(this.toRpcError(error));
-        }),
-      );
+    return this.client.send('assets.tree.find.one', { id: +params.id }).pipe(
+      catchError((error: unknown) => {
+        throw new RpcException(this.toRpcError(error));
+      }),
+    );
   }
 
   @UseGuards(AuthGuard)
