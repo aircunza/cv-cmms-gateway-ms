@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 #
-# clean-dbs.sh
+# reset-mock-data.sh
 #
-# Deletes all application data from the 3 microservice DBs.
+# Deletes all application data from the 2 microservice DBs.
 # Does NOT load mock data and does NOT touch Prisma migrations.
+#
+# Note: asset_db (port 1434) was deprecated when asset-management-ms was
+# merged into maintenance-execution-ms.
 #
 # Requirements:
 #   - Docker containers up (docker compose up -d)
@@ -30,15 +33,6 @@ DELETE FROM [dbo].[organizations];
 EOF
       ;;
 
-    asset_db)
-      cat > /tmp/db_cleanup_body.sql <<'EOF'
-DELETE FROM [dbo].[mnt_assets];
-DELETE FROM [dbo].[work_centers];
-DELETE FROM [dbo].[work_areas];
-DELETE FROM [dbo].[organizations];
-EOF
-      ;;
-
     exe_maintenance_db)
       cat > /tmp/db_cleanup_body.sql <<'EOF'
 DELETE FROM [dbo].[mnt_operation_human_resource_usages];
@@ -48,6 +42,10 @@ DELETE FROM [dbo].[mnt_work_orders];
 DELETE FROM [dbo].[mnt_work_request];
 DELETE FROM [dbo].[mnt_human_resources];
 DELETE FROM [dbo].[mnt_assets];
+DELETE FROM [dbo].[mnt_assets_tree];
+DELETE FROM [dbo].[work_centers];
+DELETE FROM [dbo].[work_areas];
+DELETE FROM [dbo].[organizations];
 EOF
       ;;
 
@@ -71,7 +69,7 @@ run_sql() {
     -i "$TMP_FILE"
 }
 
-for container in auth_db asset_db exe_maintenance_db; do
+for container in auth_db exe_maintenance_db; do
   echo "============================================================"
   echo ">>> [$container] cleaning data..."
 

@@ -2,10 +2,13 @@
 #
 # reset-and-load-mock-data.sh
 #
-# Resets (deletes) and reloads the mock data into the 3 microservice DBs:
+# Resets (deletes) and reloads the mock data into the 2 microservice DBs:
 #   auth_db            (port 1433) -> 01_auth_ms.sql
-#   asset_db           (port 1434) -> 02_asset_management_ms.sql
 #   exe_maintenance_db (port 1435) -> 03_maintenance_execution_ms.sql
+#
+# Note: asset_db (port 1434) was deprecated when asset-management-ms was
+# merged into maintenance-execution-ms. The work_areas, work_centers and
+# organizations data is now loaded into exe_maintenance_db.
 #
 # Requirements:
 #   - Docker containers up (docker compose up -d).
@@ -30,8 +33,7 @@ TMP_FILE="/tmp/mock_cleanup.sql"
 # <container_name>|<mock_sql_file>|<comma separated tables to verify>
 CONFIG=(
   "auth_db|01_auth_ms.sql|organizations,users,user_org_permissions"
-  "asset_db|02_asset_management_ms.sql|organizations,work_areas,work_centers,mnt_assets"
-  "exe_maintenance_db|03_maintenance_execution_ms.sql|mnt_assets,mnt_human_resources,mnt_work_request,mnt_work_orders,mnt_wo_operations,mnt_operation_material_usages,mnt_operation_human_resource_usages"
+  "exe_maintenance_db|03_maintenance_execution_ms.sql|organizations,work_areas,work_centers,mnt_assets,mnt_human_resources,mnt_work_request,mnt_work_orders,mnt_wo_operations,mnt_operation_material_usages,mnt_operation_human_resource_usages"
 )
 
 run_sql() {
@@ -53,14 +55,6 @@ DELETE FROM [dbo].[users];
 DELETE FROM [dbo].[organizations];
 EOF
       ;;
-    asset_db)
-      cat > /tmp/mock_cleanup_body.sql <<'EOF'
-DELETE FROM [dbo].[mnt_assets];
-DELETE FROM [dbo].[work_centers];
-DELETE FROM [dbo].[work_areas];
-DELETE FROM [dbo].[organizations];
-EOF
-      ;;
     exe_maintenance_db)
       cat > /tmp/mock_cleanup_body.sql <<'EOF'
 DELETE FROM [dbo].[mnt_operation_human_resource_usages];
@@ -70,6 +64,10 @@ DELETE FROM [dbo].[mnt_work_orders];
 DELETE FROM [dbo].[mnt_work_request];
 DELETE FROM [dbo].[mnt_human_resources];
 DELETE FROM [dbo].[mnt_assets];
+DELETE FROM [dbo].[mnt_assets_tree];
+DELETE FROM [dbo].[work_centers];
+DELETE FROM [dbo].[work_areas];
+DELETE FROM [dbo].[organizations];
 EOF
       ;;
     *)

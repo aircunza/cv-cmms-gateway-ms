@@ -4,11 +4,14 @@
 -- (cv-cmms-maintenance-execution-ms).
 --
 -- Contents:
---   1) 6 assets (same asset_code as in asset-management)
---   2) Human resources (mnt_human_resources)
---   3) Work requests (with IDENTITY_INSERT: 900000001...)
---   4) Work orders (1001...1005) with their lifecycle
---   5) Operations, materials and HR usage associated
+--   1) Organization (replica from auth-ms)
+--   2) 3 Work Areas
+--   3) 4 Work Centers
+--   4) 6 assets (with work_center_id FK)
+--   5) Human resources (mnt_human_resources)
+--   6) Work requests (with IDENTITY_INSERT: 900000001...)
+--   7) Work orders (1001...1005) with their lifecycle
+--   8) Operations, materials and HR usage associated
 --
 -- All planned_* fields are set to NULL since the system no longer uses
 -- them for calculations. Only actual_* fields drive the business logic.
@@ -20,57 +23,124 @@
 -- =====================================================================
 
 -- =====================================================================
--- 1. ASSETS (mnt_assets)
+-- 1. ORGANIZATION (replica from auth-ms, must match 01_auth_ms.sql)
+-- =====================================================================
+INSERT INTO [dbo].[organizations]
+    ([id], [code], [name], [country_code], [country_name], [timezone],
+     [offset_minutes], [created_at], [updated_at], [is_active])
+VALUES
+    ('10000000-0000-4000-8000-000000000001', 'ORG-LIMA-001', 'Empresa 1',
+     'PE', 'Peru', 'America/Lima', -300,
+     '2026-08-01T08:00:00-05:00', '2026-08-01T08:00:00-05:00', 'Y');
+
+-- =====================================================================
+-- 2. WORK AREAS
+-- =====================================================================
+INSERT INTO [dbo].[work_areas]
+    ([work_area_id], [work_area_code], [work_area_description],
+     [organization_code], [is_active], [created_at], [updated_at])
+VALUES
+     ('10000000-0000-4000-8000-0000000000A1', 'WA-001',
+      'Production Area 1', 'ORG-LIMA-001', 'Y',
+      '2026-08-01T08:00:00-05:00', NULL),
+    ('10000000-0000-4000-8000-0000000000A2', 'WA-002',
+      'Grinding Area', 'ORG-LIMA-001', 'Y',
+      '2026-08-01T08:00:00-05:00', NULL),
+    ('10000000-0000-4000-8000-0000000000A3', 'WA-003',
+      'Energy and Services Area', 'ORG-LIMA-001', 'Y',
+     '2026-08-01T08:00:00-05:00', NULL);
+
+-- =====================================================================
+-- 3. WORK CENTERS
+-- =====================================================================
+INSERT INTO [dbo].[work_centers]
+    ([work_center_id], [work_center_code], [work_center_description],
+     [work_area_id], [center_cost_code], [center_cost_description],
+     [is_active], [created_at], [updated_at])
+VALUES
+     ('10000000-0000-4000-8000-0000000000B1', 'WC-001',
+      'Central Mechanical Workshop', '10000000-0000-4000-8000-0000000000A1',
+      1001, 'Cost center 1001 - Mechanical maintenance', 'Y',
+      '2026-08-01T08:00:00-05:00', NULL),
+    ('10000000-0000-4000-8000-0000000000B2', 'WC-002',
+      'Grinding Workshop', '10000000-0000-4000-8000-0000000000A2',
+      1002, 'Cost center 1002 - Grinding', 'Y',
+      '2026-08-01T08:00:00-05:00', NULL),
+    ('10000000-0000-4000-8000-0000000000B3', 'WC-003',
+      'Electrical Workshop', '10000000-0000-4000-8000-0000000000A1',
+      1003, 'Cost center 1003 - Electrical maintenance', 'Y',
+      '2026-08-01T08:00:00-05:00', NULL),
+    ('10000000-0000-4000-8000-0000000000B4', 'WC-004',
+      'General Services', '10000000-0000-4000-8000-0000000000A3',
+      1004, 'Cost center 1004 - General services', 'Y',
+     '2026-08-01T08:00:00-05:00', NULL);
+GO
+
+-- =====================================================================
+-- 4. ASSETS (mnt_assets)
+--    Now includes work_center_id FK since this is the source of truth.
 -- =====================================================================
 INSERT INTO [dbo].[mnt_assets]
     ([asset_code], [asset_description], [asset_short_description],
      [asset_status], [organization_code], [organization_name],
-     [country_code], [country_name], [work_center_code],
+     [country_code], [country_name], [work_center_id], [work_center_code],
      [work_center_description], [center_cost_code], [work_area_code],
      [work_area_description], [enabled_maintenance_program],
      [enabled_maintenance_hours_control], [enabled_financial_kpi],
      [enabled_technical_kpi], [wo_allowed_flag], [created_by],
      [created_at], [enabled_iiot], [sector], [subsector], [is_active])
 VALUES
+    -- AST-001: Primary jaw crusher
     ('AST-001', 'Primary jaw crusher', 'Primary crusher',
      'OPERATIVE', 'ORG-LIMA-001', 'Empresa 1', 'PE', 'Peru',
-     'WC-002', 'Grinding Workshop', 1002, 'WA-002', 'Grinding Area',
+     '10000000-0000-4000-8000-0000000000B2', 'WC-002', 'Grinding Workshop',
+     1002, 'WA-002', 'Grinding Area',
      'Y', 'Y', 'N', 'Y', 'Y', 'USR001',
      '2026-08-01T08:00:00-05:00', 'N', 'Mining', 'Crushing', 'Y'),
 
+    -- AST-002: Ball mill
     ('AST-002', 'Ball mill 12 x 14 ft', 'Ball mill',
      'OPERATIVE', 'ORG-LIMA-001', 'Empresa 1', 'PE', 'Peru',
-     'WC-002', 'Grinding Workshop', 1002, 'WA-002', 'Grinding Area',
+     '10000000-0000-4000-8000-0000000000B2', 'WC-002', 'Grinding Workshop',
+     1002, 'WA-002', 'Grinding Area',
      'Y', 'Y', 'N', 'Y', 'Y', 'USR001',
      '2026-08-01T08:00:00-05:00', 'N', 'Mining', 'Grinding', 'Y'),
 
+    -- AST-003: Centrifugal slurry pump
     ('AST-003', 'Centrifugal slurry pump', 'Slurry pump',
      'OPERATIVE', 'ORG-LIMA-001', 'Empresa 1', 'PE', 'Peru',
-     'WC-001', 'Central Mechanical Workshop', 1001, 'WA-001',
-     'Production Area 1', 'Y', 'Y', 'N', 'Y', 'Y', 'USR001',
+     '10000000-0000-4000-8000-0000000000B1', 'WC-001', 'Central Mechanical Workshop',
+     1001, 'WA-001', 'Production Area 1',
+     'Y', 'Y', 'N', 'Y', 'Y', 'USR001',
      '2026-08-01T08:00:00-05:00', 'N', 'Mining', 'Slurry pumping', 'Y'),
 
+    -- AST-004: Conveyor belt N1
     ('AST-004', 'Conveyor belt N 1', 'Conveyor belt',
      'OPERATIVE', 'ORG-LIMA-001', 'Empresa 1', 'PE', 'Peru',
-     'WC-001', 'Central Mechanical Workshop', 1001, 'WA-001',
-     'Production Area 1', 'Y', 'N', 'N', 'Y', 'Y', 'USR001',
+     '10000000-0000-4000-8000-0000000000B1', 'WC-001', 'Central Mechanical Workshop',
+     1001, 'WA-001', 'Production Area 1',
+     'Y', 'N', 'N', 'Y', 'Y', 'USR001',
      '2026-08-01T08:00:00-05:00', 'N', 'Mining', 'Ore transport', 'Y'),
 
+    -- AST-005: Diesel generator
     ('AST-005', 'Diesel generator 500 kVA', 'Generator',
      'OPERATIVE', 'ORG-LIMA-001', 'Empresa 1', 'PE', 'Peru',
-     'WC-004', 'General Services', 1004, 'WA-003',
-     'Energy and Services Area', 'Y', 'N', 'N', 'Y', 'Y', 'USR001',
+     '10000000-0000-4000-8000-0000000000B4', 'WC-004', 'General Services',
+     1004, 'WA-003', 'Energy and Services Area',
+     'Y', 'N', 'N', 'Y', 'Y', 'USR001',
      '2026-08-01T08:00:00-05:00', 'N', 'Energy', 'Emergency generation', 'Y'),
 
+    -- AST-006: Industrial air compressor
     ('AST-006', 'Industrial air compressor', 'Air compressor',
      'OPERATIVE', 'ORG-LIMA-001', 'Empresa 1', 'PE', 'Peru',
-     'WC-003', 'Electrical Workshop', 1003, 'WA-001',
-     'Production Area 1', 'Y', 'N', 'N', 'Y', 'Y', 'USR001',
+     '10000000-0000-4000-8000-0000000000B3', 'WC-003', 'Electrical Workshop',
+     1003, 'WA-001', 'Production Area 1',
+     'Y', 'N', 'N', 'Y', 'Y', 'USR001',
      '2026-08-01T08:00:00-05:00', 'N', 'Energy', 'Compressed air', 'Y');
 GO
 
 -- =====================================================================
--- 2. HUMAN RESOURCES (mnt_human_resources)
+-- 5. HUMAN RESOURCES (mnt_human_resources)
 -- =====================================================================
 INSERT INTO [dbo].[mnt_human_resources]
     ([resource_code], [resource_name], [resource_type],
@@ -98,10 +168,10 @@ VALUES
      '10000000-0000-4000-8000-000000000018', 'User 08', 'Y',
      '2026-08-01T08:00:00-05:00', '10000000-0000-4000-8000-000000000011', 'User 01'),
 
-('RES-005', 'Crushing Operator', 'OPERATOR',
-      'ORG-LIMA-001', 'Empresa 1', 'AVAILABLE',
-      '10000000-0000-4000-8000-000000000017', 'User 07', 'Y',
-      '2026-08-01T08:00:00-05:00', '10000000-0000-4000-8000-000000000011', 'User 01'),
+    ('RES-005', 'Crushing Operator', 'OPERATOR',
+     'ORG-LIMA-001', 'Empresa 1', 'AVAILABLE',
+     '10000000-0000-4000-8000-000000000017', 'User 07', 'Y',
+     '2026-08-01T08:00:00-05:00', '10000000-0000-4000-8000-000000000011', 'User 01'),
 
     -- DEFAULT_RESOURCE is required: Work Requests created via the gateway
     -- auto-generate a default operation that references this resource code.
@@ -113,7 +183,7 @@ VALUES
 GO
 
 -- =====================================================================
--- 3. WORK REQUESTS (mnt_work_request)
+-- 6. WORK REQUESTS (mnt_work_request)
 -- =====================================================================
 SET IDENTITY_INSERT [dbo].[mnt_work_request] ON;
 
@@ -162,7 +232,7 @@ SET IDENTITY_INSERT [dbo].[mnt_work_request] OFF;
 GO
 
 -- =====================================================================
--- 4. WORK ORDERS (mnt_work_orders)
+-- 7. WORK ORDERS (mnt_work_orders)
 --    Columns match Prisma schema order.
 --    All planned_* fields are NULL (not used in business logic).
 -- =====================================================================
@@ -282,7 +352,7 @@ SET IDENTITY_INSERT [dbo].[mnt_work_orders] OFF;
 GO
 
 -- =====================================================================
--- 5. OPERATIONS (mnt_wo_operations)
+-- 8. OPERATIONS (mnt_wo_operations)
 --    All planned_* fields are NULL.
 --    Columns match Prisma schema order.
 -- =====================================================================
@@ -411,7 +481,7 @@ SET IDENTITY_INSERT [dbo].[mnt_wo_operations] OFF;
 GO
 
 -- =====================================================================
--- 6. MATERIALS USED (mnt_operation_material_usages)
+-- 9. MATERIALS USED (mnt_operation_material_usages)
 -- =====================================================================
 SET IDENTITY_INSERT [dbo].[mnt_operation_material_usages] ON;
 
@@ -440,7 +510,7 @@ SET IDENTITY_INSERT [dbo].[mnt_operation_material_usages] OFF;
 GO
 
 -- =====================================================================
--- 7. HUMAN RESOURCE USAGE (mnt_operation_human_resource_usages)
+-- 10. HUMAN RESOURCE USAGE (mnt_operation_human_resource_usages)
 --    All planned_* fields are NULL.
 --    ACTIVE resources have actual_start_date, actual_completion_date, actual_hours.
 --    CANCELED resources may have NULL for actual fields.
