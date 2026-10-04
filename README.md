@@ -1352,7 +1352,7 @@ Headers required for all Work Request endpoints:
 | POST   | /api/v1/work-requests                     | Create                   |
 | GET    | /api/v1/work-requests                     | List                     |
 | GET    | /api/v1/work-requests/:requestId          | Get by id                |
-| PATCH  | /api/v1/work-requests/:requestId          | Update issue description |
+| PATCH  | /api/v1/work-requests/:requestId          | Update                   |
 | PATCH  | /api/v1/work-requests/:requestId/release  | Release                  |
 | PATCH  | /api/v1/work-requests/:requestId/complete | Complete                 |
 | PATCH  | /api/v1/work-requests/:requestId/cancel   | Cancel                   |
@@ -1568,7 +1568,7 @@ Response example:
 }
 ```
 
-### Update Work Request Description
+### Update Work Request
 
 `PATCH /api/v1/work-requests/:requestId`
 
@@ -1576,9 +1576,20 @@ Request body example:
 
 ```json
 {
-  "issueDescription": "Oil leak detected on the hydraulic pump - updated."
+  "issueDescription": "Oil leak detected on the hydraulic pump - updated.",
+  "attendedByTechnician": "TECH-001",
+  "attendedByTechnicianName": "John Technician",
+  "attendedBySupervisor": "SUP-001",
+  "attendedBySupervisorName": "Jane Supervisor"
 }
 ```
+
+All fields are optional. The editable fields are:
+- `issueDescription` (max 240 chars)
+- `attendedByTechnician` (max 255 chars)
+- `attendedByTechnicianName` (max 255 chars)
+- `attendedBySupervisor` (max 255 chars)
+- `attendedBySupervisorName` (max 255 chars)
 
 Required permission: `mnt.work.request.update`.
 

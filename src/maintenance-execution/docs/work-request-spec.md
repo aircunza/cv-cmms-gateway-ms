@@ -406,7 +406,7 @@ For find one, the gateway:
 }
 ```
 
-## Update Work Request Description
+## Update Work Request
 
 ### Endpoint
 
@@ -427,15 +427,19 @@ For find one, the gateway:
 
 #### Editable Fields
 
-| Field            | Type   | Max Length | Description                       |
-| ---------------- | ------ | ---------- | --------------------------------- |
-| issueDescription | string | 240        | Updated description of the issue. |
+| Field                      | Type   | Max Length | Description                                     |
+| -------------------------- | ------ | ---------- | ----------------------------------------------- |
+| issueDescription           | string | 240        | Updated description of the issue.               |
+| attendedByTechnician       | string | 255        | Technician code who attended the work request.  |
+| attendedByTechnicianName   | string | 255        | Technician name who attended the work request.  |
+| attendedBySupervisor       | string | 255        | Supervisor code who attended the work request.  |
+| attendedBySupervisorName   | string | 255        | Supervisor name who attended the work request.  |
 
 ### Required Permissions
 
 | Permission                  | Description                                  |
 | --------------------------- | -------------------------------------------- |
-| `mnt.work.request.update`   | Required to update a Work Request description |
+| `mnt.work.request.update`   | Required to update a Work Request            |
 
 ### Gateway Processing
 
@@ -456,6 +460,10 @@ For update, the gateway:
 {
   "requestId": "900000001",
   "issueDescription": "Oil leak detected on the hydraulic pump - updated.",
+  "attendedByTechnician": "TECH-001",
+  "attendedByTechnicianName": "John Technician",
+  "attendedBySupervisor": "SUP-001",
+  "attendedBySupervisorName": "Jane Supervisor",
   "userPermissions": ["mnt.work.request.update"],
   "actorId": "550e8400-e29b-41d4-a716-446655440001",
   "actorName": "John Doe"
@@ -488,6 +496,10 @@ Returns the updated Work Request:
     "subsector": "Line A",
     "organizationCode": "ORG-BOG-001",
     "organizationName": "Bogota Plant",
+    "attendedByTechnician": "TECH-001",
+    "attendedByTechnicianName": "John Technician",
+    "attendedBySupervisor": "SUP-001",
+    "attendedBySupervisorName": "Jane Supervisor",
     "createdBy": "550e8400-e29b-41d4-a716-446655440001",
     "createdByName": "John Doe",
     "updatedBy": "550e8400-e29b-41d4-a716-446655440001",

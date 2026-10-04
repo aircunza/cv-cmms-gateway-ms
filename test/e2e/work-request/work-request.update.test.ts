@@ -149,4 +149,82 @@ describe('Work Request Update (e2e, HTTP)', () => {
       })
       .expect(400);
   });
+
+  it('updates attendance fields and forwards enriched payload to microservice', async () => {
+    const microserviceResponse = {
+      workRequest: {
+        requestId: '900000001',
+        assetCode: 'AST-001',
+        assetShortDescription: 'Hydraulic Pump',
+        issueDescription: 'Oil leak detected on the hydraulic pump.',
+        statusCode: 'RELEASED',
+        statusLabel: 'Released',
+        requestedAt: '2026-08-07T15:12:00.000Z',
+        completedAt: null,
+        releasedAt: '2026-08-07T15:12:00.000Z',
+        canceledAt: null,
+        organizationCode: 'E2E_ORG_001',
+        organizationName: 'E2E Organization',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
+        attendedByTechnician: 'TECH-001',
+        attendedByTechnicianName: 'John Technician',
+        attendedBySupervisor: 'SUP-001',
+        attendedBySupervisorName: 'Jane Supervisor',
+        createdBy: '550e8400-e29b-41d4-a716-446655440001',
+        createdByName: 'EU',
+        updatedBy: '550e8400-e29b-41d4-a716-446655440001',
+        updatedByName: 'EU',
+        createdAt: '2026-08-07T15:12:00.000Z',
+        updatedAt: '2026-08-07T15:16:00.000Z',
+        workOrders: [
+          {
+            workOrderCode: '1001',
+            workOrderDescription: 'Oil leak detected on the hydraulic pump.',
+            workOrderType: 'Not Planned',
+            workOrderSubType: 'Emergency',
+            workOrderPriority: '1',
+            woStatusCode: 'RELEASED',
+          },
+        ],
+      },
+    };
+
+    mockNatsClient.send.mockReturnValue(of(microserviceResponse));
+
+    const response = await request(app.getHttpServer())
+      .patch('/work-requests/900000001')
+      .set('Cookie', 'auth_token=mock-token')
+      .set('X-Organization-Code', 'E2E_ORG_001')
+      .send({
+        attendedByTechnician: 'TECH-001',
+        attendedByTechnicianName: 'John Technician',
+        attendedBySupervisor: 'SUP-001',
+        attendedBySupervisorName: 'Jane Supervisor',
+      })
+      .expect(200);
+
+    expect(mockNatsClient.send).toHaveBeenCalledWith(
+      'work.request.update',
+      expect.objectContaining({
+        requestId: '900000001',
+        attendedByTechnician: 'TECH-001',
+        attendedByTechnicianName: 'John Technician',
+        attendedBySupervisor: 'SUP-001',
+        attendedBySupervisorName: 'Jane Supervisor',
+        userPermissions: ['mnt.work.request.update'],
+        actorId: '550e8400-e29b-41d4-a716-446655440001',
+        actorName: 'EU',
+      }),
+    );
+
+    expect(response.body.workRequest.attendedByTechnician).toBe('TECH-001');
+    expect(response.body.workRequest.attendedByTechnicianName).toBe(
+      'John Technician',
+    );
+    expect(response.body.workRequest.attendedBySupervisor).toBe('SUP-001');
+    expect(response.body.workRequest.attendedBySupervisorName).toBe(
+      'Jane Supervisor',
+    );
+  });
 });

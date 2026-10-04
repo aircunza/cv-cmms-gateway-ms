@@ -67,7 +67,11 @@ Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
 {
-  "issueDescription": "Vibracion excesiva en chancadora primaria - actualizado"
+  "issueDescription": "Vibracion excesiva en chancadora primaria - actualizado",
+  "attendedByTechnician": "TECH-001",
+  "attendedByTechnicianName": "John Technician",
+  "attendedBySupervisor": "SUP-001",
+  "attendedBySupervisorName": "Jane Supervisor"
 }
 
 ### Release work request (transitions from ON_HOLD to RELEASED)
