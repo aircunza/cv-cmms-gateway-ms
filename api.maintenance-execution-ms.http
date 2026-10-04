@@ -198,6 +198,10 @@ Cookie: auth_token={{token}}
   "operationSeqNumber": 10,
   "assetCode": "AST-001",
   "assetShortDescription": "Chancadora primaria",
+  "assetTreeId": 12345,
+  "unit": "CHANCADORA PRIMARIA",
+  "subunit": "MOTOR PRINCIPAL",
+  "maintainableItem": "RODAMIENTO SKF 6205",
   "operationStatus": "RELEASED",
   "operationType": "Internal",
   "organizationCode": "{{orgCode}}",
@@ -232,7 +236,11 @@ Cookie: auth_token={{token}}
 
 {
   "operationName": "Inspection - Actualizado",
-  "operationStatus": "IN_PROCESS"
+  "operationStatus": "IN_PROCESS",
+  "assetTreeId": 12345,
+  "unit": "CHANCADORA PRIMARIA",
+  "subunit": "MOTOR PRINCIPAL",
+  "maintainableItem": "RODAMIENTO SKF 6205"
 }
 
 ### Review operation

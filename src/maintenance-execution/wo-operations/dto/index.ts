@@ -72,19 +72,22 @@ export class CreateWoOperationDto {
   @MaxLength(200)
   assetShortDescription?: string;
 
+  @IsOptional()
+  assetTreeId?: number;
+
   @IsString()
   @IsOptional()
-  @MaxLength(240)
+  @MaxLength(370)
   unit?: string;
 
   @IsString()
   @IsOptional()
-  @MaxLength(240)
+  @MaxLength(370)
   subunit?: string;
 
   @IsString()
   @IsOptional()
-  @MaxLength(240)
+  @MaxLength(370)
   maintainableItem?: string;
 
   @IsString()
@@ -181,6 +184,24 @@ export class UpdateWoOperationDto {
   @IsOptional()
   @MaxLength(30)
   operationType?: string;
+
+  @IsOptional()
+  assetTreeId?: number;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(370)
+  unit?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(370)
+  subunit?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(370)
+  maintainableItem?: string;
 }
 
 export class FindAllWoOperationDto {
