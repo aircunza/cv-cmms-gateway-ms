@@ -43,7 +43,9 @@ X-Organization-Code: {{orgCode}}
   "assetCode": "AST-001",
   "assetShortDescription": "Chancadora primaria",
   "issueDescription": "Vibracion excesiva en chancadora primaria detectada en operacion",
-  "enableOracleWorkOrder": "N"
+  "enableOracleWorkOrder": "N",
+  "operatorCode":"12345678",
+  "operatorName": "randn operator"
 }
 
 ### Note: copy the requestId returned and paste it into @wrRequestId
@@ -67,6 +69,11 @@ X-Organization-Code: {{orgCode}}
 {
   "issueDescription": "Vibracion excesiva en chancadora primaria - actualizado"
 }
+
+### Release work request (transitions from ON_HOLD to RELEASED)
+PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/release
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
 
 ### Complete work request
 PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/complete

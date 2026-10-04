@@ -114,7 +114,9 @@ describe('Work Centers Update (e2e, HTTP)', () => {
     );
 
     expect(response.body.workCenter).toBeDefined();
-    expect(response.body.workCenter.workCenterDescription).toBe('Updated Work Center');
+    expect(response.body.workCenter.workCenterDescription).toBe(
+      'Updated Work Center',
+    );
   });
 
   it('deactivates a work center successfully', async () => {

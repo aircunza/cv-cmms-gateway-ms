@@ -232,6 +232,40 @@ export class WorkRequestsController {
   }
 
   @UseGuards(AuthGuard)
+  @Patch(':requestId/release')
+  release(
+    @Param() params: WorkRequestIdDto,
+    @User() user: CurrentUser,
+    @Req() req: Request,
+  ) {
+    const organizationCode = this.getOrganizationCode(req);
+    const organizations = req['organizations'] as OrganizationRole[];
+
+    this.validateOrgAccess(organizations, organizationCode);
+
+    const userPermissions = this.getUserPermissions(
+      organizations,
+      organizationCode,
+    );
+    const userRoles = this.getUserRoles(organizations, organizationCode);
+
+    return this.client
+      .send('work.request.release', {
+        requestId: params.requestId,
+        organizationCode,
+        userRoles,
+        userPermissions,
+        actorId: this.getActorId(user),
+        actorName: this.getActorName(user),
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
+  }
+
+  @UseGuards(AuthGuard)
   @Patch(':requestId/complete')
   complete(
     @Param() params: WorkRequestIdDto,

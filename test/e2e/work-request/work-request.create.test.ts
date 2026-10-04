@@ -81,11 +81,11 @@ describe('Work Request Create (e2e, HTTP)', () => {
         assetCode: 'AST-001',
         assetShortDescription: 'Hydraulic Pump',
         issueDescription: 'Oil leak detected on the hydraulic pump.',
-        statusCode: 'RELEASED',
-        statusLabel: 'Released',
+        statusCode: 'ON_HOLD',
+        statusLabel: 'On Hold',
         requestedAt: '2026-08-07T15:12:00.000Z',
         completedAt: null,
-        releasedAt: '2026-08-07T15:12:00.000Z',
+        releasedAt: null,
         canceledAt: null,
         workCenterCode: 'WC-01',
         workCenterDescription: 'Main Workshop',
@@ -163,7 +163,7 @@ describe('Work Request Create (e2e, HTTP)', () => {
 
     expect(response.body.workRequest).toBeDefined();
     expect(response.body.workRequest.requestId).toBe('900000001');
-    expect(response.body.workRequest.statusCode).toBe('RELEASED');
+    expect(response.body.workRequest.statusCode).toBe('ON_HOLD');
     expect(response.body.workRequest.operatorCode).toBe('OP-001');
     expect(response.body.workRequest.operatorName).toBe('John Operator');
     expect(response.body.workOrder).toBeDefined();
@@ -214,11 +214,11 @@ describe('Work Request Create (e2e, HTTP)', () => {
         assetCode: 'AST-001',
         assetShortDescription: 'Hydraulic Pump',
         issueDescription: 'Oil leak detected on the hydraulic pump.',
-        statusCode: 'RELEASED',
-        statusLabel: 'Released',
+        statusCode: 'ON_HOLD',
+        statusLabel: 'On Hold',
         requestedAt: '2026-08-07T15:12:00.000Z',
         completedAt: null,
-        releasedAt: '2026-08-07T15:12:00.000Z',
+        releasedAt: null,
         canceledAt: null,
         organizationCode: 'E2E_ORG_001',
         organizationName: 'E2E Organization',

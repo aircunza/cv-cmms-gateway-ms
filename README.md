@@ -1353,6 +1353,7 @@ Headers required for all Work Request endpoints:
 | GET    | /api/v1/work-requests                     | List                     |
 | GET    | /api/v1/work-requests/:requestId          | Get by id                |
 | PATCH  | /api/v1/work-requests/:requestId          | Update issue description |
+| PATCH  | /api/v1/work-requests/:requestId/release  | Release                  |
 | PATCH  | /api/v1/work-requests/:requestId/complete | Complete                 |
 | PATCH  | /api/v1/work-requests/:requestId/cancel   | Cancel                   |
 
@@ -1383,6 +1384,8 @@ Required permissions: `mnt.work.request.create`, `mnt.work.orders.create`. When 
 
 Creating a Work Request automatically creates an associated Work Order with fixed values (`workOrderDescription` same as `issueDescription`, type `"Not Planned"`, subtype `"Emergency"`, priority `"1"`, status `RELEASED`).
 
+The Work Request is created with `statusCode: "ON_HOLD"`. It must be released via `PATCH /api/v1/work-requests/:requestId/release` before it can be completed or canceled.
+
 Response `201 Created`:
 
 ```json
@@ -1392,11 +1395,11 @@ Response `201 Created`:
     "assetCode": "AST-001",
     "assetShortDescription": "Hydraulic Pump",
     "issueDescription": "Oil leak detected on the hydraulic pump.",
-    "statusCode": "RELEASED",
-    "statusLabel": "Released",
+    "statusCode": "ON_HOLD",
+    "statusLabel": "On Hold",
     "requestedAt": "2026-08-07T15:12:00.000Z",
     "completedAt": null,
-    "releasedAt": "2026-08-07T15:12:00.000Z",
+    "releasedAt": null,
     "canceledAt": null,
     "workCenterCode": "WC-01",
     "workCenterDescription": "Main Workshop",
@@ -1581,6 +1584,18 @@ Required permission: `mnt.work.request.update`.
 
 Response: returns the updated Work Request (same shape as Get By ID).
 
+### Release Work Request
+
+`PATCH /api/v1/work-requests/:requestId/release`
+
+Purpose: transitions a Work Request from `ON_HOLD` to `RELEASED`. Sets `releasedAt` to the current timestamp. This action does **not** affect the associated Work Order.
+
+Required permission: `mnt.work.request.release`.
+
+Authorized roles: `MANUFACTURING_FACILITATOR`, `SUPERVISOR_MAINTENANCE_01`, `SUPERVISOR_MAINTENANCE_02`.
+
+Response: returns the Work Request with `statusCode: "RELEASED"` and `releasedAt` set.
+
 ### Complete Work Request
 
 `PATCH /api/v1/work-requests/:requestId/complete`
@@ -1609,6 +1624,7 @@ Response: returns the Work Request with `statusCode: "CANCELED"` and `canceledAt
 
 | From Status | Allowed Transitions To |
 | ----------- | ---------------------- |
+| ON_HOLD     | RELEASED               |
 | RELEASED    | COMPLETED, CANCELED    |
 | COMPLETED   | CANCELED               |
 | CANCELED    | None (terminal)        |
@@ -1617,6 +1633,7 @@ Impact on the associated Work Order:
 
 | Work Request Transition | Work Order Impact                                               |
 | ----------------------- | --------------------------------------------------------------- |
+| ON_HOLD → RELEASED      | None                                                            |
 | RELEASED → COMPLETED    | None                                                            |
 | RELEASED → CANCELED     | WO canceled, all operations canceled, Oracle sync if applicable |
 | COMPLETED → CANCELED    | WO canceled, all operations canceled, Oracle sync if applicable |

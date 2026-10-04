@@ -113,7 +113,9 @@ describe('Work Areas Update (e2e, HTTP)', () => {
     );
 
     expect(response.body.workArea).toBeDefined();
-    expect(response.body.workArea.workAreaDescription).toBe('Updated Work Area');
+    expect(response.body.workArea.workAreaDescription).toBe(
+      'Updated Work Area',
+    );
   });
 
   it('deactivates a work area successfully', async () => {

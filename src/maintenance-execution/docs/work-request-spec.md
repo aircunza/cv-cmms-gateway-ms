@@ -44,9 +44,9 @@ The following fields SHALL NOT be provided by the client. They are generated or 
 | Field                 | Type    | Description                                            |
 | --------------------- | ------- | ------------------------------------------------------ |
 | requestId             | BigInt  | Auto-generated identifier.                             |
-| statusCode            | string  | Initial work request status set by system as RELEASED. |
+| statusCode            | string  | Initial work request status set by system as ON_HOLD.  |
 | requestedAt           | Date    | Creation timestamp.                                    |
-| releasedAt            | Date    | Release timestamp.                                     |
+| releasedAt            | Date    | Release timestamp (set when transitioning to RELEASED).|
 | completedAt           | Date    | Completion timestamp.                                  |
 | canceledAt            | Date    | Cancellation timestamp.                                |
 | createdAt / updatedAt | Date    | Record timestamps.                                     |
@@ -124,11 +124,11 @@ When a Work Request is created, the microservice automatically creates an associ
     "assetCode": "AST-001",
     "assetShortDescription": "Hydraulic Pump",
     "issueDescription": "Oil leak detected on the hydraulic pump.",
-    "statusCode": "RELEASED",
-    "statusLabel": "Released",
+    "statusCode": "ON_HOLD",
+    "statusLabel": "On Hold",
     "requestedAt": "2026-08-07T15:12:00.000Z",
     "completedAt": null,
-    "releasedAt": "2026-08-07T15:12:00.000Z",
+    "releasedAt": null,
     "canceledAt": null,
     "workCenterCode": "WC-01",
     "workCenterDescription": "Main Workshop",
@@ -508,6 +508,113 @@ Returns the updated Work Request:
 }
 ```
 
+## Release Work Request
+
+### Endpoint
+
+`PATCH /api/v1/work-requests/:requestId/release`
+
+### Headers Required
+
+| Header              | Type   | Required | Description              |
+| ------------------- | ------ | -------- | ------------------------ |
+| Cookie             | string | Yes      | Authentication token (auth_token=&lt;jwt&gt;)             |
+| X-Organization-Code | string | Yes      | Target organization code |
+
+### Path Parameter
+
+- `requestId`: numeric identifier of the Work Request.
+
+### Purpose
+
+Transitions a Work Request from `ON_HOLD` to `RELEASED` status. This action sets the `releasedAt` timestamp.
+
+### Required Permissions
+
+| Permission                    | Description                              |
+| ----------------------------- | ---------------------------------------- |
+| `mnt.work.request.release`    | Required to release a Work Request       |
+
+### Role Restriction
+
+The following roles are authorized to release a Work Request:
+
+| Role |
+|------|
+| MANUFACTURING_FACILITATOR |
+| SUPERVISOR_MAINTENANCE_01 |
+| SUPERVISOR_MAINTENANCE_02 |
+
+### Gateway Processing
+
+For release, the gateway:
+
+1. Validates authentication.
+2. Reads `X-Organization-Code`.
+3. Verifies access to the organization.
+4. Extracts `userPermissions` and `userRoles` from the authenticated organization context.
+5. Injects `requestId`, `organizationCode`, `userRoles`, `userPermissions`, `actorId`, and `actorName` into the NATS payload.
+6. Sends `work.request.release` to the maintenance-execution microservice.
+
+### NATS Payload Sent to Microservice (Release)
+
+```json
+{
+  "requestId": "900000001",
+  "organizationCode": "ORG-BOG-001",
+  "userRoles": ["MANUFACTURING_FACILITATOR"],
+  "userPermissions": ["mnt.work.request.release"],
+  "actorId": "550e8400-e29b-41d4-a716-446655440001",
+  "actorName": "John Doe"
+}
+```
+
+### Response (Release)
+
+Returns the updated Work Request with `statusCode: "RELEASED"` and `releasedAt` set:
+
+```json
+{
+  "workRequest": {
+    "requestId": "900000001",
+    "assetCode": "AST-001",
+    "assetShortDescription": "Hydraulic Pump",
+    "issueDescription": "Oil leak detected on the hydraulic pump.",
+    "statusCode": "RELEASED",
+    "statusLabel": "Released",
+    "requestedAt": "2026-08-07T15:12:00.000Z",
+    "completedAt": null,
+    "releasedAt": "2026-08-07T16:00:00.000Z",
+    "canceledAt": null,
+    "workCenterCode": "WC-01",
+    "workCenterDescription": "Main Workshop",
+    "centerCostCode": 101,
+    "workAreaCode": "WA-01",
+    "workAreaDescription": "Plant Floor",
+    "sector": "Production",
+    "subsector": "Line A",
+    "organizationCode": "ORG-BOG-001",
+    "organizationName": "Bogota Plant",
+    "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+    "createdByName": "John Doe",
+    "updatedBy": "550e8400-e29b-41d4-a716-446655440001",
+    "updatedByName": "John Doe",
+    "createdAt": "2026-08-07T15:12:00.000Z",
+    "updatedAt": "2026-08-07T16:00:00.000Z",
+    "workOrders": [
+      {
+        "workOrderCode": "1001",
+        "workOrderDescription": "Oil leak detected on the hydraulic pump.",
+        "workOrderType": "Not Planned",
+        "workOrderSubType": "Emergency",
+        "workOrderPriority": "1",
+        "woStatusCode": "RELEASED"
+      }
+    ]
+  }
+}
+```
+
 ## Complete Work Request
 
 ### Endpoint
@@ -734,6 +841,7 @@ Returns the canceled Work Request with `statusCode: "CANCELED"` and `canceledAt`
 
 | From Status | Allowed Transitions To |
 |-------------|----------------------|
+| ON_HOLD     | RELEASED             |
 | RELEASED    | COMPLETED, CANCELED  |
 | COMPLETED   | CANCELED             |
 | CANCELED    | [] (terminal)        |
@@ -742,6 +850,7 @@ Returns the canceled Work Request with `statusCode: "CANCELED"` and `canceledAt`
 
 | Work Request Transition | Work Order Impact |
 |------------------------|-------------------|
+| ON_HOLD → RELEASED     | None              |
 | RELEASED → COMPLETED   | None              |
 | RELEASED → CANCELED    | WO canceled, all operations canceled, Oracle sync if applicable |
 | COMPLETED → CANCELED   | WO canceled, all operations canceled, Oracle sync if applicable |

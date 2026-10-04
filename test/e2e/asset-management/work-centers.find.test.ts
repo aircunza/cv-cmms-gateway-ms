@@ -127,7 +127,10 @@ describe('Work Centers Find (e2e, HTTP)', () => {
       .set('Cookie', 'auth_token=mock-token')
       .expect(200);
 
-    expect(mockNatsClient.send).toHaveBeenCalledWith('work.center.find.all', {});
+    expect(mockNatsClient.send).toHaveBeenCalledWith(
+      'work.center.find.all',
+      {},
+    );
 
     expect(response.body.workCenters).toBeDefined();
     expect(response.body.total).toBe(2);
