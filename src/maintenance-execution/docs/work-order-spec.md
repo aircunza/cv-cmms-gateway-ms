@@ -51,8 +51,8 @@ Each operation in the `operations` array SHALL contain:
 
 | Field                      | Type                    | Description                                                                                     |
 | -------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------- |
-| operationName              | string (min 2, max 120) | Name of the operation.                                                                          |
-| operationDescription       | string (max 240)        | Description of the operation.                                                                   |
+| operationName              | string (min 2, max 600) | Name of the operation.                                                                          |
+| operationDescription       | string (max 2000)       | Description of the operation.                                                                   |
 | operationSeqNumber         | integer (> 0)           | Sequence number, unique within the Work Order.                                                  |
 | createdBy                  | string (UUID)           | User identifier who creates the operation.                                                      |
 | operationStatus            | string                  | One of: UNRELEASED, RELEASED, IN_PROCESS, COMPLETED, NOT_DONE, CANCELED, ON_HOLD.               |
