@@ -94,6 +94,7 @@ describe('Assets Tree Create (e2e, HTTP)', () => {
         maintainableItem: 'Pump Assembly',
         sparePartCode: 'SP-HYD-001',
         sparePartName: 'Hydraulic Seal Kit',
+        itemPosition: 1,
         createdBy: '550e8400-e29b-41d4-a716-446655440001',
         createdByName: 'EU',
         updatedBy: null,
@@ -116,6 +117,7 @@ describe('Assets Tree Create (e2e, HTTP)', () => {
         maintainableItem: 'Pump Assembly',
         sparePartCode: 'SP-HYD-001',
         sparePartName: 'Hydraulic Seal Kit',
+        itemPosition: 1,
       })
       .expect(201);
 
@@ -130,6 +132,7 @@ describe('Assets Tree Create (e2e, HTTP)', () => {
         maintainableItem: 'Pump Assembly',
         sparePartCode: 'SP-HYD-001',
         sparePartName: 'Hydraulic Seal Kit',
+        itemPosition: 1,
       }),
     );
 
@@ -137,6 +140,7 @@ describe('Assets Tree Create (e2e, HTTP)', () => {
     expect(response.body.assetsTree.id).toBe('1');
     expect(response.body.assetsTree.assetCode).toBe('AST-001');
     expect(response.body.assetsTree.unit).toBe('Hydraulic System');
+    expect(response.body.assetsTree.itemPosition).toBe(1);
   });
 
   it('rejects when required field is missing', async () => {

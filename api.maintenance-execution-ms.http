@@ -46,7 +46,8 @@ Cookie: auth_token={{token}}
   "subunit": "MOTOR PRINCIPAL",
   "maintainableItem": "RODAMIENTO SKF 6205",
   "sparePartCode": "SPR-001",
-  "sparePartName": "Rodamiento rodillo esferico"
+  "sparePartName": "Rodamiento rodillo esferico",
+  "itemPosition": 1
 }
 
 ### Note: copy the id returned and paste it into @assetsTreeId

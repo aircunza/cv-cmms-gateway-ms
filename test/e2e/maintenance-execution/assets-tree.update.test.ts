@@ -95,6 +95,7 @@ describe('Assets Tree Update & Deactivate (e2e, HTTP)', () => {
           maintainableItem: 'Pump Assembly',
           sparePartCode: 'SP-HYD-001',
           sparePartName: 'Hydraulic Seal Kit Updated',
+          itemPosition: 5,
           createdBy: '550e8400-e29b-41d4-a716-446655440001',
           createdByName: 'EU',
           updatedBy: '550e8400-e29b-41d4-a716-446655440001',
@@ -113,6 +114,7 @@ describe('Assets Tree Update & Deactivate (e2e, HTTP)', () => {
         .send({
           unit: 'Hydraulic System Updated',
           sparePartName: 'Hydraulic Seal Kit Updated',
+          itemPosition: 5,
         })
         .expect(200);
 
@@ -124,6 +126,7 @@ describe('Assets Tree Update & Deactivate (e2e, HTTP)', () => {
           actorName: 'EU',
           unit: 'Hydraulic System Updated',
           sparePartName: 'Hydraulic Seal Kit Updated',
+          itemPosition: 5,
         }),
       );
 
@@ -132,6 +135,7 @@ describe('Assets Tree Update & Deactivate (e2e, HTTP)', () => {
       expect(response.body.assetsTree.sparePartName).toBe(
         'Hydraulic Seal Kit Updated',
       );
+      expect(response.body.assetsTree.itemPosition).toBe(5);
     });
 
     it('rejects update when field exceeds max length', async () => {

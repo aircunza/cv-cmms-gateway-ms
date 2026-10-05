@@ -573,7 +573,8 @@ Request:
   "subunit": "MOTOR PRINCIPAL",
   "maintainableItem": "RODAMIENTO SKF 6205",
   "sparePartCode": "SPR-001",
-  "sparePartName": "Rodamiento rodillo esferico"
+  "sparePartName": "Rodamiento rodillo esferico",
+  "itemPosition": 1
 }
 ```
 
@@ -589,6 +590,7 @@ Response:
     "maintainableItem": "RODAMIENTO SKF 6205",
     "sparePartCode": "SPR-001",
     "sparePartName": "Rodamiento rodillo esferico",
+    "itemPosition": 1,
     "isActive": "Y",
     "createdAt": "2026-08-07T15:12:00.000Z",
     "updatedAt": null,
@@ -614,6 +616,7 @@ Response:
     "maintainableItem": "RODAMIENTO SKF 6205",
     "sparePartCode": "SPR-001",
     "sparePartName": "Rodamiento rodillo esferico",
+    "itemPosition": 1,
     "isActive": "Y",
     "createdAt": "2026-08-07T15:12:00.000Z",
     "updatedAt": null
@@ -638,6 +641,7 @@ Response:
       "maintainableItem": "RODAMIENTO SKF 6205",
       "sparePartCode": "SPR-001",
       "sparePartName": "Rodamiento rodillo esferico",
+      "itemPosition": 1,
       "isActive": "Y",
       "createdAt": "2026-08-07T15:12:00.000Z",
       "updatedAt": null
