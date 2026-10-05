@@ -218,4 +218,81 @@ describe('Assets Tree Find (e2e, HTTP)', () => {
       expect(response.body.assetsTree[0].assetCode).toBe('AST-001');
     });
   });
+
+  describe('GET /assets-tree/by-asset/:assetCode', () => {
+    it('returns all assets tree records for a specific assetCode', async () => {
+      const microserviceResponse = {
+        assetsTree: [
+          {
+            id: '1',
+            assetCode: 'AST-001',
+            unit: 'Hydraulic System',
+            subunit: 'Main Pump',
+            maintainableItem: 'Pump Assembly',
+            sparePartCode: 'SP-HYD-001',
+            sparePartName: 'Hydraulic Seal Kit',
+            itemPosition: 1,
+            isActive: 'Y',
+          },
+          {
+            id: '2',
+            assetCode: 'AST-001',
+            unit: 'Lubrication System',
+            subunit: 'Oil Filter',
+            maintainableItem: 'Filter Assembly',
+            sparePartCode: 'SP-LUB-001',
+            sparePartName: 'Oil Filter Element',
+            itemPosition: 2,
+            isActive: 'Y',
+          },
+        ],
+        total: 2,
+      };
+
+      mockNatsClient.send.mockReturnValue(of(microserviceResponse));
+
+      const response = await request(app.getHttpServer())
+        .get('/assets-tree/by-asset/AST-001')
+        .set('Cookie', 'auth_token=mock-token')
+        .expect(200);
+
+      expect(mockNatsClient.send).toHaveBeenCalledWith(
+        'assets.tree.find.by-asset',
+        { assetCode: 'AST-001' },
+      );
+
+      expect(response.body.assetsTree).toBeDefined();
+      expect(Array.isArray(response.body.assetsTree)).toBe(true);
+      expect(response.body.assetsTree).toHaveLength(2);
+      expect(response.body.total).toBe(2);
+
+      for (const record of response.body.assetsTree) {
+        expect(record.assetCode).toBe('AST-001');
+      }
+    });
+
+    it('returns empty array when assetCode has no records', async () => {
+      const microserviceResponse = {
+        assetsTree: [],
+        total: 0,
+      };
+
+      mockNatsClient.send.mockReturnValue(of(microserviceResponse));
+
+      const response = await request(app.getHttpServer())
+        .get('/assets-tree/by-asset/NON-EXISTENT')
+        .set('Cookie', 'auth_token=mock-token')
+        .expect(200);
+
+      expect(mockNatsClient.send).toHaveBeenCalledWith(
+        'assets.tree.find.by-asset',
+        { assetCode: 'NON-EXISTENT' },
+      );
+
+      expect(response.body.assetsTree).toBeDefined();
+      expect(Array.isArray(response.body.assetsTree)).toBe(true);
+      expect(response.body.assetsTree).toHaveLength(0);
+      expect(response.body.total).toBe(0);
+    });
+  });
 });

@@ -557,6 +557,7 @@ Response:
 | POST   | /api/v1/assets-tree                       | Create           |
 | GET    | /api/v1/assets-tree/:id                   | Get by id (BigInt) |
 | GET    | /api/v1/assets-tree                       | List             |
+| GET    | /api/v1/assets-tree/by-asset/:assetCode   | List by asset code |
 | PATCH  | /api/v1/assets-tree/:id                   | Update           |
 | PATCH  | /api/v1/assets-tree/:id/deactivate        | Deactivate       |
 
@@ -648,6 +649,48 @@ Response:
     }
   ],
   "total": 1
+}
+```
+
+### List by asset code
+
+`GET /api/v1/assets-tree/by-asset/:assetCode`
+
+Returns all assets tree records for a specific asset code.
+
+Response:
+
+```json
+{
+  "assetsTree": [
+    {
+      "id": "1",
+      "assetCode": "PMP-1001",
+      "unit": "CHANCADORA PRIMARIA",
+      "subunit": "MOTOR PRINCIPAL",
+      "maintainableItem": "RODAMIENTO SKF 6205",
+      "sparePartCode": "SPR-001",
+      "sparePartName": "Rodamiento rodillo esferico",
+      "itemPosition": 1,
+      "isActive": "Y",
+      "createdAt": "2026-08-07T15:12:00.000Z",
+      "updatedAt": null
+    },
+    {
+      "id": "2",
+      "assetCode": "PMP-1001",
+      "unit": "CHANCADORA PRIMARIA",
+      "subunit": "MOTOR SECUNDARIO",
+      "maintainableItem": "RODAMIENTO SKF 6206",
+      "sparePartCode": "SPR-002",
+      "sparePartName": "RodamientoContacto Angular",
+      "itemPosition": 2,
+      "isActive": "Y",
+      "createdAt": "2026-08-07T15:13:00.000Z",
+      "updatedAt": null
+    }
+  ],
+  "total": 2
 }
 ```
 

@@ -60,6 +60,10 @@ Cookie: auth_token={{token}}
 GET {{baseUrl}}/assets-tree?assetCode=AST-001
 Cookie: auth_token={{token}}
 
+### List assets tree entries by asset code
+GET {{baseUrl}}/assets-tree/by-asset/AST-001
+Cookie: auth_token={{token}}
+
 ### Update assets tree entry
 PATCH {{baseUrl}}/assets-tree/{{assetsTreeId}}
 Content-Type: application/json
