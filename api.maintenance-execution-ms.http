@@ -23,6 +23,8 @@ Content-Type: application/json
 @woOperationCode = 5006
 @opInspectionCode = 5007
 
+@assetsTreeId = 1
+
 # NOTE: these ids are mock placeholders. When using the material and human
 # resources endpoints, paste here the ids returned in the "Create" responses.
 @opMaterialId = 9001
@@ -30,6 +32,45 @@ Content-Type: application/json
 @opHrUsageId2 = 9102
 
 
+
+######################## ASSETS TREE ########################
+
+### Create assets tree entry
+POST {{baseUrl}}/assets-tree
+Content-Type: application/json
+Cookie: auth_token={{token}}
+
+{
+  "assetCode": "AST-001",
+  "unit": "CHANCADORA PRIMARIA",
+  "subunit": "MOTOR PRINCIPAL",
+  "maintainableItem": "RODAMIENTO SKF 6205",
+  "sparePartCode": "SPR-001",
+  "sparePartName": "Rodamiento rodillo esferico"
+}
+
+### Note: copy the id returned and paste it into @assetsTreeId
+
+### Get assets tree entry by id
+GET {{baseUrl}}/assets-tree/{{assetsTreeId}}
+Cookie: auth_token={{token}}
+
+### List all assets tree entries (optional filter by assetCode)
+GET {{baseUrl}}/assets-tree?assetCode=AST-001
+Cookie: auth_token={{token}}
+
+### Update assets tree entry
+PATCH {{baseUrl}}/assets-tree/{{assetsTreeId}}
+Content-Type: application/json
+Cookie: auth_token={{token}}
+
+{
+  "sparePartName": "Rodamiento rodillo esferico - actualizado"
+}
+
+### Deactivate assets tree entry
+PATCH {{baseUrl}}/assets-tree/{{assetsTreeId}}/deactivate
+Cookie: auth_token={{token}}
 
 ######################## WORK REQUESTS ########################
 

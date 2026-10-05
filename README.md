@@ -550,6 +550,135 @@ Response:
 }
 ```
 
+## Assets Tree
+
+| Method | Endpoint                                  | Description      |
+| ------ | ----------------------------------------- | ---------------- |
+| POST   | /api/v1/assets-tree                       | Create           |
+| GET    | /api/v1/assets-tree/:id                   | Get by id (BigInt) |
+| GET    | /api/v1/assets-tree                       | List             |
+| PATCH  | /api/v1/assets-tree/:id                   | Update           |
+| PATCH  | /api/v1/assets-tree/:id/deactivate        | Deactivate       |
+
+The gateway injects `actorId` and `actorName` (from the authenticated user) into the create/update/deactivate payloads; the client does not send them.
+
+### Create
+
+Request:
+
+```json
+{
+  "assetCode": "PMP-1001",
+  "unit": "CHANCADORA PRIMARIA",
+  "subunit": "MOTOR PRINCIPAL",
+  "maintainableItem": "RODAMIENTO SKF 6205",
+  "sparePartCode": "SPR-001",
+  "sparePartName": "Rodamiento rodillo esferico"
+}
+```
+
+Response:
+
+```json
+{
+  "assetsTree": {
+    "id": "1",
+    "assetCode": "PMP-1001",
+    "unit": "CHANCADORA PRIMARIA",
+    "subunit": "MOTOR PRINCIPAL",
+    "maintainableItem": "RODAMIENTO SKF 6205",
+    "sparePartCode": "SPR-001",
+    "sparePartName": "Rodamiento rodillo esferico",
+    "isActive": "Y",
+    "createdAt": "2026-08-07T15:12:00.000Z",
+    "updatedAt": null,
+    "createdBy": "550e8400-e29b-41d4-a716-446655440001",
+    "createdByName": "John Doe",
+    "updatedBy": null,
+    "updatedByName": null
+  }
+}
+```
+
+### Get by id
+
+Response:
+
+```json
+{
+  "assetsTree": {
+    "id": "1",
+    "assetCode": "PMP-1001",
+    "unit": "CHANCADORA PRIMARIA",
+    "subunit": "MOTOR PRINCIPAL",
+    "maintainableItem": "RODAMIENTO SKF 6205",
+    "sparePartCode": "SPR-001",
+    "sparePartName": "Rodamiento rodillo esferico",
+    "isActive": "Y",
+    "createdAt": "2026-08-07T15:12:00.000Z",
+    "updatedAt": null
+  }
+}
+```
+
+### List
+
+`GET /api/v1/assets-tree?assetCode=PMP-1001` (`assetCode` optional).
+
+Response:
+
+```json
+{
+  "assetsTree": [
+    {
+      "id": "1",
+      "assetCode": "PMP-1001",
+      "unit": "CHANCADORA PRIMARIA",
+      "subunit": "MOTOR PRINCIPAL",
+      "maintainableItem": "RODAMIENTO SKF 6205",
+      "sparePartCode": "SPR-001",
+      "sparePartName": "Rodamiento rodillo esferico",
+      "isActive": "Y",
+      "createdAt": "2026-08-07T15:12:00.000Z",
+      "updatedAt": null
+    }
+  ],
+  "total": 1
+}
+```
+
+### Update
+
+`PATCH /api/v1/assets-tree/:id` (all fields optional).
+
+Request:
+
+```json
+{
+  "sparePartName": "Rodamiento rodillo esferico - actualizado"
+}
+```
+
+Response: `{ "assetsTree": { ... } }` (same shape as Get by id).
+
+### Deactivate
+
+`PATCH /api/v1/assets-tree/:id/deactivate` (no body).
+
+Response:
+
+```json
+{
+  "assetsTree": {
+    "id": "1",
+    "assetCode": "PMP-1001",
+    "isActive": "N",
+    "createdAt": "2026-08-07T15:12:00.000Z"
+  },
+  "message": "Assets tree entry deactivated successfully"
+}
+```
+
 ## Work Centers
 
 | Method | Endpoint                            | Description      |
