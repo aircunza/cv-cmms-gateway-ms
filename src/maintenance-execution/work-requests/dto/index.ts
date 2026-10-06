@@ -36,6 +36,27 @@ export class CreateWorkRequestDto {
   @IsNotEmpty()
   @MaxLength(255)
   operatorName!: string;
+
+  @IsOptional()
+  @IsString()
+  attendedByTechnician?: string;
+
+  @IsOptional()
+  @IsString()
+  attendedByTechnicianName?: string;
+
+  @IsOptional()
+  @IsString()
+  attendedBySupervisor?: string;
+
+  @IsOptional()
+  @IsString()
+  attendedBySupervisorName?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  specialtyType?: string;
 }
 
 export class UpdateWorkRequestDto {
@@ -63,6 +84,11 @@ export class UpdateWorkRequestDto {
   @IsOptional()
   @MaxLength(255)
   attendedBySupervisorName?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  specialtyType?: string;
 }
 
 export class FindAllWorkRequestDto {

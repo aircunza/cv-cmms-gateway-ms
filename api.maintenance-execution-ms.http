@@ -94,6 +94,26 @@ X-Organization-Code: {{orgCode}}
   "operatorName": "randn operator"
 }
 
+### Create work request with technician and supervisor
+POST {{baseUrl}}/work-requests
+Content-Type: application/json
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "assetCode": "AST-001",
+  "assetShortDescription": "Chancadora primaria",
+  "issueDescription": "Mantenimiento correctivo en chancadora primaria",
+  "enableOracleWorkOrder": "N",
+  "operatorCode":"12345678",
+  "operatorName": "randn operator",
+  "attendedByTechnician": "TECH-001",
+  "attendedByTechnicianName": "John Technician",
+  "attendedBySupervisor": "SUP-001",
+  "attendedBySupervisorName": "Jane Supervisor",
+  "specialtyType": "Mecanica"
+}
+
 ### Note: copy the requestId returned and paste it into @wrRequestId
 
 ### Get work requests (filters as JSON string URL-encoded)
@@ -117,7 +137,8 @@ X-Organization-Code: {{orgCode}}
   "attendedByTechnician": "TECH-001",
   "attendedByTechnicianName": "John Technician",
   "attendedBySupervisor": "SUP-001",
-  "attendedBySupervisorName": "Jane Supervisor"
+  "attendedBySupervisorName": "Jane Supervisor",
+  "specialtyType": "Mecanica"
 }
 
 ### Release work request (transitions from ON_HOLD to RELEASED)
@@ -204,6 +225,7 @@ X-Organization-Code: {{orgCode}}
       "unit": "CHANCADORA PRIMARIA",
       "subunit": "MOTOR PRINCIPAL",
       "maintainableItem": "RODAMIENTO SKF 6205",
+      "specialtyType": "Mecanica",
       "plannedStartDate": "2026-08-10T08:00:00Z",
       "plannedCompletionDate": "2026-08-10T12:00:00Z",
       "workOrderOperationResource": [
@@ -292,6 +314,7 @@ Cookie: auth_token={{token}}
   "unit": "CHANCADORA PRIMARIA",
   "subunit": "MOTOR PRINCIPAL",
   "maintainableItem": "RODAMIENTO SKF 6205",
+  "specialtyType": "Mecanica",
   "operationStatus": "RELEASED",
   "operationType": "Internal",
   "organizationCode": "{{orgCode}}",
@@ -362,7 +385,8 @@ Cookie: auth_token={{token}}
   "assetTreeId": 12345,
   "unit": "CHANCADORA PRIMARIA",
   "subunit": "MOTOR PRINCIPAL",
-  "maintainableItem": "RODAMIENTO SKF 6205"
+  "maintainableItem": "RODAMIENTO SKF 6205",
+  "specialtyType": "Mecanica"
 }
 
 ### Review operation
