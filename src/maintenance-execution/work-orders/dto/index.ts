@@ -119,6 +119,10 @@ export class CreateWoOperationDto {
   workOrderOperationMaterial?: CreateWoOperationMaterialDto[];
 
   @IsOptional()
+  @IsNumber()
+  assetTreeId?: number;
+
+  @IsOptional()
   @IsString()
   @MaxLength(240)
   unit?: string;

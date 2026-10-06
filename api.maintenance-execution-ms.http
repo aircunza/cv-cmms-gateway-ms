@@ -177,6 +177,50 @@ X-Organization-Code: {{orgCode}}
   ]
 }
 
+### Create work order with asset tree fields in operation
+POST {{baseUrl}}/work-orders
+Content-Type: application/json
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "workOrderDescription": "Mantenimiento preventivo en chancadora primaria con arbol de activos",
+  "woStatusCode": "UNRELEASED",
+  "assetCode": "AST-001",
+  "workOrderType": "Planned",
+  "workOrderSubType": "Preventive",
+  "workOrderPriority": "2",
+  "enableOracleWorkOrder": "N",
+  "operations": [
+    {
+      "operationName": "Inspeccion de rodamientos",
+      "operationDescription": "Inspeccion y reemplazo de rodamientos en motor principal",
+      "operationSeqNumber": 1,
+      "createdBy": "{{actorId}}",
+      "operationStatus": "UNRELEASED",
+      "operationType": "Internal",
+      "operationSubType": "Preventive",
+      "assetTreeId": 1,
+      "unit": "CHANCADORA PRIMARIA",
+      "subunit": "MOTOR PRINCIPAL",
+      "maintainableItem": "RODAMIENTO SKF 6205",
+      "plannedStartDate": "2026-08-10T08:00:00Z",
+      "plannedCompletionDate": "2026-08-10T12:00:00Z",
+      "workOrderOperationResource": [
+        {
+          "principalFlag": "Y",
+          "resourceCode": "{{hrResourceCode}}",
+          "resourceSequenceNumber": 1,
+          "actualHours": 4.0,
+          "actualStartDate": "2026-08-10T08:00:00Z",
+          "actualCompletionDate": "2026-08-10T12:00:00Z"
+        }
+      ],
+      "workOrderOperationMaterial": []
+    }
+  ]
+}
+
 ### Note: copy the workOrderCode returned and paste it into @woWorkOrderCode
 
 ### Get work orders (filters as JSON string URL-encoded)
@@ -261,6 +305,38 @@ Cookie: auth_token={{token}}
       "actualHours": 2.5,
       "actualStartDate": "2026-08-05T08:00:00Z",
       "actualCompletionDate": "2026-08-05T10:30:00Z"
+    }
+  ]
+}
+
+### Create operation with asset tree fields (null values example)
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations
+Content-Type: application/json
+Cookie: auth_token={{token}}
+
+{
+  "operationName": "Lubricacion general",
+  "operationDescription": "Lubricacion de componentes mecanicos",
+  "operationSeqNumber": 20,
+  "assetCode": "AST-001",
+  "assetShortDescription": "Chancadora primaria",
+  "assetTreeId": null,
+  "unit": null,
+  "subunit": null,
+  "maintainableItem": null,
+  "operationStatus": "RELEASED",
+  "operationType": "Internal",
+  "organizationCode": "{{orgCode}}",
+  "actualStartDate": "2026-08-06T08:00:00Z",
+  "actualCompletionDate": "2026-08-06T09:00:00Z",
+  "resources": [
+    {
+      "principalFlag": "Y",
+      "resourceCode": "{{hrResourceCode}}",
+      "resourceSequenceNumber": 1,
+      "actualHours": 1.0,
+      "actualStartDate": "2026-08-06T08:00:00Z",
+      "actualCompletionDate": "2026-08-06T09:00:00Z"
     }
   ]
 }
@@ -453,3 +529,43 @@ X-Organization-Code: {{orgCode}}
 GET {{baseUrl}}/oracle/inventory?description=%25PERNO%25DIAMETRO%25
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
+
+######################## ORGANIZATIONS ########################
+
+### List all organizations
+GET {{baseUrl}}/organizations
+Cookie: auth_token={{token}}
+
+### Get organization by id
+GET {{baseUrl}}/organizations/1
+Cookie: auth_token={{token}}
+
+######################## WORK AREAS ########################
+
+### List all work areas
+GET {{baseUrl}}/work-areas
+Cookie: auth_token={{token}}
+
+### Get work area by id
+GET {{baseUrl}}/work-areas/1
+Cookie: auth_token={{token}}
+
+######################## WORK CENTERS ########################
+
+### List all work centers
+GET {{baseUrl}}/work-centers
+Cookie: auth_token={{token}}
+
+### Get work center by id
+GET {{baseUrl}}/work-centers/1
+Cookie: auth_token={{token}}
+
+######################## ASSETS ########################
+
+### List all assets
+GET {{baseUrl}}/assets
+Cookie: auth_token={{token}}
+
+### Get asset by code
+GET {{baseUrl}}/assets/AST-001
+Cookie: auth_token={{token}}

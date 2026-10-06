@@ -5,6 +5,10 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { RpcCustomExceptionFilter } from './common';
 import cookieParser from 'cookie-parser';
 
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 async function bootstrap() {
   const logger = new Logger('Gateway-');
 

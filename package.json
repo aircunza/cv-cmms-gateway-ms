@@ -68,7 +68,10 @@
     "db:mock:reset:load": "bash load_mock_data/reset-and-load-mock-data.sh",
     "db:mock:reset": "bash load_mock_data/reset-mock-data.sh",
     "db:private:mock:reset:load": "bash load_mock_private_data/reset-and-load-mock-data.sh",
-    "db:private:mock:reset": "bash load_mock_private_data/reset-mock-data.sh"
+    "db:private:mock:reset": "bash load_mock_private_data/reset-mock-data.sh",
+    "db:mock:test:reset:load": "bash load_mock_data/reset-and-load-from-csv-test.sh",
+    "db:mock:test:reset": "bash load_mock_data/reset-only-test.sh",
+    "db:test:reset:load": "bash load_mock_private_data/sql_scripts/reset-and-load-test-data.sh"
   },
   "dependencies": {
     "@nestjs/common": "11.1.28",
