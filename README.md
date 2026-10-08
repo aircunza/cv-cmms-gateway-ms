@@ -1840,3 +1840,78 @@ Impact on the associated Work Order:
 | 403    | ORGANIZATION_MISMATCH                     | Asset belongs to a different organization                    |
 | 404    | Asset not found or inactive               | The specified asset does not exist or is inactive            |
 | 404    | Work request not found                    | The specified Work Request does not exist                    |
+
+## Users
+
+| Method | Endpoint              | Description      |
+| ------ | --------------------- | ---------------- |
+| GET    | /api/v1/users         | List users       |
+| GET    | /api/v1/users/:id     | Get by id (UUID) |
+
+### List
+
+`GET /api/v1/users?id=&code=&email=&userName=&userShortName=&isActive=Y&isVerified=Y&addAttribute1=&addAttribute2=&addAttribute3=&addAttribute4=&addAttribute5=&limit=10&offset=0` (all optional).
+
+Query parameters:
+
+- `id`: UUID (exact match)
+- `code`: string (partial match with `contains`)
+- `email`: string (partial match with `contains`)
+- `userName`: string (partial match with `contains`)
+- `userShortName`: string (partial match with `contains`)
+- `isActive`: 'Y' or 'N' (exact match)
+- `isVerified`: 'Y' or 'N' (exact match)
+- `addAttribute1-5`: string (partial match with `contains`)
+- `limit`: non-negative integer (optional, for pagination)
+- `offset`: non-negative integer (optional, for pagination)
+
+Response:
+
+```json
+{
+  "users": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "code": "JDOE01",
+      "email": "john.doe@company.com",
+      "userName": "John Doe",
+      "userShortName": "John Doe",
+      "createdAt": "2026-08-07T15:12:00.000Z",
+      "updatedAt": null,
+      "isActive": "Y",
+      "isVerified": "N",
+      "addAttribute1": null,
+      "addAttribute2": null,
+      "addAttribute3": null,
+      "addAttribute4": null,
+      "addAttribute5": null
+    }
+  ],
+  "total": 1
+}
+```
+
+### Get by id
+
+Response:
+
+```json
+{
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "code": "JDOE01",
+    "email": "john.doe@company.com",
+    "userName": "John Doe",
+    "userShortName": "John Doe",
+    "createdAt": "2026-08-07T15:12:00.000Z",
+    "updatedAt": null,
+    "isActive": "Y",
+    "isVerified": "N",
+    "addAttribute1": null,
+    "addAttribute2": null,
+    "addAttribute3": null,
+    "addAttribute4": null,
+    "addAttribute5": null
+  }
+}
+```

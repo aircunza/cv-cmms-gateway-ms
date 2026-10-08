@@ -1,4 +1,10 @@
-import { IsString, IsOptional, IsNotEmpty, MaxLength, IsInt } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNotEmpty,
+  MaxLength,
+  IsInt,
+} from 'class-validator';
 
 export class CreateAssetsTreeDto {
   @IsString()

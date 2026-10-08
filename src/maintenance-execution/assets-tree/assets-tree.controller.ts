@@ -77,11 +77,13 @@ export class AssetsTreeController {
   @UseGuards(AuthGuard)
   @Get('by-asset/:assetCode')
   findByAssetCode(@Param() params: { assetCode: string }) {
-    return this.client.send('assets.tree.find.by-asset', { assetCode: params.assetCode }).pipe(
-      catchError((error: unknown) => {
-        throw new RpcException(this.toRpcError(error));
-      }),
-    );
+    return this.client
+      .send('assets.tree.find.by-asset', { assetCode: params.assetCode })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)

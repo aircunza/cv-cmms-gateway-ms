@@ -160,3 +160,49 @@ Cookie: auth_token={{token}}
 ### Deactivate user org permission (soft delete)
 PATCH {{baseUrl}}/user-org-permissions/{{uopId}}/deactivate
 Cookie: auth_token={{token}}
+
+######################## USERS ########################
+
+### Get all users (no filters)
+GET {{baseUrl}}/users
+Cookie: auth_token={{token}}
+
+### Get users filtered by single field (code - partial match)
+GET {{baseUrl}}/users?code=12345
+Cookie: auth_token={{token}}
+
+### Get users filtered by email (partial match)
+GET {{baseUrl}}/users?email=usuario01
+Cookie: auth_token={{token}}
+
+### Get users filtered by multiple fields (isActive + isVerified)
+GET {{baseUrl}}/users?isActive=Y&isVerified=Y
+Cookie: auth_token={{token}}
+
+### Get users with pagination (first 10 users)
+GET {{baseUrl}}/users?limit=10&offset=0
+Cookie: auth_token={{token}}
+
+### Get users with pagination (next 10 users)
+GET {{baseUrl}}/users?limit=10&offset=10
+Cookie: auth_token={{token}}
+
+### Get users with multiple filters and pagination
+GET {{baseUrl}}/users?isActive=Y&isVerified=Y&userName=John&limit=20&offset=0
+Cookie: auth_token={{token}}
+
+### Get users filtered by addAttribute1 (partial match)
+GET {{baseUrl}}/users?addAttribute1=department1
+Cookie: auth_token={{token}}
+
+### Get users filtered by addAttribute2 and addAttribute3
+GET {{baseUrl}}/users?addAttribute2=location1&addAttribute3=position1
+Cookie: auth_token={{token}}
+
+### Get users with ALL filters combined (complex example)
+GET {{baseUrl}}/users?code=4428&email=usuario&userName=John&userShortName=JD&isActive=Y&isVerified=Y&addAttribute1=dept&addAttribute2=loc&addAttribute3=pos&addAttribute4=team&addAttribute5=role&limit=50&offset=0
+Cookie: auth_token={{token}}
+
+### Get one user by id
+GET {{baseUrl}}/users/{{userId}}
+Cookie: auth_token={{token}}

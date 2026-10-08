@@ -593,3 +593,37 @@ Cookie: auth_token={{token}}
 ### Get asset by code
 GET {{baseUrl}}/assets/AST-001
 Cookie: auth_token={{token}}
+
+######################## USERS ########################
+
+### Get all users
+GET {{baseUrl}}/users
+Cookie: auth_token={{token}}
+
+### Get active and verified users with pagination
+GET {{baseUrl}}/users?isActive=Y&isVerified=Y&limit=10&offset=0
+Cookie: auth_token={{token}}
+
+### Get users by code pattern with pagination
+GET {{baseUrl}}/users?code=12345&limit=20&offset=0
+Cookie: auth_token={{token}}
+
+### Get users filtered by userName and email
+GET {{baseUrl}}/users?userName=John&email=usuario&limit=15&offset=0
+Cookie: auth_token={{token}}
+
+### Get users with custom attributes (addAttribute1-5)
+GET {{baseUrl}}/users?addAttribute1=maintenance&addAttribute2=plant1&limit=10&offset=0
+Cookie: auth_token={{token}}
+
+### Complex filter: active users with custom attributes and pagination
+GET {{baseUrl}}/users?isActive=Y&userName=John&addAttribute1=department&addAttribute2=location&limit=25&offset=0
+Cookie: auth_token={{token}}
+
+### Get users with all attributes and pagination
+GET {{baseUrl}}/users?code=AST&email=usuario&userName=John&userShortName=JD&isActive=Y&isVerified=Y&addAttribute1=dept&addAttribute2=loc&addAttribute3=pos&addAttribute4=team&addAttribute5=role&limit=50&offset=0
+Cookie: auth_token={{token}}
+
+### Get one user by id (using actorId from work orders context)
+GET {{baseUrl}}/users/{{actorId}}
+Cookie: auth_token={{token}}
