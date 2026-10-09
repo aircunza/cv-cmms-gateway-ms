@@ -115,15 +115,13 @@ describe('Work Request Find One (e2e, HTTP)', () => {
     const response = await request(app.getHttpServer())
       .get('/work-requests/900000001')
       .set('Cookie', 'auth_token=mock-token')
-      .set('X-Organization-Code', 'E2E_ORG_001')
       .expect(200);
 
     expect(mockNatsClient.send).toHaveBeenCalledWith(
       'work.request.find.one',
       expect.objectContaining({
         requestId: '900000001',
-        organizationCode: 'E2E_ORG_001',
-        userRoles: ['MANUFACTURING_FACILITATOR'],
+        userRoles: [],
       }),
     );
 
@@ -135,18 +133,91 @@ describe('Work Request Find One (e2e, HTTP)', () => {
     expect(response.body.workRequest.workOrders).toHaveLength(1);
   });
 
-  it('rejects when X-Organization-Code header is missing', async () => {
+  it('finds a work request without X-Organization-Code header', async () => {
+    const microserviceResponse = {
+      workRequest: {
+        requestId: '900000001',
+        assetCode: 'AST-001',
+        assetShortDescription: 'Hydraulic Pump',
+        issueDescription: 'Oil leak detected on the hydraulic pump.',
+        statusCode: 'RELEASED',
+        statusLabel: 'Released',
+        requestedAt: '2026-08-07T15:12:00.000Z',
+        completedAt: null,
+        releasedAt: '2026-08-07T15:12:00.000Z',
+        canceledAt: null,
+        organizationCode: 'E2E_ORG_001',
+        organizationName: 'E2E Organization',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
+        createdBy: '550e8400-e29b-41d4-a716-446655440001',
+        createdByName: 'EU',
+        updatedBy: null,
+        updatedByName: null,
+        createdAt: '2026-08-07T15:12:00.000Z',
+        updatedAt: '2026-08-07T15:12:00.000Z',
+        workOrders: [],
+      },
+    };
+
+    mockNatsClient.send.mockReturnValue(of(microserviceResponse));
+
     await request(app.getHttpServer())
       .get('/work-requests/900000001')
       .set('Cookie', 'auth_token=mock-token')
-      .expect(400);
+      .expect(200);
+
+    expect(mockNatsClient.send).toHaveBeenCalledWith(
+      'work.request.find.one',
+      expect.objectContaining({
+        requestId: '900000001',
+        userRoles: [],
+      }),
+    );
   });
 
-  it('rejects when user does not have access to organization', async () => {
+  it('forwards organizationCode when X-Organization-Code header is provided', async () => {
+    const microserviceResponse = {
+      workRequest: {
+        requestId: '900000001',
+        assetCode: 'AST-001',
+        assetShortDescription: 'Hydraulic Pump',
+        issueDescription: 'Oil leak detected on the hydraulic pump.',
+        statusCode: 'RELEASED',
+        statusLabel: 'Released',
+        requestedAt: '2026-08-07T15:12:00.000Z',
+        completedAt: null,
+        releasedAt: '2026-08-07T15:12:00.000Z',
+        canceledAt: null,
+        organizationCode: 'E2E_ORG_001',
+        organizationName: 'E2E Organization',
+        operatorCode: 'OP-001',
+        operatorName: 'John Operator',
+        createdBy: '550e8400-e29b-41d4-a716-446655440001',
+        createdByName: 'EU',
+        updatedBy: null,
+        updatedByName: null,
+        createdAt: '2026-08-07T15:12:00.000Z',
+        updatedAt: '2026-08-07T15:12:00.000Z',
+        workOrders: [],
+      },
+    };
+
+    mockNatsClient.send.mockReturnValue(of(microserviceResponse));
+
     await request(app.getHttpServer())
       .get('/work-requests/900000001')
       .set('Cookie', 'auth_token=mock-token')
-      .set('X-Organization-Code', 'E2E_ORG_999')
-      .expect(400);
+      .set('X-Organization-Code', 'E2E_ORG_001')
+      .expect(200);
+
+    expect(mockNatsClient.send).toHaveBeenCalledWith(
+      'work.request.find.one',
+      expect.objectContaining({
+        requestId: '900000001',
+        organizationCode: 'E2E_ORG_001',
+        userRoles: ['MANUFACTURING_FACILITATOR'],
+      }),
+    );
   });
 });

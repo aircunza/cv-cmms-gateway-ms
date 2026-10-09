@@ -117,14 +117,12 @@ X-Organization-Code: {{orgCode}}
 ### Note: copy the requestId returned and paste it into @wrRequestId
 
 ### Get work requests (filters as JSON string URL-encoded)
-GET {{baseUrl}}/work-requests?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%5D&limit=10&offset=0
+GET {{baseUrl}}/work-requests?limit=10&offset=0
 Cookie: auth_token={{token}}
-X-Organization-Code: {{orgCode}}
 
 ### Get one work request
 GET {{baseUrl}}/work-requests/{{wrRequestId}}
 Cookie: auth_token={{token}}
-X-Organization-Code: {{orgCode}}
 
 ### Update work request description
 PATCH {{baseUrl}}/work-requests/{{wrRequestId}}

@@ -53,6 +53,11 @@ export class WorkRequestsController {
     return orgCode as string;
   }
 
+  private getOptionalOrganizationCode(request: Request): string | undefined {
+    const orgCode = request.headers['x-organization-code'];
+    return orgCode ? (orgCode as string) : undefined;
+  }
+
   private getUserPermissions(
     organizations: OrganizationRole[],
     organizationCode: string,
@@ -138,17 +143,19 @@ export class WorkRequestsController {
   @UseGuards(AuthGuard)
   @Get(':requestId')
   findOne(@Param() dto: WorkRequestIdDto, @Req() req: Request) {
-    const organizationCode = this.getOrganizationCode(req);
+    const organizationCode = this.getOptionalOrganizationCode(req);
     const organizations = req['organizations'] as OrganizationRole[];
 
-    this.validateOrgAccess(organizations, organizationCode);
-
-    const userRoles = this.getUserRoles(organizations, organizationCode);
+    let userRoles: string[] = [];
+    if (organizationCode) {
+      this.validateOrgAccess(organizations, organizationCode);
+      userRoles = this.getUserRoles(organizations, organizationCode);
+    }
 
     return this.client
       .send('work.request.find.one', {
         requestId: dto.requestId,
-        organizationCode,
+        ...(organizationCode ? { organizationCode } : {}),
         userRoles,
       })
       .pipe(
@@ -161,12 +168,14 @@ export class WorkRequestsController {
   @UseGuards(AuthGuard)
   @Get()
   findAll(@Query() dto: FindAllWorkRequestDto, @Req() req: Request) {
-    const organizationCode = this.getOrganizationCode(req);
+    const organizationCode = this.getOptionalOrganizationCode(req);
     const organizations = req['organizations'] as OrganizationRole[];
 
-    this.validateOrgAccess(organizations, organizationCode);
-
-    const userRoles = this.getUserRoles(organizations, organizationCode);
+    let userRoles: string[] = [];
+    if (organizationCode) {
+      this.validateOrgAccess(organizations, organizationCode);
+      userRoles = this.getUserRoles(organizations, organizationCode);
+    }
 
     const parsedFilters =
       typeof dto.filters === 'string'
@@ -184,7 +193,7 @@ export class WorkRequestsController {
 
     return this.client
       .send('work.request.find.all', {
-        organizationCode,
+        ...(organizationCode ? { organizationCode } : {}),
         userRoles,
         filters: parsedFilters,
         order: parsedOrder,

@@ -120,14 +120,12 @@ describe('Work Request Find All (e2e, HTTP)', () => {
         `/work-requests?filters=${encodeURIComponent(filters)}&order=${encodeURIComponent(order)}&limit=10&offset=0`,
       )
       .set('Cookie', 'auth_token=mock-token')
-      .set('X-Organization-Code', 'E2E_ORG_001')
       .expect(200);
 
     expect(mockNatsClient.send).toHaveBeenCalledWith(
       'work.request.find.all',
       expect.objectContaining({
-        organizationCode: 'E2E_ORG_001',
-        userRoles: ['MANUFACTURING_FACILITATOR'],
+        userRoles: [],
         filters: [
           { field: 'organizationCode', operator: 'eq', value: 'E2E_ORG_001' },
           { field: 'statusCode', operator: 'eq', value: 'RELEASED' },
@@ -145,18 +143,47 @@ describe('Work Request Find All (e2e, HTTP)', () => {
     expect(response.body.total).toBe(1);
   });
 
-  it('rejects when X-Organization-Code header is missing', async () => {
+  it('finds all work requests without X-Organization-Code header', async () => {
+    const microserviceResponse = {
+      workRequests: [],
+      total: 0,
+    };
+
+    mockNatsClient.send.mockReturnValue(of(microserviceResponse));
+
     await request(app.getHttpServer())
       .get('/work-requests')
       .set('Cookie', 'auth_token=mock-token')
-      .expect(400);
+      .expect(200);
+
+    expect(mockNatsClient.send).toHaveBeenCalledWith(
+      'work.request.find.all',
+      expect.objectContaining({
+        userRoles: [],
+      }),
+    );
   });
 
-  it('rejects when user does not have access to organization', async () => {
+  it('forwards organizationCode when X-Organization-Code header is provided', async () => {
+    const microserviceResponse = {
+      workRequests: [],
+      total: 0,
+    };
+
+    mockNatsClient.send.mockReturnValue(of(microserviceResponse));
+
     await request(app.getHttpServer())
       .get('/work-requests')
       .set('Cookie', 'auth_token=mock-token')
-      .set('X-Organization-Code', 'E2E_ORG_999')
-      .expect(400);
+      .set('X-Organization-Code', 'E2E_ORG_001')
+      .expect(200);
+
+    expect(mockNatsClient.send).toHaveBeenCalledWith(
+      'work.request.find.all',
+      expect.objectContaining({
+        organizationCode: 'E2E_ORG_001',
+        userRoles: ['MANUFACTURING_FACILITATOR'],
+      }),
+    );
   });
 });

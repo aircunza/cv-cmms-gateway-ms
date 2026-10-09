@@ -1521,7 +1521,7 @@ Response example:
 Headers required for all Work Request endpoints:
 
 - `Cookie: auth_token=<jwt>`
-- `X-Organization-Code: <organization-code>`
+- `X-Organization-Code: <organization-code>` (required for POST/PATCH, optional for GET)
 
 | Method | Endpoint                                  | Description              |
 | ------ | ----------------------------------------- | ------------------------ |
@@ -1626,10 +1626,14 @@ Response `201 Created`:
 
 Query parameters:
 
-- `filters`: JSON string (required)
+- `filters`: JSON string (optional)
 - `order`: JSON string (optional)
 - `limit`: non-negative integer (optional)
 - `offset`: non-negative integer (optional)
+
+Optional header:
+
+- `X-Organization-Code: <organization-code>` (if provided, results are scoped to that organization)
 
 Supported operators: `eq`, `like`, `gt`, `lt`, `in`.
 
@@ -1640,7 +1644,6 @@ Example query payload (human-readable JSON):
 ```json
 {
   "filters": [
-    { "field": "organizationCode", "operator": "eq", "value": "ORG-BOG-001" },
     { "field": "statusCode", "operator": "eq", "value": "RELEASED" }
   ],
   "order": [["createdAt", "DESC"]],
@@ -1829,8 +1832,8 @@ Impact on the associated Work Order:
 
 | Status | Message                                   | Description                                                  |
 | ------ | ----------------------------------------- | ------------------------------------------------------------ |
-| 400    | X-Organization-Code header is required    | Missing org header                                           |
-| 400    | User does not have access to organization | User-org mismatch                                            |
+| 400    | X-Organization-Code header is required    | Missing org header (POST/PATCH only)                         |
+| 400    | User does not have access to organization | User-org mismatch (POST/PATCH only)                          |
 | 400    | Validation errors                         | Missing or invalid fields                                    |
 | 400    | Invalid filter data                       | Invalid `filters`, `order`, `limit`, or `offset`             |
 | 400    | Invalid status transition                 | Work Request cannot transition from current status           |
