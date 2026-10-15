@@ -1844,6 +1844,152 @@ Impact on the associated Work Order:
 | 404    | Asset not found or inactive               | The specified asset does not exist or is inactive            |
 | 404    | Work request not found                    | The specified Work Request does not exist                    |
 
+## Work Definitions
+
+Headers required for all Work Definition endpoints:
+
+- `Cookie: auth_token=<jwt>`
+- `X-Organization-Code: <organization-code>` (required for POST/PATCH, optional for GET)
+
+| Method | Endpoint                                          | Description              |
+| ------ | ------------------------------------------------- | ------------------------ |
+| POST   | /api/v1/work-definitions                          | Create                   |
+| GET    | /api/v1/work-definitions                          | List                     |
+| GET    | /api/v1/work-definitions/:workDefinitionCode      | Get by code              |
+| PATCH  | /api/v1/work-definitions/:workDefinitionCode      | Update (toggle isActive) |
+
+### Create Work Definition
+
+`POST /api/v1/work-definitions`
+
+Request body example:
+
+```json
+{
+  "workDefinitionCode": "WD-PREVENTIVE-001",
+  "workDefinitionDescription": "Preventive maintenance for hydraulic pump"
+}
+```
+
+Role restriction: only **PLANNER_MAINTENANCE_01** and **PLANNER_MAINTENANCE_02** are authorized to create Work Definitions.
+
+Response `201 Created`:
+
+```json
+{
+  "workDefinition": {
+    "workDefinitionId": "1",
+    "workDefinitionCode": "WD-PREVENTIVE-001",
+    "workDefinitionDescription": "Preventive maintenance for hydraulic pump",
+    "isActive": "Y",
+    "createdAt": "2026-08-07T15:12:00.000Z",
+    "updatedAt": null
+  }
+}
+```
+
+### Get Work Definitions
+
+`GET /api/v1/work-definitions`
+
+Query parameters:
+
+- `filters`: JSON string (optional)
+- `order`: JSON string (optional)
+- `limit`: non-negative integer (optional)
+- `offset`: non-negative integer (optional)
+
+Optional header:
+
+- `X-Organization-Code: <organization-code>` (if provided, results are scoped to that organization)
+
+Supported operators: `eq`, `like`, `gt`, `lt`, `in`.
+
+Allowed filter fields: `workDefinitionId`, `workDefinitionCode`, `workDefinitionDescription`, `isActive`, `createdAt`, `updatedAt`.
+
+Example query payload (human-readable JSON):
+
+```json
+{
+  "filters": [
+    { "field": "isActive", "operator": "eq", "value": "Y" }
+  ],
+  "order": [["createdAt", "DESC"]],
+  "limit": 10,
+  "offset": 0
+}
+```
+
+Response example:
+
+```json
+{
+  "workDefinitions": [
+    {
+      "workDefinitionId": "1",
+      "workDefinitionCode": "WD-PREVENTIVE-001",
+      "workDefinitionDescription": "Preventive maintenance for hydraulic pump",
+      "isActive": "Y",
+      "createdAt": "2026-08-07T15:12:00.000Z",
+      "updatedAt": null
+    }
+  ],
+  "total": 1
+}
+```
+
+### Get Work Definition By Code
+
+`GET /api/v1/work-definitions/:workDefinitionCode`
+
+Path parameter: `workDefinitionCode` (unique string identifier of the Work Definition).
+
+Response example:
+
+```json
+{
+  "workDefinition": {
+    "workDefinitionId": "1",
+    "workDefinitionCode": "WD-PREVENTIVE-001",
+    "workDefinitionDescription": "Preventive maintenance for hydraulic pump",
+    "isActive": "Y",
+    "createdAt": "2026-08-07T15:12:00.000Z",
+    "updatedAt": null
+  }
+}
+```
+
+### Update Work Definition
+
+`PATCH /api/v1/work-definitions/:workDefinitionCode`
+
+Purpose: toggles the `isActive` status of a Work Definition (activate or deactivate).
+
+Request body example:
+
+```json
+{
+  "isActive": "N"
+}
+```
+
+Role restriction: only **PLANNER_MAINTENANCE_01** and **PLANNER_MAINTENANCE_02** are authorized to update Work Definitions.
+
+Response: returns the updated Work Definition (same shape as Get By Code).
+
+### Errors
+
+| Status | Message                                   | Description                                      |
+| ------ | ----------------------------------------- | ------------------------------------------------ |
+| 400    | X-Organization-Code header is required    | Missing org header (POST/PATCH only)             |
+| 400    | User does not have access to organization | User-org mismatch (POST/PATCH only)              |
+| 400    | Validation errors                         | Missing or invalid fields                        |
+| 400    | Invalid filter data                       | Invalid `filters`, `order`, `limit`, or `offset` |
+| 403    | ROLE_NOT_AUTHORIZED                       | User's role is not authorized for this action    |
+| 404    | Work definition not found                 | The specified Work Definition does not exist     |
+| 409    | Work definition code already exists       | Duplicate work definition code                   |
+| 500    | Internal server error                     | Unexpected failure                               |
+
 ## Users
 
 | Method | Endpoint              | Description      |

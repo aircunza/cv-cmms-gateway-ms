@@ -154,6 +154,37 @@ PATCH {{baseUrl}}/work-requests/{{wrRequestId}}/cancel
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
+######################## WORK DEFINITIONS ########################
+
+### Create work definition
+POST {{baseUrl}}/work-definitions
+Content-Type: application/json
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "workDefinitionCode": "WD-PREVENTIVE-001",
+  "workDefinitionDescription": "Preventive maintenance for hydraulic pump"
+}
+
+### Get work definitions (filters as JSON string URL-encoded)
+GET {{baseUrl}}/work-definitions?limit=10&offset=0
+Cookie: auth_token={{token}}
+
+### Get one work definition by code
+GET {{baseUrl}}/work-definitions/WD-PREVENTIVE-001
+Cookie: auth_token={{token}}
+
+### Update work definition (toggle isActive)
+PATCH {{baseUrl}}/work-definitions/WD-PREVENTIVE-001
+Content-Type: application/json
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "isActive": "N"
+}
+
 ######################## WORK ORDERS ########################
 
 ### Create work order

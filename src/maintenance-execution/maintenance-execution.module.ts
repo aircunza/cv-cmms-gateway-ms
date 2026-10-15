@@ -6,6 +6,7 @@ import { OperationMaterialsModule } from './operation-materials/operation-materi
 import { OperationHumanResourcesModule } from './operation-human-resources/operation-human-resources.module';
 import { HumanResourcesModule } from './human-resources/human-resources.module';
 import { AssetsTreeModule } from './assets-tree/assets-tree.module';
+import { WorkDefinitionsModule } from './work-definitions/work-definitions.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AssetsTreeModule } from './assets-tree/assets-tree.module';
     OperationHumanResourcesModule,
     HumanResourcesModule,
     AssetsTreeModule,
+    WorkDefinitionsModule,
   ],
 })
 export class MaintenanceExecutionModule {}
