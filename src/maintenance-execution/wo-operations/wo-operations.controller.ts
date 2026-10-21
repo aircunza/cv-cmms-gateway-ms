@@ -135,25 +135,6 @@ export class WoOperationsController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch(':operationCode/review')
-  review(
-    @Param() params: { operationCode: string },
-    @User() user: CurrentUser,
-  ) {
-    return this.client
-      .send('wo.operation.review', {
-        operationCode: Number(params.operationCode),
-        actorId: this.getActorId(user),
-        actorName: this.getActorName(user),
-      })
-      .pipe(
-        catchError((error: unknown) => {
-          throw new RpcException(this.toRpcError(error));
-        }),
-      );
-  }
-
-  @UseGuards(AuthGuard)
   @Patch(':operationCode/cancel')
   cancel(
     @Param() params: { workOrderCode: string; operationCode: string },

@@ -1516,6 +1516,35 @@ Response example:
 | 404    | Work order not found or inactive          | The specified work order does not exist          |
 | 500    | Internal server error                     | Unexpected failure                               |
 
+## Work Order Operations
+
+Headers required for all Work Order Operation endpoints:
+
+- `Cookie: auth_token=<jwt>`
+
+| Method | Endpoint                                                          | Description              |
+| ------ | ----------------------------------------------------------------- | ------------------------ |
+| POST   | /api/v1/work-orders/:workOrderCode/operations                     | Create                   |
+| GET    | /api/v1/work-orders/:workOrderCode/operations                     | List                     |
+| GET    | /api/v1/work-orders/:workOrderCode/operations/:operationCode      | Get by id                |
+| PATCH  | /api/v1/work-orders/:workOrderCode/operations/:operationCode      | Update                   |
+| PATCH  | /api/v1/work-orders/:workOrderCode/operations/:operationCode/cancel | Cancel                 |
+
+### Operation Fields
+
+Operations support the following optional fields for review and pending task tracking:
+
+- `reviewedByCode` (string, max 254): Code of the user who reviewed the operation
+- `reviewedByName` (string, max 254): Name of the user who reviewed the operation
+- `reviewerComment` (string, max 254): Comment from the reviewer
+- `pendingTask` (string, max 1370): Description of a pending task
+- `pendingTaskStatus` (string, max 40): Status of the pending task. One of: `UNRELEASED`, `RELEASED`, `IN_PROCESS`, `COMPLETED`, `NOT_DONE`, `CANCELED`, `ON_HOLD`
+- `reviewedAt` (DateTime): Timestamp of when the operation was reviewed
+
+These fields can be set during operation creation (POST) or updated via the PATCH endpoint.
+
+For the full contract (permissions, roles, field constraints), see the [Work Order Operation spec](../cv-cmms-maintenance-execution-ms/docs/wo-operation-spec.md).
+
 ## Work Requests
 
 Headers required for all Work Request endpoints:

@@ -393,6 +393,36 @@ Cookie: auth_token={{token}}
   ]
 }
 
+### Create operation with review and pending task fields
+POST {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations
+Content-Type: application/json
+Cookie: auth_token={{token}}
+
+{
+  "operationName": "Mantenimiento preventivo",
+  "operationDescription": "Mantenimiento preventivo de componentes mecanicos",
+  "operationSeqNumber": 30,
+  "assetCode": "AST-001",
+  "assetShortDescription": "Chancadora primaria",
+  "operationStatus": "RELEASED",
+  "operationType": "Internal",
+  "organizationCode": "{{orgCode}}",
+  "reviewedByCode": "USER-001",
+  "reviewerComment": "Operacion revisada y aprobada",
+  "pendingTask": "Revisar rodamientos despues de 100 horas de operacion",
+  "pendingTaskStatus": "RELEASED",
+  "resources": [
+    {
+      "principalFlag": "Y",
+      "resourceCode": "{{hrResourceCode}}",
+      "resourceSequenceNumber": 1,
+      "actualHours": 2.0,
+      "actualStartDate": "2026-08-07T08:00:00Z",
+      "actualCompletionDate": "2026-08-07T10:00:00Z"
+    }
+  ]
+}
+
 ### Note: copy the operationCode returned and paste it into @opInspectionCode
 
 ### Get operations for a work order
@@ -418,9 +448,17 @@ Cookie: auth_token={{token}}
   "specialtyType": "Mecanica"
 }
 
-### Review operation
-PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{opInspectionCode}}/review
+### Update operation with review and pending task fields
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{opInspectionCode}}
+Content-Type: application/json
 Cookie: auth_token={{token}}
+
+{
+  "reviewedByCode": "USER-001",
+  "reviewerComment": "Operacion revisada y aprobada",
+  "pendingTask": "Revisar rodamientos despues de 100 horas de operacion",
+  "pendingTaskStatus": "COMPLETED"
+}
 
 ### Cancel operation
 PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}/operations/{{opInspectionCode}}/cancel
