@@ -177,6 +177,14 @@ export class CreateWoOperationDto {
   @IsString()
   @IsOptional()
   @MaxLength(254)
+  reviewedByName?: string;
+
+  @IsOptional()
+  reviewedAt?: Date;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(254)
   reviewerComment?: string;
 
   @IsString()
@@ -239,6 +247,14 @@ export class UpdateWoOperationDto {
   @IsOptional()
   @MaxLength(254)
   reviewedByCode?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(254)
+  reviewedByName?: string;
+
+  @IsOptional()
+  reviewedAt?: Date;
 
   @IsString()
   @IsOptional()
