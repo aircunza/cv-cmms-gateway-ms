@@ -272,6 +272,52 @@ X-Organization-Code: {{orgCode}}
   ]
 }
 
+### Create work order with review and pending task fields in operation
+POST {{baseUrl}}/work-orders
+Content-Type: application/json
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "workOrderDescription": "Mantenimiento preventivo con revision y tareas pendientes",
+  "woStatusCode": "UNRELEASED",
+  "assetCode": "AST-001",
+  "workOrderType": "Planned",
+  "workOrderSubType": "Preventive",
+  "workOrderPriority": "2",
+  "enableOracleWorkOrder": "N",
+  "operations": [
+    {
+      "operationName": "Inspeccion de rodamientos",
+      "operationDescription": "Inspeccion y reemplazo de rodamientos en motor principal",
+      "operationSeqNumber": 1,
+      "createdBy": "{{actorId}}",
+      "operationStatus": "UNRELEASED",
+      "operationType": "Internal",
+      "operationSubType": "Preventive",
+      "actualStartDate": "2026-08-10T08:00:00Z",
+      "actualCompletionDate": "2026-08-10T12:00:00Z",
+      "reviewedByCode": "USER-001",
+      "reviewedByName": "John Reviewer",
+      "reviewedAt": "2026-08-09T15:00:00Z",
+      "reviewerComment": "Operacion revisada y aprobada",
+      "pendingTask": "Revisar rodamientos despues de 100 horas de operacion",
+      "pendingTaskStatus": "RELEASED",
+      "workOrderOperationResource": [
+        {
+          "principalFlag": "Y",
+          "resourceCode": "{{hrResourceCode}}",
+          "resourceSequenceNumber": 1,
+          "actualHours": 4.0,
+          "actualStartDate": "2026-08-10T08:00:00Z",
+          "actualCompletionDate": "2026-08-10T12:00:00Z"
+        }
+      ],
+      "workOrderOperationMaterial": []
+    }
+  ]
+}
+
 ### Note: copy the workOrderCode returned and paste it into @woWorkOrderCode
 
 ### Get work orders (filters as JSON string URL-encoded)

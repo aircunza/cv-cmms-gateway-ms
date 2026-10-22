@@ -1541,7 +1541,11 @@ Operations support the following optional fields for review and pending task tra
 - `pendingTaskStatus` (string, max 40): Status of the pending task. One of: `UNRELEASED`, `RELEASED`, `IN_PROCESS`, `COMPLETED`, `NOT_DONE`, `CANCELED`, `ON_HOLD`
 - `reviewedAt` (DateTime): Timestamp of when the operation was reviewed
 
-These fields can be set during operation creation (POST) or updated via the PATCH endpoint.
+These fields can be set:
+- During Work Order creation (POST /api/v1/work-orders) in the nested `operations` array
+- During Operation creation (POST /api/v1/work-orders/:workOrderCode/operations)
+- Via the PATCH endpoint (PATCH /api/v1/work-orders/:workOrderCode/operations/:operationCode)
+- Returned in all GET responses that include operations
 
 For the full contract (permissions, roles, field constraints), see the [Work Order Operation spec](../cv-cmms-maintenance-execution-ms/docs/wo-operation-spec.md).
 
