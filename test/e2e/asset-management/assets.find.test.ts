@@ -125,13 +125,18 @@ describe('Assets Find (e2e, HTTP)', () => {
       .set('Cookie', 'auth_token=mock-token')
       .expect(200);
 
-    expect(mockNatsClient.send).toHaveBeenCalledWith('asset.find.all', {});
+    expect(mockNatsClient.send).toHaveBeenCalledWith('asset.find.all', {
+      filters: undefined,
+      order: undefined,
+      limit: undefined,
+      offset: undefined,
+    });
 
     expect(response.body.assets).toBeDefined();
     expect(response.body.total).toBe(2);
   });
 
-  it('finds all assets with filter', async () => {
+  it('finds all assets with filters', async () => {
     const microserviceResponse = {
       assets: [{ assetCode: 'AST-001', assetDescription: 'Asset 1' }],
       total: 1,
@@ -139,13 +144,47 @@ describe('Assets Find (e2e, HTTP)', () => {
 
     mockNatsClient.send.mockReturnValue(of(microserviceResponse));
 
+    const filters = JSON.stringify([
+      { field: 'assetCode', operator: 'like', value: 'AST' },
+    ]);
+
     const response = await request(app.getHttpServer())
-      .get('/assets?assetCode=AST')
+      .get(`/assets?filters=${encodeURIComponent(filters)}`)
       .set('Cookie', 'auth_token=mock-token')
       .expect(200);
 
     expect(mockNatsClient.send).toHaveBeenCalledWith('asset.find.all', {
-      assetCode: 'AST',
+      filters: [{ field: 'assetCode', operator: 'like', value: 'AST' }],
+      order: undefined,
+      limit: undefined,
+      offset: undefined,
+    });
+
+    expect(response.body.assets).toBeDefined();
+  });
+
+  it('finds all assets with filters and pagination', async () => {
+    const microserviceResponse = {
+      assets: [{ assetCode: 'AST-001', assetDescription: 'Asset 1' }],
+      total: 1,
+    };
+
+    mockNatsClient.send.mockReturnValue(of(microserviceResponse));
+
+    const filters = JSON.stringify([
+      { field: 'sector', operator: 'eq', value: 'Mining' },
+    ]);
+
+    const response = await request(app.getHttpServer())
+      .get(`/assets?filters=${encodeURIComponent(filters)}&limit=10&offset=0`)
+      .set('Cookie', 'auth_token=mock-token')
+      .expect(200);
+
+    expect(mockNatsClient.send).toHaveBeenCalledWith('asset.find.all', {
+      filters: [{ field: 'sector', operator: 'eq', value: 'Mining' }],
+      order: undefined,
+      limit: 10,
+      offset: 0,
     });
 
     expect(response.body.assets).toBeDefined();

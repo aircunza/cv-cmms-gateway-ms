@@ -492,7 +492,58 @@ Response:
 
 ### List
 
-`GET /api/v1/assets?organizationCode=ORG-BOG-001&assetStatus=OPERATIVE&isActive=Y` (all optional; `isActive` defaults to `Y`).
+`GET /api/v1/assets` supports the following query parameters:
+
+- `filters`: JSON array of filter objects (URL-encoded)
+- `order`: JSON array of ordering criteria (URL-encoded)
+- `limit`: Maximum number of results
+- `offset`: Number of results to skip
+
+**Filter format:**
+```json
+[
+  { "field": "fieldName", "operator": "eq", "value": "value" }
+]
+```
+
+**Supported operators:**
+- `eq`: Exact equality
+- `like`: Partial match (string fields only)
+- `gt`: Greater than (numeric and date fields only)
+- `lt`: Less than (numeric and date fields only)
+- `in`: Value in array (e.g., `{ "field": "sector", "operator": "in", "value": ["A", "B"] }`)
+
+**Filterable fields:**
+- String: `assetCode`, `assetDescription`, `assetShortDescription`, `assetStatus`, `operationalHoursOrigin`, `organizationCode`, `organizationName`, `countryCode`, `countryName`, `workCenterId`, `workCenterCode`, `workCenterDescription`, `workAreaCode`, `workAreaDescription`, `accountingAccountCode`, `supervisorCode`, `assetDependency`, `processTypeCode`, `subprocessTypeCode`, `hierarchyCode`, `assetClass`, `enabledMaintenanceProgram`, `enabledMaintenanceHoursControl`, `enabledFinancialKpi`, `enabledTechnicalKpi`, `woAllowedFlag`, `createdBy`, `updatedBy`, `enabledIiot`, `sector`, `subsector`, `isActive`
+- Integer: `centerCostCode`
+- Date: `updateUp`, `createdAt`
+
+**Examples:**
+
+Filter by sector:
+```
+GET /api/v1/assets?filters=[{"field":"sector","operator":"eq","value":"EXTRUSION_RIGIDOS"}]
+```
+
+Filter by organization and status:
+```
+GET /api/v1/assets?filters=[{"field":"organizationCode","operator":"eq","value":"ORG-BOG-001"},{"field":"assetStatus","operator":"eq","value":"OPERATIVE"}]
+```
+
+Partial match on description:
+```
+GET /api/v1/assets?filters=[{"field":"assetDescription","operator":"like","value":"PUMP"}]
+```
+
+With pagination:
+```
+GET /api/v1/assets?filters=[{"field":"sector","operator":"eq","value":"EXTRUSION"}]&limit=10&offset=0
+```
+
+With ordering:
+```
+GET /api/v1/assets?order=[["assetCode","ASC"]]
+```
 
 Response:
 

@@ -1,28 +1,15 @@
-import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsOptional } from 'class-validator';
 
 export class FindAllAssetsDto {
   @IsOptional()
-  @IsString()
-  @MaxLength(80)
-  assetCode?: string;
+  filters?: unknown;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  organizationCode?: string;
+  order?: unknown;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  supervisorCode?: string;
+  limit?: number | string;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  assetStatus?: string;
-
-  @IsOptional()
-  @IsString()
-  @IsIn(['Y', 'N'])
-  isActive?: string;
+  offset?: number | string;
 }

@@ -73,11 +73,51 @@ export class AssetsController {
   @UseGuards(AuthGuard)
   @Get()
   findAll(@Query() dto: FindAllAssetsDto) {
-    return this.client.send('asset.find.all', dto).pipe(
-      catchError((error: unknown) => {
-        throw new RpcException(this.toRpcError(error));
-      }),
-    );
+    const parsedFilters =
+      typeof dto.filters === 'string'
+        ? this.parseJsonParam(dto.filters)
+        : dto.filters;
+
+    const parsedOrder =
+      typeof dto.order === 'string'
+        ? this.parseJsonParam(dto.order)
+        : dto.order;
+
+    const parsedLimit = this.parseNonNegativeInt(dto.limit);
+
+    const parsedOffset = this.parseNonNegativeInt(dto.offset);
+
+    return this.client
+      .send('asset.find.all', {
+        filters: parsedFilters,
+        order: parsedOrder,
+        limit: parsedLimit,
+        offset: parsedOffset,
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
+  }
+
+  private parseJsonParam(value: string): unknown {
+    try {
+      return JSON.parse(value) as unknown;
+    } catch {
+      throw new BadRequestException('Invalid filter data');
+    }
+  }
+
+  private parseNonNegativeInt(
+    value: number | string | undefined,
+  ): number | undefined {
+    if (value === undefined || value === '') return undefined;
+    const parsed = typeof value === 'string' ? parseInt(value, 10) : value;
+    if (Number.isNaN(parsed) || !Number.isInteger(parsed) || parsed < 0) {
+      throw new BadRequestException('Invalid filter data');
+    }
+    return parsed;
   }
 
   @UseGuards(AuthGuard)

@@ -761,6 +761,30 @@ Cookie: auth_token={{token}}
 GET {{baseUrl}}/assets
 Cookie: auth_token={{token}}
 
+### List all assets (filter by sector)
+GET {{baseUrl}}/assets?filters=%5B%7B%22field%22%3A%22sector%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22Production%22%7D%5D
+Cookie: auth_token={{token}}
+
+### List all assets (filter by organizationCode)
+GET {{baseUrl}}/assets?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%5D
+Cookie: auth_token={{token}}
+
+### List all assets (filter by assetStatus)
+GET {{baseUrl}}/assets?filters=%5B%7B%22field%22%3A%22assetStatus%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22OPERATIVE%22%7D%5D
+Cookie: auth_token={{token}}
+
+### List all assets (filter by assetDescription containing text)
+GET {{baseUrl}}/assets?filters=%5B%7B%22field%22%3A%22assetDescription%22%2C%22operator%22%3A%22like%22%2C%22value%22%3A%22Chancadora%22%7D%5D
+Cookie: auth_token={{token}}
+
+### List all assets (multiple filters with pagination)
+GET {{baseUrl}}/assets?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22ORG-LIMA-001%22%7D%2C%7B%22field%22%3A%22sector%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22Production%22%7D%5D&limit=10&offset=0
+Cookie: auth_token={{token}}
+
+### List all assets (with pagination)
+GET {{baseUrl}}/assets?limit=10&offset=0
+Cookie: auth_token={{token}}
+
 ### Get asset by code
 GET {{baseUrl}}/assets/AST-001
 Cookie: auth_token={{token}}
