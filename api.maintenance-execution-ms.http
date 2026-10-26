@@ -318,6 +318,50 @@ X-Organization-Code: {{orgCode}}
   ]
 }
 
+### Create work order with additional attributes
+POST {{baseUrl}}/work-orders
+Content-Type: application/json
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "workOrderDescription": "Mantenimiento con atributos adicionales",
+  "woStatusCode": "UNRELEASED",
+  "assetCode": "AST-001",
+  "workOrderType": "Planned",
+  "workOrderSubType": "Preventive",
+  "workOrderPriority": "2",
+  "enableOracleWorkOrder": "N",
+  "oldId": 12345,
+  "addAttribute1": "Custom field 1",
+  "addAttribute2": "Custom field 2",
+  "addAttribute3": "Custom field 3",
+  "operations": [
+    {
+      "operationName": "Inspeccion general",
+      "operationDescription": "Inspeccion general de equipos",
+      "operationSeqNumber": 1,
+      "createdBy": "{{actorId}}",
+      "operationStatus": "UNRELEASED",
+      "operationType": "Internal",
+      "operationSubType": "Preventive",
+      "actualStartDate": "2026-08-10T08:00:00Z",
+      "actualCompletionDate": "2026-08-10T12:00:00Z",
+      "workOrderOperationResource": [
+        {
+          "principalFlag": "Y",
+          "resourceCode": "{{hrResourceCode}}",
+          "resourceSequenceNumber": 1,
+          "actualHours": 4.0,
+          "actualStartDate": "2026-08-10T08:00:00Z",
+          "actualCompletionDate": "2026-08-10T12:00:00Z"
+        }
+      ],
+      "workOrderOperationMaterial": []
+    }
+  ]
+}
+
 ### Note: copy the workOrderCode returned and paste it into @woWorkOrderCode
 
 ### Get work orders (filters as JSON string URL-encoded)
@@ -340,6 +384,20 @@ X-Organization-Code: {{orgCode}}
   "enableOracleWorkOrder": "N",
   "workOrderDescription": "Vibracion excesiva en chancadora primaria - actualizado",
   "workOrderPriority": "2"
+}
+
+### Update work order with additional attributes
+PATCH {{baseUrl}}/work-orders/{{woWorkOrderCode}}
+Content-Type: application/json
+Cookie: auth_token={{token}}
+X-Organization-Code: {{orgCode}}
+
+{
+  "enableOracleWorkOrder": "N",
+  "oldId": 99999,
+  "addAttribute1": "Updated custom field 1",
+  "addAttribute4": "New custom field 4",
+  "addAttribute5": "New custom field 5"
 }
 
 ### Release work order

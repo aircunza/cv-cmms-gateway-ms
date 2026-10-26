@@ -1110,6 +1110,18 @@ Headers required for all Work Order endpoints:
 
 For the full contract (permissions, roles, field constraints, allowed type/subtype combinations), see the [Work Order spec](src/maintenance-execution/docs/work-order-spec.md).
 
+### Work Order Additional Fields
+
+Work Orders support the following optional fields for additional attributes:
+
+- `oldId` (integer): Legacy ID from previous system
+- `addAttribute1` through `addAttribute10` (string, max 254 each): Custom additional attributes
+
+These fields can be set:
+- During Work Order creation (POST /api/v1/work-orders)
+- Via the PATCH endpoint (PATCH /api/v1/work-orders/:workOrderCode)
+- Returned in all GET responses
+
 ### Create Work Order
 
 `POST /api/v1/work-orders`

@@ -11,6 +11,7 @@ import {
   IsNumber,
   Min,
   IsDateString,
+  IsInt,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -229,6 +230,60 @@ export class CreateWorkOrderDto {
 
   @IsOptional()
   needByDate?: Date;
+
+  @IsOptional()
+  @IsInt()
+  oldId?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute1?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute2?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute3?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute4?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute5?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute6?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute7?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute8?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute9?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute10?: string;
 }
 
 export class UpdateWorkOrderDto {
@@ -256,6 +311,60 @@ export class UpdateWorkOrderDto {
   @IsOptional()
   @IsIn(['1', '2', '3', '4'])
   workOrderPriority?: string;
+
+  @IsOptional()
+  @IsInt()
+  oldId?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute1?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute2?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute3?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute4?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute5?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute6?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute7?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute8?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute9?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(254)
+  addAttribute10?: string;
 }
 
 export class FindAllWorkOrderDto {
