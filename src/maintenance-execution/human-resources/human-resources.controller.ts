@@ -68,12 +68,12 @@ export class HumanResourcesController {
   @Get(':resourceCode')
   findOne(
     @Param() params: { resourceCode: string },
-    @Query() dto: { organizationCode: string },
+    @Query() dto: { organizationCode?: string },
   ) {
     return this.client
       .send('human.resource.find.one', {
         resourceCode: params.resourceCode,
-        organizationCode: dto.organizationCode,
+        ...(dto.organizationCode ? { organizationCode: dto.organizationCode } : {}),
       })
       .pipe(
         catchError((error: unknown) => {

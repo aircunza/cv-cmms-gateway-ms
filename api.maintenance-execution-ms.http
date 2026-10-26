@@ -725,6 +725,36 @@ GET {{baseUrl}}/oracle/inventory?description=%25PERNO%25DIAMETRO%25
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
+######################## HUMAN RESOURCES ########################
+
+### List all human resources
+GET {{baseUrl}}/human-resources
+Cookie: auth_token={{token}}
+
+### List all human resources (filter by organizationCode)
+GET {{baseUrl}}/human-resources?organizationCode={{orgCode}}
+Cookie: auth_token={{token}}
+
+### List all human resources (filter by resourceType)
+GET {{baseUrl}}/human-resources?resourceType=TECHNICIAN
+Cookie: auth_token={{token}}
+
+### List all human resources (filter by availabilityStatus)
+GET {{baseUrl}}/human-resources?availabilityStatus=AVAILABLE
+Cookie: auth_token={{token}}
+
+### List all human resources (multiple filters)
+GET {{baseUrl}}/human-resources?organizationCode={{orgCode}}&resourceType=TECHNICIAN&availabilityStatus=AVAILABLE
+Cookie: auth_token={{token}}
+
+### Get human resource by code
+GET {{baseUrl}}/human-resources/{{hrResourceCode}}
+Cookie: auth_token={{token}}
+
+### Get human resource by code (with organizationCode filter)
+GET {{baseUrl}}/human-resources/{{hrResourceCode}}?organizationCode={{orgCode}}
+Cookie: auth_token={{token}}
+
 ######################## ORGANIZATIONS ########################
 
 ### List all organizations

@@ -99,12 +99,11 @@ export class FindAllHumanResourceDto {
 
 export class HumanResourceIdDto {
   @IsString()
-  @IsNotEmpty()
   @MaxLength(255)
   resourceCode: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(255)
-  organizationCode: string;
+  organizationCode?: string;
 }
