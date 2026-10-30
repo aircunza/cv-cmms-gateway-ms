@@ -44,6 +44,8 @@ The business logic, validations and error codes documented here follow the maint
 | workDefinitionCode    | string (140)    | Work definition code.                           |
 | schedulingMethod      | string (30)     | Scheduling method.                              |
 | needByDate            | Date (ISO 8601) | Date by which the work order needs to be completed. |
+| assignedToCode        | string (max 255) | Code of the user assigned to the work order. |
+| assignedToName        | string (max 255) | Name of the user assigned to the work order. |
 
 #### Operation Object Structure
 
@@ -382,6 +384,8 @@ Allowed filter fields:
 - `releasedDate`
 - `closedDate`
 - `canceledDate`
+- `assignedToCode`
+- `assignedToName`
 
 `order` format:
 

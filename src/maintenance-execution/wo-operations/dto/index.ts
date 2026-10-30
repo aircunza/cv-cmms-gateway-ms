@@ -195,8 +195,26 @@ export class CreateWoOperationDto {
   @IsString()
   @IsOptional()
   @MaxLength(40)
-  @IsIn(['RELEASED', 'COMPLETED', 'IN_PROCESS', 'UNRELEASED', 'ON_HOLD', 'CANCELED', 'NOT_DONE'])
+  @IsIn([
+    'RELEASED',
+    'COMPLETED',
+    'IN_PROCESS',
+    'UNRELEASED',
+    'ON_HOLD',
+    'CANCELED',
+    'NOT_DONE',
+  ])
   pendingTaskStatus?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToName?: string;
 }
 
 export class UpdateWoOperationDto {
@@ -269,8 +287,26 @@ export class UpdateWoOperationDto {
   @IsString()
   @IsOptional()
   @MaxLength(40)
-  @IsIn(['RELEASED', 'COMPLETED', 'IN_PROCESS', 'UNRELEASED', 'ON_HOLD', 'CANCELED', 'NOT_DONE'])
+  @IsIn([
+    'RELEASED',
+    'COMPLETED',
+    'IN_PROCESS',
+    'UNRELEASED',
+    'ON_HOLD',
+    'CANCELED',
+    'NOT_DONE',
+  ])
   pendingTaskStatus?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToName?: string;
 }
 
 export class FindAllWoOperationDto {
@@ -286,6 +322,16 @@ export class FindAllWoOperationDto {
   @IsOptional()
   @MaxLength(30)
   operationStatus?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  assignedToCode?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  assignedToName?: string;
 }
 
 export class WoOperationCodeDto {

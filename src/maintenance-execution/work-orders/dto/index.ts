@@ -169,8 +169,26 @@ export class CreateWoOperationDto {
   @IsOptional()
   @IsString()
   @MaxLength(40)
-  @IsIn(['RELEASED', 'COMPLETED', 'IN_PROCESS', 'UNRELEASED', 'ON_HOLD', 'CANCELED', 'NOT_DONE'])
+  @IsIn([
+    'RELEASED',
+    'COMPLETED',
+    'IN_PROCESS',
+    'UNRELEASED',
+    'ON_HOLD',
+    'CANCELED',
+    'NOT_DONE',
+  ])
   pendingTaskStatus?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToName?: string;
 }
 
 export class CreateWorkOrderDto {
@@ -284,6 +302,16 @@ export class CreateWorkOrderDto {
   @IsString()
   @MaxLength(254)
   addAttribute10?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToName?: string;
 }
 
 export class UpdateWorkOrderDto {
@@ -365,6 +393,16 @@ export class UpdateWorkOrderDto {
   @IsString()
   @MaxLength(254)
   addAttribute10?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  assignedToName?: string;
 }
 
 export class FindAllWorkOrderDto {

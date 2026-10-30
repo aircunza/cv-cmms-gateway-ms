@@ -1167,6 +1167,8 @@ Work Orders support the following optional fields for additional attributes:
 
 - `oldId` (integer): Legacy ID from previous system
 - `addAttribute1` through `addAttribute10` (string, max 254 each): Custom additional attributes
+- `assignedToCode` (string, max 255): Code of the user assigned to the Work Order (JSON camelCase, DB `assigned_to_code`)
+- `assignedToName` (string, max 255): Name of the user assigned to the Work Order (JSON camelCase, DB `assigned_to_name`)
 
 These fields can be set:
 - During Work Order creation (POST /api/v1/work-orders)
@@ -1319,7 +1321,7 @@ Query parameters:
 
 Supported operators: `eq`, `like`, `gt`, `lt`, `in`.
 
-Allowed filter fields: `workOrderCode`, `assetCode`, `workOrderDescription`, `woStatusCode`, `workOrderType`, `workOrderSubType`, `organizationCode`, `workCenterCode`, `workAreaCode`, `createdAt`, `actualStartDate`, `actualCompletionDate`, `releasedDate`, `closedDate`, `canceledDate`.
+Allowed filter fields: `workOrderCode`, `assetCode`, `workOrderDescription`, `woStatusCode`, `workOrderType`, `workOrderSubType`, `organizationCode`, `workCenterCode`, `workAreaCode`, `createdAt`, `actualStartDate`, `actualCompletionDate`, `releasedDate`, `closedDate`, `canceledDate`, `assignedToCode`, `assignedToName`.
 
 Example query payload (human-readable JSON):
 
@@ -1603,6 +1605,8 @@ Operations support the following optional fields for review and pending task tra
 - `pendingTask` (string, max 1370): Description of a pending task
 - `pendingTaskStatus` (string, max 40): Status of the pending task. One of: `UNRELEASED`, `RELEASED`, `IN_PROCESS`, `COMPLETED`, `NOT_DONE`, `CANCELED`, `ON_HOLD`
 - `reviewedAt` (DateTime): Timestamp of when the operation was reviewed
+- `assignedToCode` (string, max 255): Code of the user assigned to the operation
+- `assignedToName` (string, max 255): Name of the user assigned to the operation. Both are also accepted as query filters on `GET /api/v1/work-orders/:workOrderCode/operations` (partial match)
 
 These fields can be set:
 - During Work Order creation (POST /api/v1/work-orders) in the nested `operations` array
