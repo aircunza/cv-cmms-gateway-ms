@@ -126,6 +126,9 @@ export class CreateWoOperationDto {
   @Type(() => CreateWoOperationResourceDto)
   resources!: CreateWoOperationResourceDto[];
 
+  // Los campos de centro de costo, área, sector, subsector y nombre de
+  // organización se infieren del asset (assetCode) en maintenance-execution-ms.
+  // Se aceptan por compatibilidad de contrato pero el microservicio los ignora.
   @IsString()
   @IsOptional()
   @MaxLength(255)
