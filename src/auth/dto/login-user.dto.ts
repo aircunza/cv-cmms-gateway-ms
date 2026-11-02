@@ -14,7 +14,7 @@ export class LoginUserDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(12)
+  @MaxLength(255)
   code?: string;
 
   @IsString()
