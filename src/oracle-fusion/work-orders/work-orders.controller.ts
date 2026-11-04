@@ -4,6 +4,7 @@ import {
   Get,
   Inject,
   Param,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -13,7 +14,11 @@ import { catchError } from 'rxjs';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import type { OrganizationRole } from 'src/auth/interfaces/organization-role.interface';
 import { NATS_SERVICE } from 'src/config';
-import { OracleWorkOrderCodeDto, OracleOperationCodeDto } from './dto';
+import {
+  OracleWorkOrderCodeDto,
+  OracleOperationCodeDto,
+  OracleIntegrationWorkOrdersQueryDto,
+} from './dto';
 
 @Controller('oracle/work-orders')
 export class WorkOrdersController {
@@ -44,6 +49,56 @@ export class WorkOrdersController {
         `User does not have access to organization ${organizationCode}`,
       );
     }
+  }
+
+  private parseNumericCode(value: string): number {
+    if (!/^\d+$/.test(value)) {
+      throw new BadRequestException(`Invalid work order code: ${value}`);
+    }
+    return Number(value);
+  }
+
+  // Declared before ':workOrderCode' so 'integration' is not captured as a code.
+  @UseGuards(AuthGuard)
+  @Get('integration')
+  findIntegrationMany(@Query() dto: OracleIntegrationWorkOrdersQueryDto) {
+    const workOrderCodes = dto.workOrderCodes
+      .split(',')
+      .map((code) => code.trim())
+      .filter((code) => code.length > 0)
+      .map((code) => this.parseNumericCode(code));
+
+    if (workOrderCodes.length === 0) {
+      throw new BadRequestException(
+        'workOrderCodes must contain at least one work order code',
+      );
+    }
+
+    return this.client
+      .send('oracle.sync.work-order.integration.find-many', {
+        workOrderCodes: [...new Set(workOrderCodes)],
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('integration/:workOrderCode')
+  findIntegrationOne(@Param() dto: OracleWorkOrderCodeDto) {
+    const workOrderCode = this.parseNumericCode(String(dto.workOrderCode));
+
+    return this.client
+      .send('oracle.sync.work-order.integration.find-one', {
+        workOrderCode,
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)

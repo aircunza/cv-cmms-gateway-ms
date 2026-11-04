@@ -1616,6 +1616,88 @@ These fields can be set:
 
 For the full contract (permissions, roles, field constraints), see the [Work Order Operation spec](../cv-cmms-maintenance-execution-ms/docs/wo-operation-spec.md).
 
+## Oracle Fusion Work Order Integration
+
+Read-only endpoints that return the data stored in the integration tables (`oracle_work_orders`, `oracle_wo_operations`, `oracle_wo_operation_materials`, `oracle_wo_operation_human_resources`). They do not call Oracle Fusion, so they are faster than the real-time `/oracle/work-orders/:workOrderCode` endpoints.
+
+Headers required:
+
+- `Cookie: auth_token=<jwt>`
+
+| Method | Endpoint                                              | Description                                    |
+| ------ | ----------------------------------------------------- | ---------------------------------------------- |
+| GET    | /api/v1/oracle/work-orders/integration/:workOrderCode | Integration data of one work order             |
+| GET    | /api/v1/oracle/work-orders/integration?workOrderCodes=1,2,3 | Integration data of many work orders (comma-separated) |
+
+Both endpoints include records whose `syncStatus` is not `synced` (for example, failed creations in Oracle), so the frontend can show the failure and its `syncError`.
+
+Response for a found work order (`status: "found"`):
+
+```json
+{
+  "workOrderCode": "102862",
+  "status": "found",
+  "oracleWorkOrderId": "300100123456",
+  "oracleWorkOrderNumber": "WO-000123",
+  "oracleWorkOrderStatusCode": "RELEASED",
+  "syncStatus": "synced",
+  "syncError": null,
+  "retryCount": 0,
+  "lastSyncAttempt": "2026-11-04T10:00:00.000Z",
+  "createdAt": "2026-11-04T09:59:00.000Z",
+  "updatedAt": "2026-11-04T10:00:00.000Z",
+  "operations": [
+    {
+      "woOperationCode": "93315",
+      "oracleOperationId": "300100123457",
+      "oracleOperationName": "OP-10",
+      "oracleOperationDescription": "Inspection",
+      "syncStatus": "synced",
+      "syncError": null,
+      "retryCount": 0,
+      "lastSyncAttempt": "2026-11-04T10:00:00.000Z",
+      "createdAt": "2026-11-04T09:59:30.000Z",
+      "updatedAt": "2026-11-04T10:00:00.000Z",
+      "materials": [
+        {
+          "materialSequenceNumber": 1,
+          "oracleOperationMaterialId": "300100123458",
+          "syncStatus": "synced",
+          "syncError": null,
+          "retryCount": 0,
+          "lastSyncAttempt": "2026-11-04T10:00:00.000Z",
+          "createdAt": "2026-11-04T09:59:45.000Z",
+          "updatedAt": "2026-11-04T10:00:00.000Z"
+        }
+      ],
+      "humanResources": [
+        {
+          "resourceSequenceNumber": 1,
+          "resourceCode": "47357764",
+          "oracleOperationResourceId": "300100123459",
+          "syncStatus": "synced",
+          "syncError": null,
+          "retryCount": 0,
+          "lastSyncAttempt": "2026-11-04T10:00:00.000Z",
+          "createdAt": "2026-11-04T09:59:50.000Z",
+          "updatedAt": "2026-11-04T10:00:00.000Z"
+        }
+      ]
+    }
+  ]
+}
+```
+
+A work order that does not exist in the integration tables returns HTTP 200 with `status: "not_found"`:
+
+```json
+{ "workOrderCode": "999999", "status": "not_found" }
+```
+
+For the multiple endpoint the response is an array with one entry per unique `workOrderCode`, in the order requested. The `oracleWorkOrderId`, `oracleWorkOrderNumber` and `oracleOperationId` fields are `null` when the creation in Oracle failed; `syncStatus` and `syncError` describe the failure.
+
+Validation: `workOrderCodes` is required and must contain at least one numeric code. Invalid codes return HTTP 400. No organization check is applied beyond the authentication guard.
+
 ## Work Requests
 
 Headers required for all Work Request endpoints:

@@ -1,4 +1,10 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
+
+export class OracleIntegrationWorkOrdersQueryDto {
+  @IsString()
+  @IsNotEmpty()
+  workOrderCodes!: string;
+}
 
 export class OracleWorkOrderCodeDto {
   @IsNotEmpty()

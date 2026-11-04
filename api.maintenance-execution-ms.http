@@ -701,6 +701,20 @@ GET {{baseUrl}}/oracle/work-orders/{{woCodeLocal}}/operations/{{woOpCodeLocal}}/
 Cookie: auth_token={{token}}
 X-Organization-Code: {{orgCode}}
 
+######################## ORACLE FUSION INTEGRATION READ ENDPOINTS ########################
+
+## Reads the data stored in the integration tables (no call to Oracle Fusion).
+## Includes records with syncStatus other than "synced" (e.g. failed creations).
+## Response: status "found" | "not_found" (HTTP 200 in both cases).
+
+### Get work order integration data by workOrderCode
+GET {{baseUrl}}/oracle/work-orders/integration/{{woCodeLocal}}
+Cookie: auth_token={{token}}
+
+### Get many work orders integration data (comma-separated workOrderCodes)
+GET {{baseUrl}}/oracle/work-orders/integration?workOrderCodes={{woCodeLocal}},102863,999999
+Cookie: auth_token={{token}}
+
 ######################## ORACLE INVENTORY ENDPOINTS ########################
 
 ### Get inventory by materialCode from Oracle Fusion (real-time)
