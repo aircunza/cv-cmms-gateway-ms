@@ -1,9 +1,6 @@
 import { IsString, IsOptional, IsNotEmpty, MaxLength } from 'class-validator';
 
 export class CreateOperationMaterialDto {
-  @IsNotEmpty()
-  operationCode: number;
-
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
