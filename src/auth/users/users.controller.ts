@@ -1,7 +1,9 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
+  Post,
   Query,
   UseGuards,
   Inject,
@@ -10,7 +12,13 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { NATS_SERVICE } from 'src/config';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { FindAllUsersDto, FindOneUserDto } from './dto';
+import { User } from 'src/auth/decorators/user.decorator';
+import type { CurrentUser } from 'src/auth/interfaces/current-user.interface';
+import {
+  FindAllUsersDto,
+  FindOneUserDto,
+  RegisterUserWithRoleDto,
+} from './dto';
 
 @Controller('users')
 export class UsersController {
@@ -22,6 +30,26 @@ export class UsersController {
     }
 
     return String(error);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('register-with-role')
+  registerUserWithRole(
+    @Body() registerUserWithRoleDto: RegisterUserWithRoleDto,
+    @User() user: CurrentUser,
+  ) {
+    // requesterId se toma del token verificado, nunca del body.
+    // El microservicio auth valida que sea ADMIN en la organizacion indicada.
+    return this.client
+      .send('auth.register.user.with.role', {
+        ...registerUserWithRoleDto,
+        requesterId: user.id,
+      })
+      .pipe(
+        catchError((error: unknown) => {
+          throw new RpcException(this.toRpcError(error));
+        }),
+      );
   }
 
   @UseGuards(AuthGuard)

@@ -1,4 +1,11 @@
-import { IsArray, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsIn,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class UpdateUserOrgPermissionDto {
   @IsOptional()
@@ -25,4 +32,12 @@ export class UpdateUserOrgPermissionDto {
   @IsArray()
   @IsString({ each: true })
   deniedPermissions?: string[];
+
+  @IsOptional()
+  @IsIn(['Y', 'N'])
+  isActive?: string;
+
+  @IsOptional()
+  @IsDateString()
+  assignedAt?: string;
 }

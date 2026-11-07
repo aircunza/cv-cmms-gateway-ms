@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsDateString,
+  IsIn,
   IsOptional,
   IsString,
   IsUUID,
@@ -36,6 +37,10 @@ export class CreateUserOrgPermissionDto {
   @IsArray()
   @IsString({ each: true })
   deniedPermissions?: string[];
+
+  @IsOptional()
+  @IsIn(['Y', 'N'])
+  isActive?: string;
 
   @IsOptional()
   @IsDateString()
