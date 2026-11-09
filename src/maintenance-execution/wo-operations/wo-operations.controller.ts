@@ -95,16 +95,52 @@ export class WoOperationsController {
       );
   }
 
+  private parseJsonParam(value: string): unknown {
+    try {
+      return JSON.parse(value) as unknown;
+    } catch {
+      throw new BadRequestException('Invalid filter data');
+    }
+  }
+
+  private parseNonNegativeInt(
+    value: number | string | undefined,
+  ): number | undefined {
+    if (value === undefined || value === '') return undefined;
+    const parsed = typeof value === 'string' ? parseInt(value, 10) : value;
+    if (Number.isNaN(parsed) || !Number.isInteger(parsed) || parsed < 0) {
+      throw new BadRequestException('Invalid filter data');
+    }
+    return parsed;
+  }
+
   @UseGuards(AuthGuard)
   @Get()
   findAll(
     @Param() params: { workOrderCode: string },
     @Query() dto: FindAllWoOperationDto,
   ) {
+    const parsedFilters =
+      typeof dto.filters === 'string'
+        ? this.parseJsonParam(dto.filters)
+        : dto.filters;
+
+    const parsedOrder =
+      typeof dto.order === 'string'
+        ? this.parseJsonParam(dto.order)
+        : dto.order;
+
     return this.client
       .send('wo.operation.find.all', {
-        ...dto,
         workOrderCode: Number(params.workOrderCode),
+        assetCode: dto.assetCode,
+        operationStatus: dto.operationStatus,
+        assignedToCode: dto.assignedToCode,
+        assignedToName: dto.assignedToName,
+        filters: parsedFilters,
+        order: parsedOrder,
+        limit: this.parseNonNegativeInt(dto.limit),
+        offset: this.parseNonNegativeInt(dto.offset),
       })
       .pipe(
         catchError((error: unknown) => {

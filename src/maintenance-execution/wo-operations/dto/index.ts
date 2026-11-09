@@ -314,6 +314,18 @@ export class UpdateWoOperationDto {
 
 export class FindAllWoOperationDto {
   @IsOptional()
+  filters?: unknown;
+
+  @IsOptional()
+  order?: unknown;
+
+  @IsOptional()
+  limit?: number | string;
+
+  @IsOptional()
+  offset?: number | string;
+
+  @IsOptional()
   workOrderCode?: number;
 
   @IsString()
