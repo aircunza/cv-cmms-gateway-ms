@@ -360,3 +360,37 @@ export class CancelWoOperationDto {
   @MaxLength(240)
   canceledReason!: string;
 }
+
+export class FindAllGlobalWoOperationDto {
+  @IsOptional()
+  filters?: unknown;
+
+  @IsOptional()
+  order?: unknown;
+
+  @IsOptional()
+  limit?: number | string;
+
+  @IsOptional()
+  offset?: number | string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(80)
+  assetCode?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(30)
+  operationStatus?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  assignedToCode?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  assignedToName?: string;
+}
