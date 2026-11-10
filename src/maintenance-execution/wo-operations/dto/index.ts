@@ -394,3 +394,17 @@ export class FindAllGlobalWoOperationDto {
   @MaxLength(255)
   assignedToName?: string;
 }
+
+export class FindHumanResourcesPlainWoOperationDto {
+  @IsOptional()
+  filters?: unknown;
+
+  @IsOptional()
+  order?: unknown;
+
+  @IsOptional()
+  limit?: number | string;
+
+  @IsOptional()
+  offset?: number | string;
+}
