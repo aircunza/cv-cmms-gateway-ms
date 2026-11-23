@@ -937,3 +937,23 @@ Cookie: auth_token={{token}}
   "roleDescription": "Ejecuta trabajos asignados",
   "permissions": ["mnt.work.orders.view"]
 }
+
+
+######################## CUSTOM OTBI REPORTS (base_cumplimiento_egp) ########################
+
+### Get base cumplimiento EGP (sin filtros, paginado)
+GET {{baseUrl}}/custom-otbi-reports/base-cumplimiento-egp?limit=10&offset=0
+Cookie: auth_token={{token}}
+
+### Get base cumplimiento EGP (organizationCode eq + fecha entre dos fechas)
+GET {{baseUrl}}/custom-otbi-reports/base-cumplimiento-egp?filters=%5B%7B%22field%22%3A%22organizationCode%22%2C%22operator%22%3A%22eq%22%2C%22value%22%3A%22xxxxPR002%22%7D%2C%7B%22field%22%3A%22fecha%22%2C%22operator%22%3A%22gt%22%2C%22value%22%3A%222026-09-30%22%7D%2C%7B%22field%22%3A%22fecha%22%2C%22operator%22%3A%22lt%22%2C%22value%22%3A%222026-10-31%22%7D%5D&limit=50&offset=0
+Cookie: auth_token={{token}}
+
+### Get base cumplimiento EGP (resourceCode like + turnoReportado in)
+GET {{baseUrl}}/custom-otbi-reports/base-cumplimiento-egp?filters=%5B%7B%22field%22%3A%22resourceCode%22%2C%22operator%22%3A%22like%22%2C%22value%22%3A%22as75%22%7D%2C%7B%22field%22%3A%22turnoReportado%22%2C%22operator%22%3A%22in%22%2C%22value%22%3A%5B%22A%22%2C%22B%22%5D%7D%5D&limit=10&offset=0
+Cookie: auth_token={{token}}
+
+### Get base cumplimiento EGP (fechaConsulta mayor a una fecha UTC + orden)
+GET {{baseUrl}}/custom-otbi-reports/base-cumplimiento-egp?filters=%5B%7B%22field%22%3A%22fechaConsulta%22%2C%22operator%22%3A%22gt%22%2C%22value%22%3A%222026-11-19T00%3A00%3A00Z%22%7D%5D&order=%5B%5B%22fecha%22%2C%22desc%22%5D%2C%5B%22resourceCode%22%2C%22asc%22%5D%5D&limit=10&offset=0
+Cookie: auth_token={{token}}
+
